@@ -2,11 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import PoppinsRegular from './font/Poppins-Regular.ttf';
 import PoppinsSemiBold from './font/Poppins-SemiBold.ttf';
 
-const theme = createTheme({
-  palette: {
-    
-  },
-});
+const theme = createTheme();
 
 theme.typography.h1 = {
   fontFamily: 'PoppinsRegular, Arial',
