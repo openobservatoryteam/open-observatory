@@ -15,6 +15,7 @@ specifiers:
   eslint-config-prettier: ^8.6.0
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-react: ^7.32.1
+  ky: ^0.33.2
   prettier: ^2.8.3
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -28,6 +29,7 @@ dependencies:
   '@mui/material': 5.11.6_rqh7qj4464ntrqrt6banhaqg4q
   '@tanstack/react-location': 3.7.4_biqbaboplfbrettd7655fr4n2y
   '@tanstack/react-query': 4.24.2_biqbaboplfbrettd7655fr4n2y
+  ky: 0.33.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
 
@@ -2096,6 +2098,11 @@ packages:
       array-includes: 3.1.6
       object.assign: 4.1.4
     dev: true
+
+  /ky/0.33.2:
+    resolution: {integrity: sha512-f6oS2rKUcPu5FzdqCDbFpmzis/JlqFZw8uIHm/jf8Kc3vtnW+VDhuashOAKyBZv8bFiZFZUMNxTC0JtahEvujA==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
