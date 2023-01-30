@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material';
+
 export default function HomePage() {
-  return <h1>Open Observatory</h1>;
+  return <Typography variant="h1">Open Observatory</Typography>;
 }
