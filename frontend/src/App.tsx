@@ -1,6 +1,7 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 import theme from '@/theme';
 import routes from '@/routes';
 
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Router location={location} routes={routes}>
           <Outlet />
         </Router>
