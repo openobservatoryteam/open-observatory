@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
-import PoppinsRegular from './font/Poppins-Regular.ttf';
-import PoppinsSemiBold from './font/Poppins-SemiBold.ttf';
+import PoppinsRegular from '@/fonts/Poppins-Regular.ttf';
+import PoppinsSemiBold from '@/fonts/Poppins-SemiBold.ttf';
 
 const theme = createTheme();
 

@@ -1,7 +1,7 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
+import theme from '@/theme';
 import routes from '@/routes';
 
 const location = new ReactLocation();
