@@ -2,8 +2,7 @@ import { Link } from '@tanstack/react-location';
 import { useForm } from 'react-hook-form';
 
 import { Button, TextInput, Title } from '@/components';
-import Header from '@/layout/Header';
-import Footer from '@/layout/Footer';
+import { Footer, Header } from '@/layout';
 
 function LoginPage() {
   const { handleSubmit, register } = useForm({

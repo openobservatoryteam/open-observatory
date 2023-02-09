@@ -1,6 +1,5 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
 
-import Layout from '@/layout';
 import routes from '@/routes';
 
 const location = new ReactLocation();

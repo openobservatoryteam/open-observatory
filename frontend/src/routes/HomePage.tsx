@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-location';
 
 import { Button, Map } from '@/components';
-import Header from '@/layout/Header';
+import { Header } from '@/layout';
 
 function HomePage() {
   return (

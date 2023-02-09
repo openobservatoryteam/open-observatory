@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-function Footer() {
+export function Footer() {
   return (
     <footer
       className={clsx(
