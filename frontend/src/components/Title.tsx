@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { DetailedHTMLProps, HTMLAttributes } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 
 type HeadingElement = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
@@ -12,11 +12,9 @@ const styles: Record<HeadingElement, string> = {
   h6: 'text-md',
 };
 
-type TitleProps = { as?: HeadingElement } & DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>;
+type TitleProps = { as?: HeadingElement } & ComponentPropsWithoutRef<HeadingElement>;
 
-function Title({ as = 'h1', className, ...props }: TitleProps) {
+export const Title = ({ as = 'h1', className, ...props }: TitleProps) => {
   const Component = as;
   return <Component className={clsx(styles[as], className)} {...props} />;
-}
-
-export default Title;
+};

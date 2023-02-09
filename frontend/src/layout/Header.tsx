@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-location';
 
-import Logo from '@/assets/Logo';
-import Title from '@/components/Title';
+import { Logo } from '@/assets';
+import { Title } from '@/components';
 
 function Header() {
   return (

@@ -1,9 +1,7 @@
 import { Link } from '@tanstack/react-location';
 import { useForm } from 'react-hook-form';
 
-import Button from '@/components/Button';
-import TextInput from '@/components/TextInput';
-import Title from '@/components/Title';
+import { Button, TextInput, Title } from '@/components';
 
 function LoginPage() {
   const { handleSubmit, register } = useForm({
@@ -34,7 +32,7 @@ function LoginPage() {
           {...register('password')}
         />
         <div className="flex justify-center">
-          <Button className="mb-4" type="submit">
+          <Button className="mb-4" onPress={() => alert('Coucou')} type="submit">
             Se connecter
           </Button>
         </div>

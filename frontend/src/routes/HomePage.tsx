@@ -1,10 +1,14 @@
 import { Link } from '@tanstack/react-location';
 
+import { Button } from '@/components';
+
 function HomePage() {
   return (
     <>
       <h1>Accueil</h1>
-      <Link to="/login">Se connecter</Link>
+      <Button as={Link} to="/login">
+        Ici
+      </Button>
     </>
   );
 }

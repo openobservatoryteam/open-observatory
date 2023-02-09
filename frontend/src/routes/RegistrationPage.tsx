@@ -1,8 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-import Button from '@/components/Button';
-import TextInput from '@/components/TextInput';
-import Title from '@/components/Title';
+import { Button, TextInput, Title } from '@/components';
 
 function RegistrationPage() {
   const { handleSubmit, register } = useForm({

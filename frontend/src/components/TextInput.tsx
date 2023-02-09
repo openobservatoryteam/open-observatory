@@ -1,27 +1,18 @@
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
-import {
-  ChangeEvent,
-  DetailedHTMLProps,
-  ForwardedRef,
-  forwardRef,
-  InputHTMLAttributes,
-  RefObject,
-  useState,
-} from 'react';
+import { ChangeEvent, ComponentPropsWithRef, ForwardedRef, forwardRef, RefObject, useState } from 'react';
 import { AriaTextFieldOptions, useTextField } from 'react-aria';
 
-import Button from './Button';
+import { Button } from '@/components';
 
 const styles = () => clsx('bg-white px-4 py-2 rounded-3xl text-black w-full');
 
-type TextInputProps = Omit<AriaTextFieldOptions<'input'>, 'onChange'> &
-  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
-    withVisibilityToggle?: boolean;
-  };
+type TextInputProps =
+  | { withVisibilityToggle?: boolean } & Omit<AriaTextFieldOptions<'input'>, 'onChange'> &
+      ComponentPropsWithRef<'input'>;
 
-const TextInput = forwardRef(
+export const TextInput = forwardRef(
   (
     { onChange, type, withVisibilityToggle = type === 'password', ...props }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>,
@@ -59,5 +50,3 @@ const TextInput = forwardRef(
     );
   },
 );
-
-export default TextInput;

@@ -1,6 +1,6 @@
 import { Route } from '@tanstack/react-location';
-import HomePage from './HomePage';
 
+import HomePage from './HomePage';
 import LoginPage from './LoginPage';
 import RegistrationPage from './RegistrationPage';
 
