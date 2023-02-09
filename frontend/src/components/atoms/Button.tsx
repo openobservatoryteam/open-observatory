@@ -26,7 +26,14 @@ export const Button = <C extends ElementType>({
   const { isFocusVisible } = useFocusVisible();
   return (
     <Component
-      className={clsx(!unstyled && styles(isPressed), 'outline-none', isFocusVisible && 'focus:ring-4', className)}
+      className={clsx(
+        !unstyled && styles(isPressed),
+        'outline-none',
+        isFocusVisible && 'focus:ring-4',
+        'block',
+        'flex items-center justify-center text-center',
+        className,
+      )}
       {...props}
       {...buttonProps}
     >

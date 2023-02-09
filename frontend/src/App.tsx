@@ -8,9 +8,7 @@ const location = new ReactLocation();
 function App() {
   return (
     <Router location={location} routes={routes}>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <Outlet />
     </Router>
   );
 }

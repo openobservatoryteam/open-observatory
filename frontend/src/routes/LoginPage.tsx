@@ -2,6 +2,8 @@ import { Link } from '@tanstack/react-location';
 import { useForm } from 'react-hook-form';
 
 import { Button, TextInput, Title } from '@/components';
+import Header from '@/layout/Header';
+import Footer from '@/layout/Footer';
 
 function LoginPage() {
   const { handleSubmit, register } = useForm({
@@ -12,6 +14,7 @@ function LoginPage() {
   });
   return (
     <>
+      <Header />
       <Title as="h2" className="mb-10 mt-16 text-center">
         Connexion
       </Title>
@@ -40,6 +43,7 @@ function LoginPage() {
       <p className="text-center">
         <Link to="/register">Pas de compte ? Inscrivez-vous</Link>
       </p>
+      <Footer />
     </>
   );
 }

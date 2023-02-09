@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 
 import { Button, TextInput, Title } from '@/components';
+import Header from '@/layout/Header';
+import Footer from '@/layout/Footer';
 
 function RegistrationPage() {
   const { handleSubmit, register } = useForm({
@@ -13,6 +15,7 @@ function RegistrationPage() {
   });
   return (
     <>
+      <Header />
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription
       </Title>
@@ -51,6 +54,7 @@ function RegistrationPage() {
           <Button type="submit">S&apos;inscrire</Button>
         </div>
       </form>
+      <Footer />
     </>
   );
 }
