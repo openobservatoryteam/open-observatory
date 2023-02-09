@@ -1,30 +1,18 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import theme from '@/theme';
+
+import Layout from '@/layout';
 import routes from '@/routes';
 
 const location = new ReactLocation();
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  },
-  logger: { error: () => void 0, log: () => void 0, warn: () => void 0 },
-});
 
-export default function App() {
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router location={location} routes={routes}>
-          <Outlet />
-        </Router>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Router location={location} routes={routes}>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </Router>
   );
 }
+
+export default App;

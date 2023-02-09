@@ -1,6 +1,13 @@
-import { type Route } from '@tanstack/react-location';
+import { Route } from '@tanstack/react-location';
+import HomePage from './HomePage';
 
-// Lazy loading
-const HomePage = () => import('./HomePage').then((page) => <page.default />);
+import LoginPage from './LoginPage';
+import RegistrationPage from './RegistrationPage';
 
-export default [{ path: '/', element: HomePage }] satisfies Route[];
+const routes: Route[] = [
+  { path: '/', element: <HomePage /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/register', element: <RegistrationPage /> },
+];
+
+export default routes;

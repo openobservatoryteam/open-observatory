@@ -1,5 +1,12 @@
-import { Typography } from '@mui/material';
+import { Link } from '@tanstack/react-location';
 
-export default function HomePage() {
-  return <Typography variant="h1">Open Observatory</Typography>;
+function HomePage() {
+  return (
+    <>
+      <h1>Accueil</h1>
+      <Link to="/login">Se connecter</Link>
+    </>
+  );
 }
+
+export default HomePage;
