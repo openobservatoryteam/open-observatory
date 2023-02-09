@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Marker, Popup, useMap } from 'react-leaflet';
+import { Circle, useMap, CircleMarker, Tooltip } from 'react-leaflet';
 
 import { usePosition } from '@/hooks';
 
@@ -14,8 +14,11 @@ export function CurrentPosition() {
     }
   }, [position]);
   return position ? (
-    <Marker position={position}>
-      <Popup>C&apos;EST MOI</Popup>
-    </Marker>
+    <>
+      <Circle center={position} radius={25000} color="#444444" />
+      <CircleMarker center={position} color="#990000" fill fillColor="#990000" fillOpacity={1} radius={2}>
+        <Tooltip direction="top">Vous êtes ici</Tooltip>
+      </CircleMarker>
+    </>
   ) : null;
 }
