@@ -8,7 +8,7 @@ type ButtonColor = 'lightGray' | 'darkGray' | 'red';
 type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
   ComponentPropsWithoutRef<C> & { as?: C; children: ReactNode; color?: ButtonColor; unstyled?: boolean };
 
-const styles = (isFocusVisible: boolean, isPressed: boolean, color?: ButtonColor, unstyled?: boolean) => {
+const classes = (isFocusVisible: boolean, isPressed: boolean, color?: ButtonColor, unstyled?: boolean) => {
   const colors: Record<ButtonColor, string> = {
     darkGray: 'bg-[#333C47] ring-[#999EA3] text-white',
     lightGray: 'bg-[#D9D9D9] ring-[#6d6d6d] text-black',
@@ -45,7 +45,7 @@ function Button<C extends ElementType>({ as, className, color, unstyled, ...prop
   const { buttonProps, isPressed } = useButton(props, ref);
   const { isFocusVisible } = useFocusVisible();
   const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
-  return <Component className={clsx(styles(isFocusVisible, isPressed, color, unstyled), className)} {...finalProps} />;
+  return <Component className={clsx(classes(isFocusVisible, isPressed, color, unstyled), className)} {...finalProps} />;
 }
 
 export { Button };
