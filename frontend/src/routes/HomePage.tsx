@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-location';
+import { Helmet } from 'react-helmet';
 
 import { Button, Map } from '@/components';
 import { Header } from '@/layout';
@@ -6,6 +7,9 @@ import { Header } from '@/layout';
 function HomePage() {
   return (
     <>
+      <Helmet>
+        <title>Accueil – Open Observatory</title>
+      </Helmet>
       <Header />
       <div className="flex justify-around items-center my-5 md:my-7">
         <Button
