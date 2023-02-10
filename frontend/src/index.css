@@ -19,7 +19,6 @@
 @layer base {
   html {
     background-color: #101010;
-    color: #EEEEEE;
     font-family: Poppins, system-ui, sans-serif;
   }
 }

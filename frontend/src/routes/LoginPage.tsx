@@ -41,8 +41,8 @@ function LoginPage() {
           </Button>
         </div>
       </form>
-      <Text as={Link} centered to="/register">
-        Pas de compte ? Inscrivez-vous.
+      <Text centered>
+        <Link to="/register">Pas de compte ? Inscrivez-vous.</Link>
       </Text>
       <Footer />
     </>
