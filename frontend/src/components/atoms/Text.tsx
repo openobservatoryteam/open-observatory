@@ -4,9 +4,9 @@ import { ComponentPropsWithoutRef, ElementType } from 'react';
 import { removeKeys } from '@/utils';
 
 type TextProps<C extends ElementType = 'p'> =
-  | ComponentPropsWithoutRef<C> & { as?: C; bold?: boolean; centered?: boolean };
+  | ComponentPropsWithoutRef<C> & { as?: C; bold?: boolean; centered?: boolean; className?: string };
 
-const excludedProps = ['bold', 'centered'] as const;
+const excludedProps = ['bold', 'centered', 'className'] as const;
 const classes = ({ bold, centered, className }: TextProps) =>
   clsx('text-white', bold && 'font-bold', centered && 'text-center', className);
 
