@@ -1,13 +1,13 @@
 import { Route } from '@tanstack/react-location';
 
-import HomePage from './HomePage';
-import LoginPage from './LoginPage';
-import RegistrationPage from './RegistrationPage';
+const HomePage = () => import('./HomePage').then((page) => <page.default />);
+const LoginPage = () => import('./LoginPage').then((page) => <page.default />);
+const RegistrationPage = () => import('./RegistrationPage').then((page) => <page.default />);
 
 const routes: Route[] = [
-  { path: '/', element: <HomePage /> },
-  { path: '/login', element: <LoginPage /> },
-  { path: '/register', element: <RegistrationPage /> },
+  { path: '/', element: HomePage },
+  { path: '/login', element: LoginPage },
+  { path: '/register', element: RegistrationPage },
 ];
 
 export default routes;
