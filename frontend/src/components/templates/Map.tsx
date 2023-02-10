@@ -5,7 +5,6 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import { CurrentPosition } from '@/components';
 
 export function Map() {
-  console.log(leafletStylesheet);
   return (
     <>
       <Style type="text/css">{leafletStylesheet}</Style>
