@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-location';
-import { Helmet } from 'react-helmet';
+import { Title as DocumentTitle } from 'react-head';
 
 import { Button, Map } from '@/components';
 import { Header } from '@/layout';
@@ -7,15 +7,13 @@ import { Header } from '@/layout';
 function HomePage() {
   return (
     <>
-      <Helmet>
-        <title>Accueil – Open Observatory</title>
-      </Helmet>
+      <DocumentTitle>Accueil – Open Observatory</DocumentTitle>
       <Header />
       <div className="flex justify-around items-center my-5 md:my-7">
         <Button
           as={Link}
           className="h-20 w-40 md:w-96 text-[10px] sm:text-[14px] md:text-[20px]"
-          color="darkGray"
+          color="lightGray"
           to="/login"
         >
           Nouvelle observation
@@ -23,7 +21,7 @@ function HomePage() {
         <Button
           as={Link}
           className="h-20 w-40 md:w-96 text-[10px] sm:text-[14px] md:text-[20px]"
-          color="darkGray"
+          color="red"
           to="/login"
         >
           Se connecter

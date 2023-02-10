@@ -8,7 +8,6 @@ specifiers:
   '@types/leaflet': ^1.9.0
   '@types/react': ^18.0.27
   '@types/react-dom': ^18.0.10
-  '@types/react-helmet': ^6.1.6
   '@typescript-eslint/eslint-plugin': ^5.51.0
   '@typescript-eslint/parser': ^5.51.0
   '@vitejs/plugin-react-swc': ^3.1.0
@@ -24,7 +23,7 @@ specifiers:
   react: ^18.2.0
   react-aria: ^3.22.0
   react-dom: ^18.2.0
-  react-helmet: ^6.1.0
+  react-head: ^3.4.2
   react-hook-form: ^7.43.1
   react-leaflet: ^4.2.0
   tailwindcss: ^3.2.6
@@ -44,7 +43,7 @@ dependencies:
   react: 18.2.0
   react-aria: 3.22.0_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
-  react-helmet: 6.1.0_react@18.2.0
+  react-head: 3.4.2_biqbaboplfbrettd7655fr4n2y
   react-hook-form: 7.43.1_react@18.2.0
   react-leaflet: 4.2.0_yydtlhsdonbqao6vgvkwhv2zki
   tailwindcss: 3.2.6_postcss@8.4.21
@@ -53,7 +52,6 @@ devDependencies:
   '@types/leaflet': 1.9.0
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
-  '@types/react-helmet': 6.1.6
   '@typescript-eslint/eslint-plugin': 5.51.0_b635kmla6dsb4frxfihkw4m47e
   '@typescript-eslint/parser': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
   '@vitejs/plugin-react-swc': 3.1.0_vite@4.1.1
@@ -1764,12 +1762,6 @@ packages:
       '@types/react': 18.0.27
     dev: true
 
-  /@types/react-helmet/6.1.6:
-    resolution: {integrity: sha512-ZKcoOdW/Tg+kiUbkFCBtvDw0k3nD4HJ/h/B9yWxN4uDO8OkRksWTO+EL+z/Qu3aHTeTll3Ro0Cc/8UhwBCMG5A==}
-    dependencies:
-      '@types/react': 18.0.27
-    dev: true
-
   /@types/react/18.0.27:
     resolution: {integrity: sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==}
     dependencies:
@@ -3331,20 +3323,15 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-fast-compare/3.2.0:
-    resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
-    dev: false
-
-  /react-helmet/6.1.0_react@18.2.0:
-    resolution: {integrity: sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==}
+  /react-head/3.4.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-mnl6u7E0SSzY9w+mExKGVz8vW/oObUTnj+vpRaZF6jcdjFcCGs0vl8MRwlRws56dye3f1CpzU7C/hz3b3S2BBA==}
     peerDependencies:
-      react: '>=16.3.0'
+      react: '>=16.3'
+      react-dom: '>=16.3'
     dependencies:
-      object-assign: 4.1.1
-      prop-types: 15.8.1
+      '@babel/runtime': 7.20.13
       react: 18.2.0
-      react-fast-compare: 3.2.0
-      react-side-effect: 2.1.2_react@18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-hook-form/7.43.1_react@18.2.0:
@@ -3370,14 +3357,6 @@ packages:
       leaflet: 1.9.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /react-side-effect/2.1.2_react@18.2.0:
-    resolution: {integrity: sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==}
-    peerDependencies:
-      react: ^16.3.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react/18.2.0:

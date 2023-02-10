@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-location';
-import { Helmet } from 'react-helmet';
+import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
-import { Button, TextInput, Title } from '@/components';
+import { Button, Text, TextInput, Title } from '@/components';
 import { Footer, Header } from '@/layout';
 
 function LoginPage() {
@@ -14,9 +14,7 @@ function LoginPage() {
   });
   return (
     <>
-      <Helmet>
-        <title>Connexion – Open Observatory</title>
-      </Helmet>
+      <DocumentTitle>Connexion – Open Observatory</DocumentTitle>
       <Header />
       <Title as="h2" className="mb-10 mt-16 text-center">
         Connexion
@@ -43,9 +41,9 @@ function LoginPage() {
           </Button>
         </div>
       </form>
-      <p className="text-center">
-        <Link to="/register">Pas de compte ? Inscrivez-vous</Link>
-      </p>
+      <Text as={Link} centered to="/register">
+        Pas de compte ? Inscrivez-vous.
+      </Text>
       <Footer />
     </>
   );

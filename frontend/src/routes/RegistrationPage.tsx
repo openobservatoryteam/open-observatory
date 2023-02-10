@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet';
+import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
 import { Button, TextInput, Title } from '@/components';
@@ -15,9 +15,7 @@ function RegistrationPage() {
   });
   return (
     <>
-      <Helmet>
-        <title>Inscription – Open Observatory</title>
-      </Helmet>
+      <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
       <Header />
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription

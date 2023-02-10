@@ -1,16 +1,14 @@
 import leafletStylesheet from 'leaflet/dist/leaflet.css?inline';
+import { Style } from 'react-head';
 import { MapContainer, TileLayer } from 'react-leaflet';
 
 import { CurrentPosition } from '@/components';
-import { Helmet } from 'react-helmet';
 
 export function Map() {
   console.log(leafletStylesheet);
   return (
     <>
-      <Helmet>
-        <style type="text/css">{leafletStylesheet}</style>
-      </Helmet>
+      <Style type="text/css">{leafletStylesheet}</Style>
       <MapContainer
         attributionControl={false}
         center={[48.866667, 2.333333]}
