@@ -1,6 +1,8 @@
+import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
 import { Button, TextInput, Title } from '@/components';
+import { Footer, Header } from '@/layout';
 
 function RegistrationPage() {
   const { handleSubmit, register } = useForm({
@@ -13,6 +15,8 @@ function RegistrationPage() {
   });
   return (
     <>
+      <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
+      <Header />
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription
       </Title>
@@ -51,6 +55,7 @@ function RegistrationPage() {
           <Button type="submit">S&apos;inscrire</Button>
         </div>
       </form>
+      <Footer />
     </>
   );
 }

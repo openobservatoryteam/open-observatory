@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-location';
 import { Logo } from '@/assets';
 import { Title } from '@/components';
 
-function Header() {
+export function Header() {
   return (
     <header className="mx-auto px-5 pt-6 md:px-10 md:pt-10">
       <Link to="/">
@@ -13,5 +13,3 @@ function Header() {
     </header>
   );
 }
-
-export default Header;

@@ -1,6 +1,8 @@
-import { DetailedHTMLProps, SVGAttributes } from 'react';
+import { ComponentProps } from 'react';
 
-export const Logo = (props: DetailedHTMLProps<SVGAttributes<SVGSVGElement>, SVGSVGElement>) => (
+type LogoProps = Omit<ComponentProps<'svg'>, 'version' | 'viewBox' | 'xmlns'>;
+
+export const Logo = (props: LogoProps) => (
   <svg {...props} version="1.1" viewBox="0 0 2650 700" xmlns="http://www.w3.org/2000/svg">
     <path
       fill="#00BAFF"
