@@ -10,9 +10,9 @@ type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
 
 const styles = (isFocusVisible: boolean, isPressed: boolean, color?: ButtonColor, unstyled?: boolean) => {
   const colors: Record<ButtonColor, string> = {
-    darkGray: 'bg-[#333C47] text-white',
-    lightGray: 'bg-gray-300 text-black',
-    red: 'bg-[#880000] text-white',
+    darkGray: 'bg-[#333C47] ring-[#999EA3] text-white',
+    lightGray: 'bg-[#D9D9D9] ring-[#6d6d6d] text-black',
+    red: 'bg-[#B33A3A] ring-[#D87979] text-white',
   };
   return clsx(
     !unstyled && [
@@ -22,7 +22,7 @@ const styles = (isFocusVisible: boolean, isPressed: boolean, color?: ButtonColor
       colors[color ?? 'lightGray'],
     ],
     'outline-none',
-    isFocusVisible && 'focus:ring-4',
+    isFocusVisible && 'focus:ring-2',
   );
 };
 
@@ -39,11 +39,13 @@ const excludedAriaHandlers = [
   'onPressUp',
 ] as const;
 
-export const Button = <C extends ElementType>({ as, className, color, unstyled, ...props }: ButtonProps<C>) => {
+function Button<C extends ElementType>({ as, className, color, unstyled, ...props }: ButtonProps<C>) {
   const Component = as ?? 'button';
   const ref = useRef(null);
   const { buttonProps, isPressed } = useButton(props, ref);
   const { isFocusVisible } = useFocusVisible();
   const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
   return <Component className={clsx(styles(isFocusVisible, isPressed, color, unstyled), className)} {...finalProps} />;
-};
+}
+
+export { Button };
