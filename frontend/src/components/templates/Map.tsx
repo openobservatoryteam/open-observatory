@@ -1,20 +1,23 @@
 import leafletStylesheet from 'leaflet/dist/leaflet.css?inline';
 import { Style } from 'react-head';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, MapContainerProps, TileLayer } from 'react-leaflet';
 
 import { CurrentPosition } from '@/components';
+import { removeKeys } from '@/utils';
 
-export function Map() {
+type MapProps = MapContainerProps;
+
+export function Map(props: MapProps) {
   return (
     <>
       <Style type="text/css">{leafletStylesheet}</Style>
       <MapContainer
         attributionControl={false}
         center={[48.866667, 2.333333]}
-        className="h-[calc(100vh-19em)] md:h-[calc(100vh-21.6em)] relative top-4"
         zoom={10}
+        {...removeKeys(props, ['attributionControl', 'center', 'zoom'])}
       >
-        <TileLayer url="https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png" />
+        <TileLayer url=" https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" />
         <CurrentPosition />
       </MapContainer>
     </>
