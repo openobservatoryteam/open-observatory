@@ -2,53 +2,48 @@ import clsx from 'clsx';
 import { ComponentPropsWithoutRef, ElementType, ReactNode, useRef } from 'react';
 import { AriaButtonProps, useButton, useFocusVisible } from 'react-aria';
 
+import { removeKeys } from '@/utils';
+
 type ButtonColor = 'lightGray' | 'darkGray' | 'red';
+type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
+  ComponentPropsWithoutRef<C> & { as?: C; children: ReactNode; color?: ButtonColor; unstyled?: boolean };
 
-const styles = (color: ButtonColor, isPressed = false) =>
-  clsx(
-    'px-8 py-2.5 rounded-3xl',
-    'disabled:cursor-not-allowed disabled:brightness-75',
-    isPressed && 'brightness-90',
-    color === 'lightGray'
-      ? 'bg-gray-300 text-black'
-      : color === 'darkGray'
-      ? 'bg-[#333C47] text-white'
-      : color === 'red'
-      ? 'bg-[#880000] text-white'
-      : '',
+const styles = (isFocusVisible: boolean, isPressed: boolean, color?: ButtonColor, unstyled?: boolean) => {
+  const colors: Record<ButtonColor, string> = {
+    darkGray: 'bg-[#333C47] text-white',
+    lightGray: 'bg-gray-300 text-black',
+    red: 'bg-[#880000] text-white',
+  };
+  return clsx(
+    !unstyled && [
+      'flex items-center justify-center px-8 py-2.5 rounded-3xl text-center',
+      'disabled:cursor-not-allowed disabled:brightness-75',
+      isPressed && 'brightness-90',
+      colors[color ?? 'lightGray'],
+    ],
+    'outline-none',
+    isFocusVisible && 'focus:ring-4',
   );
+};
 
-type ButtonProps<C extends ElementType> =
-  | { as?: C; children: ReactNode; color?: ButtonColor; unstyled?: boolean } & AriaButtonProps<C> &
-      ComponentPropsWithoutRef<C>;
+const excludedAriaHandlers = [
+  'onBlur',
+  'onFocus',
+  'onFocusChange',
+  'onKeyDown',
+  'onKeyUp',
+  'onPress',
+  'onPressChange',
+  'onPressEnd',
+  'onPressStart',
+  'onPressUp',
+] as const;
 
-export const Button = <C extends ElementType>({
-  as,
-  className,
-  children,
-  color = 'lightGray',
-  onPress,
-  unstyled,
-  ...props
-}: ButtonProps<C>) => {
+export const Button = <C extends ElementType>({ as, className, color, unstyled, ...props }: ButtonProps<C>) => {
   const Component = as ?? 'button';
   const ref = useRef(null);
-  const { buttonProps, isPressed } = useButton({ onPress, ...props }, ref);
+  const { buttonProps, isPressed } = useButton(props, ref);
   const { isFocusVisible } = useFocusVisible();
-  return (
-    <Component
-      className={clsx(
-        !unstyled && styles(color, isPressed),
-        'outline-none',
-        isFocusVisible && 'focus:ring-4',
-        'block',
-        'flex items-center justify-center text-center',
-        className,
-      )}
-      {...props}
-      {...buttonProps}
-    >
-      {children}
-    </Component>
-  );
+  const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
+  return <Component className={clsx(styles(isFocusVisible, isPressed, color, unstyled), className)} {...finalProps} />;
 };
