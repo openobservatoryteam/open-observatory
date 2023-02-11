@@ -3,14 +3,16 @@ import { Circle, useMap, CircleMarker, Tooltip } from 'react-leaflet';
 
 import { usePosition } from '@/hooks';
 
-export function CurrentPosition() {
+export function CurrentPosition({ centeredOnUser = true }: { centeredOnUser: boolean }) {
   const [hasCentered, setCentered] = useState(false);
   const map = useMap();
   const position = usePosition();
   useEffect(() => {
     if (position !== null && !hasCentered) {
-      map.flyTo(position, 12);
-      setCentered(true);
+      if (centeredOnUser) {
+        map.flyTo(position, 12);
+        setCentered(true);
+      }
     }
   }, [position]);
   return position ? (
