@@ -15,7 +15,7 @@ export default function ObservationPage(): JSX.Element {
   return (
     <div className="md:flex md:w-full">
       <div className="w-full">
-        <div className={clsx('w-full h-1/3 relative', 'md:h-96 ')}>
+        <div className={clsx('w-full h-1/3 relative', 'md:h-[50vh]')}>
           {expired && (
             <Text as="span" color="black" centered className="absolute top-5 left-5 py-2 px-5 rounded-[45px] bg-white">
               expiré
@@ -24,7 +24,7 @@ export default function ObservationPage(): JSX.Element {
           {isUser && (
             <Button
               unstyled
-              className="bg-white absolute top-4 right-2 w-14 md:w-20 md:h-20 h-14 flex justify-center items-center rounded-[45px]"
+              className="bg-white absolute top-4 right-2 w-14 md:w-16 md:h-16 h-14 flex justify-center items-center rounded-[45px]"
             >
               <FontAwesomeIcon icon={faPen} size="xl" />
             </Button>
@@ -46,7 +46,7 @@ export default function ObservationPage(): JSX.Element {
             </div>
           </div>
         </div>
-        <div className={clsx('w-full h-1/4 bg-slate-500 pb-5', 'md:h-96')}>
+        <div className={clsx('w-full h-1/4 bg-slate-500 pb-5', 'md:h-[50vh]')}>
           <div className="pt-4 pl-3 flex justify-between">
             <div className="w-1/2">
               <Text as="h1" bold className="text-lg md:text-2xl">
