@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "celestial_body")
-public class CelestialBody {
+public class CelestialBodyDto {
 
     @Id
     @SequenceGenerator(name = "id", sequenceName = "celestial_body_id_sequence")
@@ -27,7 +27,7 @@ public class CelestialBody {
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
-    public CelestialBody(Integer id, String name, Byte[] image, Integer validityTime, Date createdAt) {
+    public CelestialBodyDto(Integer id, String name, Byte[] image, Integer validityTime, Date createdAt) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -35,7 +35,7 @@ public class CelestialBody {
         this.createdAt = createdAt;
     }
 
-    public CelestialBody(){
+    public CelestialBodyDto(){
     }
 
     // GETTERS
@@ -81,7 +81,7 @@ public class CelestialBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CelestialBody that = (CelestialBody) o;
+        CelestialBodyDto that = (CelestialBodyDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Arrays.equals(image, that.image) && Objects.equals(validityTime, that.validityTime) && Objects.equals(createdAt, that.createdAt);
     }
 
