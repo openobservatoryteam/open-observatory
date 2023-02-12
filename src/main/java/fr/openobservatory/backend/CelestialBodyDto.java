@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "celestial_body")
@@ -12,34 +13,30 @@ public class CelestialBodyDto {
 
     @Id
     @SequenceGenerator(name = "id", sequenceName = "celestial_body_id_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "celestial_body_id_sequence")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID, generator = "celestial_body_id_sequence")
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "image", nullable = false)
-    private Byte[] image;
+    private String imageURL;
 
     @Column(name = "validity_time", nullable = false)
     private Integer validityTime;
 
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
-
-    public CelestialBodyDto(Integer id, String name, Byte[] image, Integer validityTime, Date createdAt) {
+    public CelestialBodyDto(UUID id, String name, String imageURL, Integer validityTime) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageURL = imageURL;
         this.validityTime = validityTime;
-        this.createdAt = createdAt;
     }
 
     public CelestialBodyDto(){
     }
 
     // GETTERS
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -47,16 +44,12 @@ public class CelestialBodyDto {
         return name;
     }
 
-    public Byte[] getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
     public Integer getValidityTime() {
         return validityTime;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
     }
 
     // SETTERS
@@ -65,41 +58,37 @@ public class CelestialBodyDto {
         this.name = name;
     }
 
-    public void setImage(Byte[] image) {
-        this.image = image;
+    public void setImage(String  imageURL) {
+        this.imageURL = imageURL;
     }
 
     public void setValidityTime(Integer validityTime) {
         this.validityTime = validityTime;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    // TOOLS
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CelestialBodyDto that = (CelestialBodyDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Arrays.equals(image, that.image) && Objects.equals(validityTime, that.validityTime) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(imageURL, that.imageURL) && Objects.equals(validityTime, that.validityTime);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, validityTime, createdAt);
-        result = 31 * result + Arrays.hashCode(image);
-        return result;
+        return Objects.hash(id, name, imageURL, validityTime);
     }
 
     @Override
     public String toString() {
-        return "CelestialBody{" +
+        return "CelestialBodyDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", image=" + Arrays.toString(image) +
+                ", imageURL='" + imageURL + '\'' +
                 ", validityTime=" + validityTime +
-                ", createdAt=" + createdAt +
                 '}';
     }
 }
