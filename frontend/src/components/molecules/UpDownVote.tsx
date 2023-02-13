@@ -12,7 +12,6 @@ type UpDownVoteProps = {
 } & ComponentPropsWithoutRef<'div'>;
 
 const UpDownVote = ({ className, currentVotes, onVote, vote, ...props }: UpDownVoteProps) => {
-  const currentVoteValue = vote === null ? 0 : vote === true ? 1 : -1;
   return (
     <div className={clsx('flex flex-col justify-around items-center', className)} {...props}>
       <Button
@@ -24,7 +23,7 @@ const UpDownVote = ({ className, currentVotes, onVote, vote, ...props }: UpDownV
         <FontAwesomeIcon color={vote === true ? 'white' : 'gray'} icon={faArrowUp} size="2xl" />
       </Button>
       <Text as="span" centered className="mt-1.5 mb-1 w-10" color="white">
-        {currentVotes + currentVoteValue}
+        {currentVotes}
       </Text>
       <Button
         aria-label={vote === false ? 'Annuler mon vote' : 'Voter -1'}

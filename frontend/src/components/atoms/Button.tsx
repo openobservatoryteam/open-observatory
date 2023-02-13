@@ -4,7 +4,7 @@ import { AriaButtonProps, useButton, useFocusVisible } from 'react-aria';
 
 import { removeKeys } from '@/utils';
 
-type ButtonColor = 'lightGray' | 'darkGray' | 'red' | 'white';
+type ButtonColor = 'lightGray' | 'darkGray' | 'red' | 'transparent' | 'white';
 type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
   ComponentPropsWithoutRef<C> & {
     as?: C;
@@ -25,13 +25,14 @@ const classes = (
     darkGray: 'bg-[#333C47] ring-[#999EA3] text-white',
     lightGray: 'bg-[#D9D9D9] ring-[#6d6d6d] text-black',
     red: 'bg-[#B33A3A] ring-[#D87979] text-white',
+    transparent: 'bg-transparent hover:bg-opacity-20 hover:bg-white ring-white',
     white: 'bg-white ring-neutral-400 text-black',
   };
   return clsx(
     !unstyled && [
-      'flex items-center justify-center px-8 py-2.5 select-none text-center',
+      'flex items-center justify-center select-none text-center',
       'disabled:cursor-not-allowed disabled:brightness-75',
-      rounded ? 'rounded-full' : 'rounded-3xl',
+      rounded ? 'rounded-full' : 'px-8 py-2.5 rounded-3xl',
       isPressed && 'brightness-90',
       colors[color ?? 'lightGray'],
     ],
