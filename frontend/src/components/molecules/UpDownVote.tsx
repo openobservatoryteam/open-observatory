@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import clsx from 'clsx';
 import { ComponentPropsWithoutRef } from 'react';
 
 import { Button, Text } from '@/components';
@@ -11,22 +10,24 @@ type UpDownVoteProps = {
   vote: boolean | null;
 } & ComponentPropsWithoutRef<'div'>;
 
-const UpDownVote = ({ className, currentVotes, onVote, vote, ...props }: UpDownVoteProps) => {
+const UpDownVote = ({ currentVotes, onVote, vote, ...props }: UpDownVoteProps) => {
   return (
-    <div className={clsx('flex flex-col justify-around items-center', className)} {...props}>
+    <div {...props}>
       <Button
         aria-label={vote === true ? 'Annuler mon vote' : 'Voter +1'}
+        fullWidth
         onPress={() => onVote(vote === true ? null : true)}
         title={vote === true ? 'Annuler mon vote' : 'Voter +1'}
         unstyled
       >
         <FontAwesomeIcon color={vote === true ? 'white' : 'gray'} icon={faArrowUp} size="2xl" />
       </Button>
-      <Text as="span" centered className="mt-1.5 mb-1 w-10" color="white">
+      <Text as="p" className="mt-1.5 mb-0.5">
         {currentVotes}
       </Text>
       <Button
         aria-label={vote === false ? 'Annuler mon vote' : 'Voter -1'}
+        fullWidth
         onPress={() => onVote(vote === false ? null : false)}
         title={vote === false ? 'Annuler mon vote' : 'Voter -1'}
         unstyled

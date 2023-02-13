@@ -10,6 +10,7 @@ type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
     as?: C;
     children: ReactNode;
     color?: ButtonColor;
+    fullWidth?: boolean;
     rounded?: boolean;
     unstyled?: boolean;
   };
@@ -18,6 +19,7 @@ const classes = (
   isFocusVisible: boolean,
   isPressed: boolean,
   color?: ButtonColor,
+  fullWidth?: boolean,
   rounded?: boolean,
   unstyled?: boolean,
 ) => {
@@ -37,6 +39,7 @@ const classes = (
       colors[color ?? 'lightGray'],
     ],
     'outline-none',
+    fullWidth && 'w-full',
     isFocusVisible && 'focus:ring-2',
   );
 };
@@ -58,6 +61,7 @@ function Button<C extends ElementType = 'button'>({
   as,
   className,
   color,
+  fullWidth,
   rounded,
   unstyled,
   ...props
@@ -69,7 +73,7 @@ function Button<C extends ElementType = 'button'>({
   const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
   return (
     <Component
-      className={clsx(classes(isFocusVisible, isPressed, color, rounded, unstyled), className)}
+      className={clsx(classes(isFocusVisible, isPressed, color, fullWidth, rounded, unstyled), className)}
       {...finalProps}
     />
   );
