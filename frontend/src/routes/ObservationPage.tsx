@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { Link } from '@tanstack/react-location';
-// import { useMatch } from '@tanstack/react-location';
+import { Link, useMatch } from '@tanstack/react-location';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
@@ -16,9 +15,9 @@ const visibilityLevels = {
 };
 
 export default function ObservationPage() {
-  // const {
-  //   params: { id },
-  // } = useMatch<{ Params: { id: string } }>();
+  const {
+    params: { id },
+  } = useMatch<{ Params: { id: string } }>();
   const observation = {
     author: {
       avatarURL: null,
@@ -41,7 +40,13 @@ export default function ObservationPage() {
         <div className="h-[50vh] relative">
           {observation.hasExpired && <Chip className="absolute left-5 top-5">Expirée</Chip>}
           {isAuthor && (
-            <Button className="absolute h-14 md:h-16 right-2 top-4 w-14 md:w-16" color="white" rounded>
+            <Button
+              as={Link}
+              className="absolute h-14 md:h-16 right-2 top-4 w-14 md:w-16"
+              color="white"
+              rounded
+              to={`/observations/${id}/edit`}
+            >
               <FontAwesomeIcon icon={faPen} size="xl" />
             </Button>
           )}
@@ -63,7 +68,12 @@ export default function ObservationPage() {
                 {dayjs(observation.sentAt).format('le DD/MM/YYYY à HH:mm')}
               </Text>
             </div>
-            <Button as={Link} className="gap-2 md:gap-4 mr-4 py-1.5" color="transparent" to="/users/a">
+            <Button
+              as={Link}
+              className="gap-2 md:gap-4 mr-4 py-1.5"
+              color="transparent"
+              to={`/users/${observation.author.username}`}
+            >
               <img className="rounded-full w-10 md:w-12" src={observation.author.avatarURL ?? userIcon} />
               <Text as="span" color="white">
                 {observation.author.username}
