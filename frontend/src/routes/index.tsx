@@ -9,7 +9,7 @@ const routes: Route[] = [
   { path: '/', element: HomePage },
   { path: '/login', element: LoginPage },
   { path: '/register', element: RegistrationPage },
-  { path: '/observation/:id', element: ObservationPage },
+  { path: '/observations/:id', element: ObservationPage },
 ];
 
 export default routes;
