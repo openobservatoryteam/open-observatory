@@ -33,15 +33,18 @@ export default function ObservationPage() {
     visibility: 'NAKED_EYE',
     votes: 200,
   } as const;
+  const isAuthor = observation.author.username === 'EikjosTV';
   const [myVote, submitVote] = useState<boolean | null>(null);
   return (
     <div className="md:flex">
       <div className="w-full">
         <div className="h-[50vh] relative">
           {observation.hasExpired && <Chip className="absolute left-5 top-5">Expirée</Chip>}
-          <Button className="absolute h-14 md:h-16 right-2 top-4 w-14 md:w-16" color="white" rounded>
-            <FontAwesomeIcon icon={faPen} size="xl" />
-          </Button>
+          {isAuthor && (
+            <Button className="absolute h-14 md:h-16 right-2 top-4 w-14 md:w-16" color="white" rounded>
+              <FontAwesomeIcon icon={faPen} size="xl" />
+            </Button>
+          )}
           <img src={celestialBodyImage} alt="Objet céleste de l'observation" className="h-full object-cover w-full" />
           <UpDownVote
             className="absolute bottom-1 right-2"
