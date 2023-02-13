@@ -3,21 +3,21 @@ import { Circle, useMap, CircleMarker, Tooltip } from 'react-leaflet';
 
 import { usePosition } from '@/hooks';
 
-export function CurrentPosition({ centeredOnUser = true }: { centeredOnUser: boolean }) {
-  const [hasCentered, setCentered] = useState(false);
+type CurrentPositionProps = { noFly?: boolean; withoutNotificationCircle?: boolean };
+
+export function CurrentPosition({ noFly = false, withoutNotificationCircle = false }: CurrentPositionProps) {
+  const [hasCentered, setCentered] = useState(noFly);
   const map = useMap();
   const position = usePosition();
   useEffect(() => {
     if (position !== null && !hasCentered) {
-      if (centeredOnUser) {
-        map.flyTo(position, 12);
-        setCentered(true);
-      }
+      map.flyTo(position, 12);
+      setCentered(true);
     }
   }, [position]);
   return position ? (
     <>
-      <Circle center={position} radius={25000} color="#444444" />
+      {!withoutNotificationCircle && <Circle center={position} radius={25000} color="#444444" />}
       <CircleMarker center={position} color="#990000" fill fillColor="#990000" fillOpacity={1} radius={2}>
         <Tooltip direction="top">Vous êtes ici</Tooltip>
       </CircleMarker>

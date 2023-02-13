@@ -5,6 +5,7 @@ import iconUser from '@/assets/png/icon-user.png';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faPen } from '@fortawesome/free-solid-svg-icons';
+import { Marker, Popup } from 'react-leaflet';
 
 export default function ObservationPage(): JSX.Element {
   const {
@@ -18,7 +19,7 @@ export default function ObservationPage(): JSX.Element {
         <div className={clsx('w-full h-1/3 relative', 'md:h-[50vh]')}>
           {expired && (
             <Text as="span" color="black" centered className="absolute top-5 left-5 py-2 px-5 rounded-[45px] bg-white">
-              expiré
+              Expirée
             </Text>
           )}
           {isUser && (
@@ -32,15 +33,15 @@ export default function ObservationPage(): JSX.Element {
           <img src={celest} alt="image de l'observation" className="h-full w-full" />
           <div className={clsx('absolute bottom-1 right-2  flex-col justify-around items-center')}>
             <div className="w-10 flex justify-center items-center">
-              <Button unstyled={true}>
+              <Button unstyled>
                 <FontAwesomeIcon icon={faArrowUp} size="2xl" color="white" />
               </Button>
             </div>
-            <Text as="p" color="white" centered={true} className={clsx('w-10 py-1')}>
+            <Text as="p" color="white" centered className={clsx('w-10 py-1')}>
               10
             </Text>
             <div className="w-10 flex justify-center items-center">
-              <Button unstyled={true}>
+              <Button unstyled>
                 <FontAwesomeIcon icon={faArrowDown} size="2xl" color="grey" />
               </Button>
             </div>
@@ -68,7 +69,7 @@ export default function ObservationPage(): JSX.Element {
               Visibilité :
             </Text>
             <Text as="span" color="white">
-              À l'oeil nu
+              À l&apos;oeil nu
             </Text>
           </div>
           <div className="md:mt-5 px-4 mt-3">
@@ -84,7 +85,7 @@ export default function ObservationPage(): JSX.Element {
               Description :
             </Text>
             <Text as="span" color="white">
-              L'observation est somptueuse.
+              L&apos;observation est somptueuse.
             </Text>
           </div>
         </div>
@@ -92,8 +93,13 @@ export default function ObservationPage(): JSX.Element {
       <Map
         className="h-[calc(100vh-20rem)] md:h-[100vh] w-full"
         center={[49.2332, 1.813]}
-        marker={{ coords: [49.2332, 1.813], description: "Nom de l'observation" }}
-      />
+        noFly
+        withoutNotificationCircle
+      >
+        <Marker position={[49.2332, 1.813]}>
+          <Popup>Nom de l&apos;observation</Popup>
+        </Marker>
+      </Map>
     </div>
   );
 }
