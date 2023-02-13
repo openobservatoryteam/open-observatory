@@ -1,18 +1,20 @@
-import { Button, Map, Text } from '@/components';
-import { useMatch } from '@tanstack/react-location';
-import celest from '@/assets/png/celeste.png';
-import iconUser from '@/assets/png/icon-user.png';
-import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faArrowUp, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { useMatch } from '@tanstack/react-location';
+import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
-export default function ObservationPage(): JSX.Element {
+import celest from '@/assets/png/celeste.png';
+import iconUser from '@/assets/png/icon-user.png';
+import { Button, Map, Text, UpDownVote } from '@/components';
+
+export default function ObservationPage() {
   const {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
   const expired = true;
   const isUser = true;
+  const [currentVote, setCurrentVote] = useState<boolean | null>(null);
   return (
     <div className="md:flex md:w-full">
       <div className="w-full">
@@ -30,22 +32,13 @@ export default function ObservationPage(): JSX.Element {
               <FontAwesomeIcon icon={faPen} size="xl" />
             </Button>
           )}
-          <img src={celest} alt="image de l'observation" className="h-full w-full" />
-          <div className="absolute bottom-1 flex-col justify-around items-center right-2">
-            <div className="flex justify-center items-center w-10">
-              <Button unstyled>
-                <FontAwesomeIcon icon={faArrowUp} size="2xl" color="white" />
-              </Button>
-            </div>
-            <Text as="p" centered className="py-1 w-10" color="white">
-              10
-            </Text>
-            <div className="flex justify-center items-center w-10">
-              <Button unstyled>
-                <FontAwesomeIcon icon={faArrowDown} size="2xl" color="grey" />
-              </Button>
-            </div>
-          </div>
+          <img src={celest} alt="image de l'observation" className="h-full object-cover w-full" />
+          <UpDownVote
+            className="absolute bottom-1 right-2"
+            currentVotes={10}
+            onVote={(v) => setCurrentVote(v)}
+            vote={currentVote}
+          />
         </div>
         <div className="bg-slate-500 h-1/4 pb-5 md:h-[50vh] w-full">
           <div className="flex justify-between pl-3 pt-4">

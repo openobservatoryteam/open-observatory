@@ -16,7 +16,7 @@ const classes = ({ bold, centered, className, color }: TextProps) =>
     className,
   );
 
-function Text<C extends ElementType>({ as, ...props }: TextProps<C>) {
+function Text<C extends ElementType = 'p'>({ as, ...props }: TextProps<C>) {
   const Component = as ?? 'p';
   return <Component className={classes(props)} {...removeKeys(props, excludedProps)} />;
 }
