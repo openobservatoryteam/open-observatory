@@ -16,19 +16,16 @@ export default function ObservationPage() {
   const isUser = true;
   const [currentVote, setCurrentVote] = useState<boolean | null>(null);
   return (
-    <div className="md:flex md:w-full">
+    <div className="md:flex">
       <div className="w-full">
-        <div className="h-1/3 md:h-[50vh] relative w-full">
+        <div className="h-[50vh] relative">
           {expired && (
-            <Text as="span" color="black" centered className="absolute bg-white left-5 py-2 px-5 rounded-[45px] top-5">
+            <Text as="span" centered className="absolute bg-white left-5 py-2 px-5 rounded-[45px] top-5" color="black">
               Expirée
             </Text>
           )}
           {isUser && (
-            <Button
-              className="absolute bg-white flex h-14 md:h-16 justify-center items-center right-2 rounded-[45px] top-4 w-14 md:w-16"
-              unstyled
-            >
+            <Button className="absolute h-14 md:h-16 right-2 top-4 w-14 md:w-16" color="white" rounded>
               <FontAwesomeIcon icon={faPen} size="xl" />
             </Button>
           )}
