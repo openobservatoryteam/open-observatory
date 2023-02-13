@@ -29,7 +29,7 @@ const classes = (
   };
   return clsx(
     !unstyled && [
-      'flex items-center justify-center px-8 py-2.5 text-center',
+      'flex items-center justify-center px-8 py-2.5 select-none text-center',
       'disabled:cursor-not-allowed disabled:brightness-75',
       rounded ? 'rounded-full' : 'rounded-3xl',
       isPressed && 'brightness-90',
