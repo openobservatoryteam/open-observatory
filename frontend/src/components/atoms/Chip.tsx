@@ -9,7 +9,7 @@ const classes = (bold: boolean, color: ChipColor) => {
     red: 'bg-red-600 text-white',
     white: 'bg-white text-black',
   };
-  return clsx('px-5 py-2 rounded-full select-none', bold && 'font-bold', colors[color]);
+  return clsx('hover:cursor-default px-5 py-2 rounded-full select-none', bold && 'font-bold', colors[color]);
 };
 
 const Chip = ({ bold = false, children, className, color = 'white', ...props }: ChipProps) => {
