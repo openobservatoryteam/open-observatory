@@ -1,14 +1,16 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.CelestialBodyDto;
+import fr.openobservatory.backend.models.SearchResults;
 import fr.openobservatory.backend.services.CelestialBodyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public class CelestialBodyController {
     }
 
     @GetMapping
-    public ResponseEntity<SearchResults<CelestialBodyDto>> searchCelestialBodies(
+    public ResponseEntity<SearchResults<CelestialBodyDto>> getCelestialBodies(
             @RequestParam(required = false, defaultValue = "10") Integer limit,
             @RequestParam(required = false, defaultValue = "0") Integer page) {
 
@@ -34,13 +36,14 @@ public class CelestialBodyController {
         if (page < 0) {
             return ResponseEntity.badRequest().build();
         }
-        SearchResults<CelestialBody> searchResults = celestialBodyService.searchCelestialBodies(limit, page);
-        SearchResults<CelestialBodyDto> dtoResults = searchResults.map(CelestialBodyDto::fromEntity);
-        return ResponseEntity.ok(dtoResults);
+        Pageable pageable = PageRequest.of(page, limit);
+        SearchResults<CelestialBodyDto> results = celestialBodyService.getCelestialBodies(pageable);
+        return ResponseEntity.ok(results);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CelestialBodyDto> getCelestialBody(@PathVariable UUID id) {
+    public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable UUID id) {
+        // TODO
         Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(id);
         if (celestialBody.isPresent()) {
             return new ResponseEntity<>(celestialBody.get(), HttpStatus.OK);
@@ -52,6 +55,7 @@ public class CelestialBodyController {
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> createCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
+        // TODO
         CelestialBodyDto createdCelestialBody = celestialBodyService.addCelestialBody(celestialBodyDto);
         return new ResponseEntity<>(createdCelestialBody, HttpStatus.CREATED);
     }
@@ -59,6 +63,7 @@ public class CelestialBodyController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> updateCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
+        // TODO
         CelestialBodyDto updatedCelestialBody = celestialBodyService.updateCelestialBody(celestialBodyDto);
         return new ResponseEntity<>(updatedCelestialBody, HttpStatus.OK);
     }
@@ -66,6 +71,7 @@ public class CelestialBodyController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<Void> deleteCelestialBody(@PathVariable UUID id) {
+        // TODO
         celestialBodyService.deleteCelestialBody(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
