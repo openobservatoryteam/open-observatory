@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { useMatch } from '@tanstack/react-location';
+// import { useMatch } from '@tanstack/react-location';
 import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
@@ -9,9 +9,9 @@ import iconUser from '@/assets/png/icon-user.png';
 import { Button, Map, Text, UpDownVote } from '@/components';
 
 export default function ObservationPage() {
-  const {
-    params: { id },
-  } = useMatch<{ Params: { id: string } }>();
+  // const {
+  //   params: { id },
+  // } = useMatch<{ Params: { id: string } }>();
   const expired = true;
   const isUser = true;
   const [currentVote, setCurrentVote] = useState<boolean | null>(null);
