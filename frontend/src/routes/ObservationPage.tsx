@@ -63,7 +63,7 @@ export default function ObservationPage() {
                 {dayjs(observation.sentAt).format('le DD/MM/YYYY à HH:mm')}
               </Text>
             </div>
-            <Button as={Link} className="gap-2 md:gap-4 mr-4 md:mr-10 py-1.5" color="transparent" to="/users/a">
+            <Button as={Link} className="gap-2 md:gap-4 mr-4 py-1.5" color="transparent" to="/users/a">
               <img className="rounded-full w-10 md:w-12" src={observation.author.avatarURL ?? userIcon} />
               <Text as="span" color="white">
                 {observation.author.username}
