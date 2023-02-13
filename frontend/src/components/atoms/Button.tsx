@@ -39,7 +39,7 @@ const excludedAriaHandlers = [
   'onPressUp',
 ] as const;
 
-function Button<C extends ElementType>({ as, className, color, unstyled, ...props }: ButtonProps<C>) {
+function Button<C extends ElementType = 'button'>({ as, className, color, unstyled, ...props }: ButtonProps<C>) {
   const Component = as ?? 'button';
   const ref = useRef(null);
   const { buttonProps, isPressed } = useButton(props, ref);
