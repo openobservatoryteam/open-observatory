@@ -5,20 +5,24 @@ import { MapContainer, MapContainerProps, TileLayer } from 'react-leaflet';
 import { CurrentPosition } from '@/components';
 import { removeKeys } from '@/utils';
 
-type MapProps = MapContainerProps;
+type MapProps = {
+  noFly?: boolean;
+  withoutNotificationCircle?: boolean;
+} & MapContainerProps;
 
-export function Map(props: MapProps) {
+export function Map({ center, children, noFly, withoutNotificationCircle, ...props }: MapProps) {
   return (
     <>
       <Style type="text/css">{leafletStylesheet}</Style>
       <MapContainer
         attributionControl={false}
-        center={[48.866667, 2.333333]}
+        center={center ?? [48.866667, 2.333333]}
         zoom={10}
-        {...removeKeys(props, ['attributionControl', 'center', 'zoom'])}
+        {...removeKeys(props, ['attributionControl', 'zoom'])}
       >
         <TileLayer url=" https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" />
-        <CurrentPosition />
+        <CurrentPosition noFly={noFly} withoutNotificationCircle={withoutNotificationCircle} />
+        {children}
       </MapContainer>
     </>
   );
