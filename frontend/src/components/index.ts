@@ -4,5 +4,8 @@ export * from './atoms/Text';
 export * from './atoms/TextInput';
 export * from './atoms/Title';
 export * from './molecules/CurrentPosition';
+export * from './molecules/Pagination';
 export * from './molecules/UpDownVote';
+export * from './templates/List';
 export * from './templates/Map';
+
