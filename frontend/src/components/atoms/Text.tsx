@@ -2,10 +2,11 @@ import clsx from 'clsx';
 import { ComponentPropsWithoutRef, ElementType } from 'react';
 
 import { removeKeys } from '@/utils';
+import { AsProps } from '@/types';
 
 type TextColor = 'black' | 'white';
-type TextProps<C extends ElementType = 'p'> =
-  | ComponentPropsWithoutRef<C> & { as?: C; bold?: boolean; centered?: boolean; className?: string; color?: TextColor };
+type TextProps<C extends ElementType = 'p'> = AsProps<C> &
+  ComponentPropsWithoutRef<C> & { bold?: boolean; centered?: boolean; className?: string; color?: TextColor };
 
 const excludedProps = ['bold', 'centered', 'className', 'color'] as const;
 const classes = ({ bold, centered, className, color }: TextProps) => {

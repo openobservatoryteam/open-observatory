@@ -1,13 +1,14 @@
 import clsx from 'clsx';
-import { ComponentPropsWithoutRef, ElementType, ReactNode, useRef } from 'react';
+import { ComponentPropsWithoutRef, ElementType, forwardRef, ReactNode, useRef } from 'react';
 import { AriaButtonProps, useButton, useFocusVisible } from 'react-aria';
 
+import { AsProps, PolymorphicRef } from '@/types';
 import { removeKeys } from '@/utils';
 
 type ButtonColor = 'lightGray' | 'darkGray' | 'red' | 'transparent' | 'white';
-type ButtonProps<C extends ElementType> = AriaButtonProps<C> &
+type ButtonProps<C extends ElementType> = AsProps<C> &
+  AriaButtonProps<C> &
   ComponentPropsWithoutRef<C> & {
-    as?: C;
     children: ReactNode;
     color?: ButtonColor;
     fullWidth?: boolean;
@@ -57,17 +58,12 @@ const excludedAriaHandlers = [
   'onPressUp',
 ] as const;
 
-function Button<C extends ElementType = 'button'>({
-  as,
-  className,
-  color,
-  fullWidth,
-  rounded,
-  unstyled,
-  ...props
-}: ButtonProps<C>) {
+function Button<C extends ElementType = 'button'>(
+  { as, className, color, fullWidth, rounded, unstyled, ...props }: ButtonProps<C>,
+  ref?: PolymorphicRef<C>,
+) {
+  ref ??= useRef(null);
   const Component = as ?? 'button';
-  const ref = useRef(null);
   const { buttonProps, isPressed } = useButton(props, ref);
   const { isFocusVisible } = useFocusVisible();
   const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
@@ -79,4 +75,5 @@ function Button<C extends ElementType = 'button'>({
   );
 }
 
-export { Button };
+const _Button = forwardRef(Button);
+export { _Button as Button };
