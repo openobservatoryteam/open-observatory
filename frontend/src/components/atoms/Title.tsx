@@ -1,9 +1,11 @@
-import { removeKeys } from '@/utils';
 import clsx from 'clsx';
 import { ComponentPropsWithoutRef } from 'react';
 
+import { AsProps } from '@/types';
+import { removeKeys } from '@/utils';
+
 type HeadingElement = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-type TitleProps = { as?: HeadingElement; centered?: boolean } & ComponentPropsWithoutRef<HeadingElement>;
+type TitleProps = AsProps<HeadingElement> & ComponentPropsWithoutRef<HeadingElement> & { centered?: boolean };
 
 const classes = (as: HeadingElement, { centered, className }: Omit<TitleProps, 'as'>) => {
   const headingStyles: Record<HeadingElement, string> = {
