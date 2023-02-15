@@ -23,17 +23,25 @@ function CelestialBodyAdminPage() {
         </Text>
         <ul>
           <li>
-            <Button as={Link} className="mb-12" color="white" to="/admin/observations">
+            <Button
+              as={Link}
+              className="bg-transparent mb-12 py-4 text-white text-xl hover:bg-white hover:opacity-80 hover:text-black"
+              to="/admin/observations"
+            >
               Observations
             </Button>
           </li>
           <li>
-            <Button as={Link} className="mb-12" color="white" to="/admin/celestial-bodies">
+            <Button as={Link} className="mb-12 py-4 text-xl" color="white" to="/admin/celestial-bodies">
               Objets célestes
             </Button>
           </li>
           <li>
-            <Button as={Link} color="white" to="/admin/users">
+            <Button
+              as={Link}
+              className="bg-transparent mb-12 py-4 text-white text-xl hover:bg-white hover:opacity-80 hover:text-black"
+              to="/admin/users"
+            >
               Utilisateurs
             </Button>
           </li>
