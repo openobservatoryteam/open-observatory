@@ -44,7 +44,7 @@ public class CelestialBodyService {
     }
 
     public CelestialBodyDto addCelestialBody(CelestialBodyDto celestialBodyDto) {
-        // TODO
+        // TODO Convertire de dto à model ?
         return celestialBodyRepository.save(celestialBodyDto);
     }
 

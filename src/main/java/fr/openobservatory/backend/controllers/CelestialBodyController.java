@@ -43,7 +43,6 @@ public class CelestialBodyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable UUID id) {
-        // TODO
         Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(id);
         if (celestialBody.isPresent()) {
             return new ResponseEntity<>(celestialBody.get(), HttpStatus.OK);
