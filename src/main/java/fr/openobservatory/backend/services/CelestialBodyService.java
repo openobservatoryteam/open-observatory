@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.CelestialBodyDto;
+import fr.openobservatory.backend.exceptions.ConflictException;
 import fr.openobservatory.backend.models.CelestialBody;
 import fr.openobservatory.backend.models.SearchResults;
 import fr.openobservatory.backend.repository.CelestialBodyRepository;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class CelestialBodyService {
     private final CelestialBodyRepository celestialBodyRepository;
     private final ModelMapper modelMapper;
+    .;
 
     public CelestialBodyService(CelestialBodyRepository celestialBodyRepository) {
         this.celestialBodyRepository = celestialBodyRepository;
@@ -44,8 +46,18 @@ public class CelestialBodyService {
     }
 
     public CelestialBodyDto addCelestialBody(CelestialBodyDto celestialBodyDto) {
-        // TODO Convertire de dto à model ?
-        return celestialBodyRepository.save(celestialBodyDto);
+        if (celestialBodyRepository.existsCelestialBodyByName(celestialBodyDto.getName())) {
+            throw new ConflictException("Celestial body's name already in use.");
+        }
+
+        CelestialBody celestialBody = new CelestialBody();
+        celestialBody.setName(celestialBodyDto.getName());
+        celestialBody.setImageURL(celestialBodyDto.getImageURL());
+        celestialBody.setValidityTime(celestialBodyDto.getValidityTime());
+
+        celestialBody = celestialBodyRepository.save(celestialBody);
+
+        return modelMapper.map(celestialBody, celestialBodyDto.getClass());
     }
 
     public CelestialBodyDto updateCelestialBody(CelestialBodyDto celestialBodyDto) {

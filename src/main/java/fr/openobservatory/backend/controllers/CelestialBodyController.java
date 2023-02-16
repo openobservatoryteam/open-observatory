@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.CelestialBodyDto;
+import fr.openobservatory.backend.exceptions.ConflictException;
 import fr.openobservatory.backend.models.SearchResults;
 import fr.openobservatory.backend.services.CelestialBodyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class CelestialBodyController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<SearchResults<CelestialBodyDto>> getCelestialBodies(
             @RequestParam(required = false, defaultValue = "10") Integer limit,
             @RequestParam(required = false, defaultValue = "0") Integer page) {
@@ -44,18 +46,23 @@ public class CelestialBodyController {
     @GetMapping("/{id}")
     public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable UUID id) {
         Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(id);
-        if (celestialBody.isPresent()) {
-            return new ResponseEntity<>(celestialBody.get(), HttpStatus.OK);
-        } else {
+        if (!celestialBody.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(celestialBody.get(), HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> createCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
-        // TODO
-        CelestialBodyDto createdCelestialBody = celestialBodyService.addCelestialBody(celestialBodyDto);
+        // TODO 400 Bad Request
+        CelestialBodyDto createdCelestialBody;
+        try {
+            createdCelestialBody = celestialBodyService.addCelestialBody(celestialBodyDto);
+        } catch (ConflictException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         return new ResponseEntity<>(createdCelestialBody, HttpStatus.CREATED);
     }
 
