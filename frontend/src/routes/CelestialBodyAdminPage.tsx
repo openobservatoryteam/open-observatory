@@ -5,6 +5,7 @@ import { useOverlayTriggerState } from 'react-stately';
 
 import celestialBodyImage from '@/assets/png/celeste.png';
 import { Button, List, Text, Title, Modal, Dialog } from '@/components';
+import { Logo } from '@/assets';
 
 const fake = [
   { id: 1, iconURL: celestialBodyImage, name: 'Galaxie Messier', validityTime: 180 },
@@ -20,7 +21,10 @@ function CelestialBodyAdminPage() {
 
   return (
     <div className="flex">
-      <aside className="bg-[#333C47] min-h-screen px-3 md:px-12">
+      <aside className="bg-[#333C47] min-h-screen pt-4 px-3 md:px-12">
+        <Link title="Accueil Open Observatory" to="/">
+          <Logo />
+        </Link>
         <Text centered className="mb-20 mt-4">
           ADMINISTRATEUR
         </Text>
