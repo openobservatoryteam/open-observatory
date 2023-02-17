@@ -6,7 +6,7 @@ export * from './atoms/Title';
 export * from './molecules/CurrentPosition';
 export * from './molecules/Pagination';
 export * from './molecules/UpDownVote';
+export * from './templates/Dialog';
 export * from './templates/List';
 export * from './templates/Map';
-export * from './templates/Dialog';
 export * from './templates/Modal';
