@@ -21,7 +21,7 @@ const classes = (as: HeadingElement, { centered, className }: Omit<TitleProps, '
 
 function Title({ as = 'h1', ...props }: TitleProps) {
   const Component = as;
-  return <Component className={classes(as, props)} {...removeKeys(props, ['className'])} />;
+  return <Component className={classes(as, props)} {...removeKeys(props, ['centered', 'className'])} />;
 }
 
 export { Title };

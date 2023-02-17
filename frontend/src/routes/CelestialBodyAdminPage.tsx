@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@tanstack/react-location';
 
 import celestialBodyImage from '@/assets/png/celeste.png';
-import { Button, List, Text, Title } from '@/components';
+import { Button, List, Text, Title, Modal, Dialog } from '@/components';
+import { useOverlayTriggerState } from 'react-stately';
+import { useOverlayTrigger } from 'react-aria';
 
 const fake = [
   { iconURL: celestialBodyImage, name: 'Galaxie Messier', validityTime: 180 },
@@ -15,6 +17,8 @@ const fake = [
 ] as const;
 
 function CelestialBodyAdminPage() {
+  const state = useOverlayTriggerState({});
+
   return (
     <div className="flex">
       <aside className="bg-[#333C47] min-h-screen px-3 md:px-12">
@@ -52,10 +56,20 @@ function CelestialBodyAdminPage() {
           Objets célestes
         </Title>
         <div className="flex justify-end mb-8 mt-2 mx-4 md:mx-16">
-          <Button className="p-4" color="darkGray" rounded>
+          <Button className="p-4" color="darkGray" rounded onPress={state.open}>
             <FontAwesomeIcon icon={faPlus} size="lg" />
           </Button>
         </div>
+        <Modal state={state}>
+          <Dialog title="Création d'un objet céleste">
+            <Text centered as="h2">
+              Hello World
+            </Text>
+            <Button color="darkGray" rounded onPress={state.close}>
+              Quitter
+            </Button>
+          </Dialog>
+        </Modal>
         <List
           className="mx-4 md:mx-16"
           data={fake}
@@ -69,7 +83,7 @@ function CelestialBodyAdminPage() {
               <img className="rounded-t-2xl" src={e.iconURL} alt={`Illustration de ${e.name}`} />
               <Text color="black">{e.name}</Text>
               <Text className="mb-3" color="black">
-                Validité : {e.validityTime}
+                Validité : {e.validityTime}h
               </Text>
             </Button>
           )}
