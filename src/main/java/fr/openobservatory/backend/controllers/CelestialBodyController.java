@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,7 +57,20 @@ public class CelestialBodyController {
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> createCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
-        // TODO 400 Bad Request
+        // Checks
+        if (celestialBodyDto.getName().length() < 4 || celestialBodyDto.getName().length() > 64) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            new URL(celestialBodyDto.getImageURL());
+        } catch (MalformedURLException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (celestialBodyDto.getValidityTime() < 1 || celestialBodyDto.getValidityTime() > 12) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // Name conflict
         CelestialBodyDto createdCelestialBody;
         try {
             createdCelestialBody = celestialBodyService.addCelestialBody(celestialBodyDto);

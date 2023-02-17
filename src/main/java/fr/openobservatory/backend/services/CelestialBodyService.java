@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class CelestialBodyService {
     private final CelestialBodyRepository celestialBodyRepository;
     private final ModelMapper modelMapper;
-    .;
 
     public CelestialBodyService(CelestialBodyRepository celestialBodyRepository) {
         this.celestialBodyRepository = celestialBodyRepository;
