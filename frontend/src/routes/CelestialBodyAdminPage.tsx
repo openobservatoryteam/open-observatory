@@ -83,7 +83,7 @@ function CelestialBodyAdminPage() {
           <Dialog title="Création d'un objet céleste">
             <form className="flex items-center flex-col">
             {image && 
-              <div className='relative w-96 h-52 flex justify-center items-center rounded-2xl'>
+              <div className='relative w-3/4 h-52 flex justify-center items-center rounded-2xl'>
                 <img src={image} className="rounded-2xl" />
                 <label className="absolute bottom-0 right-5 cursor-pointer p-3 bg-[#D9D9D9]  flex justify-center items-center rounded-full">
                   <input type="file" className='hidden' onChange={(evt) => handleChange(evt)} />
@@ -92,27 +92,29 @@ function CelestialBodyAdminPage() {
               </div>
             }
             {!image && 
-              <label className="cursor-pointer py-10 bg-[#D9D9D9] w-96 h-52 flex justify-center items-center rounded-2xl">
+              <label className="cursor-pointer py-10 bg-[#D9D9D9] w-3/4 h-60 flex justify-center items-center rounded-2xl">
               <input type="file" className='hidden' onChange={(evt) => handleChange(evt)} />
                <FontAwesomeIcon icon={faCamera} size="5x" color='black'/>
               </label>
             }
-            <div className="mt-8 w-full flex items-center justify-center">
+            <div className="mt-8 w-full flex items-center justify-evenly">
               <Text as='span' className='mr-5'>
                 Nom
               </Text>
-              <TextInput name="name" className='w-1/2' placeholder="Nom de l'objet céleste"/>
+              <TextInput name="name" className='w-3/4' placeholder="Nom de l'objet céleste"/>
             </div>
-            <div className="mt-8 w-full flex items-center justify-center">
+            <div className="mt-8 w-full flex items-center justify-evenly">
               <Text as='span' className='mr-5'>
                 Validité
               </Text>
-              <Slider minValue={1} maxValue={10} withMarks className='w-1/3' step={1} value={value} onChange={(val) =>  setValue(val)}/>
-              <Text as='span' className='ml-5'>
-                {value} {value > 1 ? ' heures' : ' heure'}
-              </Text>
+              <div className='w-3/4 flex items-center'>
+                <Slider minValue={1} maxValue={10} withMarks step={1} value={value} onChange={(val) =>  setValue(val)} className='w-full'/>
+                <Text as='span' className='ml-5 w-1/5'>
+                  {value} {value > 1 ? ' heures' : ' heure'}
+                </Text>
+              </div>
             </div>
-            <Button rounded onPress={state.close} className='p-2 mt-10 flex justify-between w-1/4'>
+            <Button rounded onPress={state.close} className='px-4 py-2 mt-10 flex justify-between w-1/4'>
               Enregistrer
               <FontAwesomeIcon icon={faSave} size="1x" color='black'/>
             </Button>
