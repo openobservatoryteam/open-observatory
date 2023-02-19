@@ -51,7 +51,7 @@ public class CelestialBodyService {
 
         CelestialBody celestialBody = new CelestialBody();
         celestialBody.setName(celestialBodyDto.getName());
-        celestialBody.setImageURL(celestialBodyDto.getImageURL());
+        celestialBody.setImage(celestialBodyDto.getImage());
         celestialBody.setValidityTime(celestialBodyDto.getValidityTime());
 
         celestialBody = celestialBodyRepository.save(celestialBody);
@@ -59,7 +59,7 @@ public class CelestialBodyService {
         return modelMapper.map(celestialBody, celestialBodyDto.getClass());
     }
 
-    public CelestialBodyDto updateCelestialBody(CelestialBodyDto celestialBodyDto) {
+    public CelestialBodyDto updateCelestialBody(CelestialBodyDto celestialBodyDto, UUID id) {
         // TODO
         return celestialBodyRepository.save(celestialBodyDto);
     }

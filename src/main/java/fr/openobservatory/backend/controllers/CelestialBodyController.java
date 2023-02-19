@@ -47,6 +47,7 @@ public class CelestialBodyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable UUID id) {
+        // TODO is id valid
         Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(id);
         if (!celestialBody.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,11 +60,6 @@ public class CelestialBodyController {
     public ResponseEntity<CelestialBodyDto> createCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
         // Checks
         if (celestialBodyDto.getName().length() < 4 || celestialBodyDto.getName().length() > 64) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            new URL(celestialBodyDto.getImageURL());
-        } catch (MalformedURLException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (celestialBodyDto.getValidityTime() < 1 || celestialBodyDto.getValidityTime() > 12) {
@@ -83,9 +79,10 @@ public class CelestialBodyController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<CelestialBodyDto> updateCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
+    public ResponseEntity<CelestialBodyDto> updateCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto,
+                                                                @PathVariable UUID id) {
         // TODO
-        CelestialBodyDto updatedCelestialBody = celestialBodyService.updateCelestialBody(celestialBodyDto);
+        CelestialBodyDto updatedCelestialBody = celestialBodyService.updateCelestialBody(celestialBodyDto, id);
         return new ResponseEntity<>(updatedCelestialBody, HttpStatus.OK);
     }
 

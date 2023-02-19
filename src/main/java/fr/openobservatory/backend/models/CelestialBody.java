@@ -22,8 +22,9 @@ public class CelestialBody {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Lob
     @Column(name = "image", nullable = false)
-    private String imageURL;
+    private String image;
 
     @Column(name = "validity_time", nullable = false)
     private Integer validityTime;

@@ -12,7 +12,7 @@ public class CelestialBodyDto {
     @Setter(AccessLevel.NONE)
     private UUID id;
     private String name;
-    private String imageURL;
+    private String image;
     private Integer validityTime;
 
 }
