@@ -42,7 +42,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(request -> request
-                        .anyRequest().permitAll()
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/login").anonymous()
+                        .requestMatchers("/users/register").anonymous()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtSecurityFilter(http.getSharedObject(AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class)
                 .csrf(CsrfConfigurer::disable)
