@@ -1,12 +1,15 @@
+import clsx from 'clsx';
 import { useRef } from 'react';
 import { AriaDialogProps, useDialog } from 'react-aria';
+import { Title } from '../atoms/Title';
 
 type DialogProps = AriaDialogProps & {
   children: React.ReactNode;
   title: string;
+  className?: string;
 };
 
-function Dialog({ children, title, ...props }: DialogProps) {
+function Dialog({ children, title, className, ...props }: DialogProps) {
   const ref = useRef(null);
   const { dialogProps, titleProps } = useDialog(
     {
@@ -16,10 +19,10 @@ function Dialog({ children, title, ...props }: DialogProps) {
     ref,
   );
   return (
-    <div {...dialogProps} ref={ref} style={{ padding: 30 }}>
-      <h3 {...titleProps} style={{ marginTop: 0 }}>
+    <div {...dialogProps} ref={ref} style={{ padding: 30 }} className={clsx('text-white bg-[#333C47] rounded-2xl w-1/2', className)}>
+      <Title as='h2' {...titleProps} style={{ marginTop: 0, paddingBottom: 30 }} centered>
         {title}
-      </h3>
+      </Title>
       {children}
     </div>
   );

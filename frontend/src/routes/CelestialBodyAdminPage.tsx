@@ -2,10 +2,12 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@tanstack/react-location';
 import { useOverlayTriggerState } from 'react-stately';
+import { faCamera, faSave } from '@fortawesome/free-solid-svg-icons';
 
 import celestialBodyImage from '@/assets/png/celeste.png';
-import { Button, List, Text, Title, Modal, Dialog } from '@/components';
+import { Button, List, Text, Title, Modal, Dialog, TextInput, Slider } from '@/components';
 import { Logo } from '@/assets';
+import { ChangeEvent, useState } from 'react';
 
 const fake = [
   { id: 1, iconURL: celestialBodyImage, name: 'Galaxie Messier', validityTime: 180 },
@@ -19,6 +21,20 @@ const fake = [
 function CelestialBodyAdminPage() {
   const state = useOverlayTriggerState({});
 
+  const [value, setValue] = useState(1);
+  const [image, setImage] = useState<any>();
+
+
+  const handleChange = (evt : ChangeEvent<HTMLInputElement>) => {
+    if (evt.target.files && evt.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target?.result)
+      }
+      reader.readAsDataURL(evt.target.files[0])
+    }
+  }
+ 
   return (
     <div className="flex">
       <aside className="bg-[#333C47] min-h-screen pt-4 px-3 md:px-12">
@@ -65,12 +81,39 @@ function CelestialBodyAdminPage() {
         </div>
         <Modal isDismissable state={state}>
           <Dialog title="Création d'un objet céleste">
-            <Text centered as="h2">
-              Hello World
-            </Text>
-            <Button color="darkGray" rounded onPress={state.close}>
-              Quitter
+            <form className="flex items-center flex-col">
+            {image && 
+              <div className='relative w-96 h-52 flex justify-center items-center rounded-2xl'>
+                <img src={image} className="rounded-2xl" />
+                <FontAwesomeIcon icon={faCamera} size="lg" color='black' className='rounded-full p-3 bg-[#D9D9D9] absolute bottom-0 right-5'/>
+              </div>
+            }
+            {!image && 
+              <label className="cursor-pointer py-10 bg-[#D9D9D9] w-96 h-52 flex justify-center items-center rounded-2xl">
+              <input type="file" className='hidden' onChange={(evt) => handleChange(evt)} />
+               <FontAwesomeIcon icon={faCamera} size="5x" color='black'/>
+              </label>
+            }
+            <div className="mt-8 w-full flex items-center justify-center">
+              <Text as='span' className='mr-5'>
+                Nom
+              </Text>
+              <TextInput name="name" className='w-1/2' placeholder="Nom de l'objet céleste"/>
+            </div>
+            <div className="mt-8 w-full flex items-center justify-center">
+              <Text as='span' className='mr-5'>
+                Validité
+              </Text>
+              <Slider minValue={1} maxValue={10} withMarks className='w-1/3' step={1} value={value} onChange={(val) =>  setValue(val)}/>
+              <Text as='span' className='ml-5'>
+                {value} {value > 1 ? ' heures' : ' heure'}
+              </Text>
+            </div>
+            <Button rounded onPress={state.close} className='p-2 mt-10 flex justify-between w-1/4'>
+              Enregistrer
+              <FontAwesomeIcon icon={faSave} size="1x" color='black'/>
             </Button>
+            </form>
           </Dialog>
         </Modal>
         <List
