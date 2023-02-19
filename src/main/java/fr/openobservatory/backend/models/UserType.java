@@ -3,7 +3,7 @@ package fr.openobservatory.backend.models;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum AccountType {
+public enum UserType {
     USER(true),
     ADMIN(false);
 

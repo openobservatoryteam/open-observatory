@@ -3,12 +3,15 @@ package fr.openobservatory.backend.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Data
 @Entity
-public class Account implements Comparable<Account> {
+@Getter
+@Setter
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue
@@ -21,7 +24,7 @@ public class Account implements Comparable<Account> {
     @Column(nullable = false)
     private String password;
 
-    private AccountType type;
+    private UserType type;
 
     private String avatarUrl;
 
@@ -32,7 +35,7 @@ public class Account implements Comparable<Account> {
     private Date created_at;
 
     @Override
-    public int compareTo(Account o) {
+    public int compareTo(User o) {
         return username.compareTo(o.username);
     }
 }

@@ -3,7 +3,7 @@ package fr.openobservatory.backend.dto;
 import lombok.Data;
 
 @Data
-public class AccountDto {
+public class UserDto {
 
     private String username;
 
