@@ -26,6 +26,7 @@ function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, 
   const numberFormatter = useNumberFormatter(formatOptions);
   const state = useSliderState({ numberFormatter, ...props });
   const { groupProps, labelProps, outputProps, trackProps } = useSlider(props, state, trackRef);
+  const marksCount = withMarks ? Math.floor((state.getThumbMaxValue(0) - state.getThumbMinValue(0)) / state.step) : 0;
   return (
     <div className={className} {...groupProps}>
       {props.label && (
@@ -54,9 +55,8 @@ function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, 
           }}
         ></div>
         <Thumb index={0} inputRef={inputRef} state={state} trackRef={trackRef} />
-        {withMarks &&
-          state.step > 1 &&
-          [...Array(state.step)].map((_, i) => <Mark key={`step_${i}/${state.step}`} nth={i + 1} total={state.step} />)}
+        {marksCount > 0 &&
+          [...Array(marksCount)].map((_, i) => <Mark key={`step_${i}/${marksCount}`} nth={i} total={marksCount} />)}
       </div>
     </div>
   );
@@ -98,7 +98,7 @@ function Mark({ nth, total }: MarkProps) {
     <div
       className="absolute bg-white h-1 w-1 rounded-full"
       style={{
-        left: `calc(${(nth / total) * 100}% - 2px)`,
+        left: `calc(${((nth + 1) / total) * 100}% - 2px)`,
       }}
     />
   );
