@@ -8,7 +8,10 @@ import fr.openobservatory.backend.repository.CelestialBodyRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,8 +63,23 @@ public class CelestialBodyService {
     }
 
     public CelestialBodyDto updateCelestialBody(CelestialBodyDto celestialBodyDto, UUID id) {
-        // TODO
-        return celestialBodyRepository.save(celestialBodyDto);
+        CelestialBody celestialBody = celestialBodyRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (celestialBodyDto.getImage() != null) {
+            if (celestialBodyRepository.existsCelestialBodyByName(celestialBodyDto.getName())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            celestialBody.setName(celestialBodyDto.getName());
+        }
+
+        if (celestialBodyDto.getImage() != null)
+            celestialBody.setImage(celestialBodyDto.getImage());
+
+        if (celestialBodyDto.getValidityTime() != null)
+            celestialBody.setValidityTime(celestialBodyDto.getValidityTime());
+
+        return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
     }
 
     public void deleteCelestialBody(UUID id) {

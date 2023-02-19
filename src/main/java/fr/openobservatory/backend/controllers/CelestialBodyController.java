@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,37 +36,35 @@ public class CelestialBodyController {
             @RequestParam(required = false, defaultValue = "10") Integer limit,
             @RequestParam(required = false, defaultValue = "0") Integer page) {
 
-        if (limit < 1 || limit > 100) {
-            return ResponseEntity.badRequest().build();
-        }
-        if (page < 0) {
-            return ResponseEntity.badRequest().build();
-        }
+        if (limit < 1 || limit > 100 || page < 0)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Pageable pageable = PageRequest.of(page, limit);
         SearchResults<CelestialBodyDto> results = celestialBodyService.getCelestialBodies(pageable);
         return ResponseEntity.ok(results);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable UUID id) {
-        // TODO is id valid
-        Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(id);
-        if (!celestialBody.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<CelestialBodyDto> getCelestialBodyById(@PathVariable String id) {
+        try {
+            UUID uuid = UUID.fromString(id);
+            Optional<CelestialBodyDto> celestialBody = celestialBodyService.getCelestialBodyById(uuid);
+            return celestialBody.map(
+                    celestialBodyDto -> new ResponseEntity<>(celestialBodyDto, HttpStatus.OK)
+            ).orElseGet(
+                    () -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(celestialBody.get(), HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> createCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto) {
         // Checks
-        if (celestialBodyDto.getName().length() < 4 || celestialBodyDto.getName().length() > 64) {
+        if (celestialBodyDto.getName().length() < 4 || celestialBodyDto.getName().length() > 64
+                || celestialBodyDto.getValidityTime() < 1 || celestialBodyDto.getValidityTime() > 12)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (celestialBodyDto.getValidityTime() < 1 || celestialBodyDto.getValidityTime() > 12) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         // Name conflict
         CelestialBodyDto createdCelestialBody;
@@ -80,9 +80,29 @@ public class CelestialBodyController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CelestialBodyDto> updateCelestialBody(@RequestBody CelestialBodyDto celestialBodyDto,
-                                                                @PathVariable UUID id) {
-        // TODO
-        CelestialBodyDto updatedCelestialBody = celestialBodyService.updateCelestialBody(celestialBodyDto, id);
+                                                                @PathVariable String id) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (celestialBodyDto.getName() != null)
+            if (celestialBodyDto.getName().length() < 4 || celestialBodyDto.getName().length() > 64)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if (celestialBodyDto.getValidityTime() != null)
+            if (celestialBodyDto.getValidityTime() < 1 || celestialBodyDto.getValidityTime() > 12)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        CelestialBodyDto updatedCelestialBody;
+        try {
+             updatedCelestialBody = celestialBodyService.updateCelestialBody(celestialBodyDto, uuid);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getStatusCode());
+        }
+
         return new ResponseEntity<>(updatedCelestialBody, HttpStatus.OK);
     }
 
