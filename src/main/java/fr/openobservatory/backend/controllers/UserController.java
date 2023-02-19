@@ -10,15 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
-@Controller
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
 
 
-    @PostMapping("/users/regiter")
+    @PostMapping("/register")
     public ResponseEntity<UserDto> register(@ModelAttribute("RegisterDto")RegisterUserDto dto) {
         User user = userService.registerAccount(dto);
         UserDto userDto = new UserDto();

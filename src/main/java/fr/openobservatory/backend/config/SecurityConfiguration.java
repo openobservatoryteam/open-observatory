@@ -28,11 +28,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
 
     private JwtService jwtService;
-    @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        System.out.println("manager");
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(customAuthenticationProvider);
         return authenticationManagerBuilder.build();
