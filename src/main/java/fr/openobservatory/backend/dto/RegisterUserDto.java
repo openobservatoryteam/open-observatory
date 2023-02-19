@@ -1,15 +1,17 @@
 package fr.openobservatory.backend.dto;
 
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class RegisterUserDto {
 
-    private String username;
+  @NotBlank
+  @Size(min = 1, max = 32)
+  private String username;
 
-    private String password;
+  @NotBlank private String password;
 
-    private String biography;
-
+  private String biography;
 }

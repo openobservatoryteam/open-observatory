@@ -1,46 +1,44 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.RegisterUserDto;
+import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.UsernameAlreadyUsedException;
-import fr.openobservatory.backend.models.User;
-import fr.openobservatory.backend.models.UserType;
-import fr.openobservatory.backend.repository.UserRepository;
+import fr.openobservatory.backend.repositories.UserRepository;
+import java.time.Instant;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+  private final ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
 
-    public User registerAccount(RegisterUserDto accountDto) throws UsernameAlreadyUsedException {
-        if (userRepository.findByUsername(accountDto.getUsername()).isPresent()) {
-            throw new UsernameAlreadyUsedException();
-        }
-        User user = new User();
-        user.setUsername(accountDto.getUsername());
-        user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        user.setBiography(accountDto.getBiography());
-        user.setPublicProfil(true);
-        user.setType(UserType.USER);
-        user.setAvatarUrl("test");
-        user.setCreated_at(new Date());
-        return userRepository.save(user);
+  // ---
+
+  public Optional<UserDto> findByUsername(String username) {
+    return userRepository
+        .findByUsernameIgnoreCase(username)
+        .map(u -> modelMapper.map(u, UserDto.class));
+  }
+
+  public UserDto register(RegisterUserDto dto) {
+    if (userRepository.existsByUsernameIgnoreCase(dto.getUsername())) {
+      throw new UsernameAlreadyUsedException();
     }
-
-    public Boolean canUserAuthenticate(String username, String password) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            var userPassword = user.get().getPassword();
-            return passwordEncoder.matches(password, userPassword);
-        }
-        return false;
-    }
-
+    var entity = new UserEntity();
+    entity.setUsername(dto.getUsername());
+    entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+    entity.setBiography(dto.getBiography());
+    entity.setType(UserEntity.Type.USER);
+    entity.setPublic(true);
+    entity.setCreatedAt(Instant.now());
+    return modelMapper.map(userRepository.save(entity), UserDto.class);
+  }
 }

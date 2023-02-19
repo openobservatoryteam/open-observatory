@@ -1,89 +1,89 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.CelestialBodyDto;
-import fr.openobservatory.backend.exceptions.ConflictException;
-import fr.openobservatory.backend.models.CelestialBody;
-import fr.openobservatory.backend.models.SearchResults;
-import fr.openobservatory.backend.repository.CelestialBodyRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
+import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.SearchResultsDto;
+import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.entities.CelestialBodyEntity;
+import fr.openobservatory.backend.exceptions.*;
+import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class CelestialBodyService {
-    private final CelestialBodyRepository celestialBodyRepository;
-    private final ModelMapper modelMapper;
 
-    public CelestialBodyService(CelestialBodyRepository celestialBodyRepository) {
-        this.celestialBodyRepository = celestialBodyRepository;
-        this.modelMapper = new ModelMapper();
+  private final CelestialBodyRepository celestialBodyRepository;
+  private final ModelMapper modelMapper;
+
+  // ---
+
+  public CelestialBodyDto create(CreateCelestialBodyDto dto) {
+    if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
+      throw new CelestialBodyNameAlreadyUsedException();
+    if (dto.getName().length() < 4 || dto.getName().length() > 64)
+      throw new InvalidCelestialBodyNameException();
+    if (dto.getValidityTime() < 1 || dto.getValidityTime() > 12)
+      throw new InvalidCelestialBodyValidityTimeException();
+    var celestialBody = new CelestialBodyEntity();
+    celestialBody.setName(dto.getName());
+    celestialBody.setValidityTime(dto.getValidityTime());
+    celestialBody.setImage(dto.getImage());
+    return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
+  }
+
+  public void delete(Long id) {
+    if (!celestialBodyRepository.existsById(id)) throw new UnknownCelestialBodyException();
+    celestialBodyRepository.deleteById(id);
+  }
+
+  public Optional<CelestialBodyDto> findById(Long id) {
+    return celestialBodyRepository
+        .findById(id)
+        .map(c -> modelMapper.map(c, CelestialBodyDto.class));
+  }
+
+  public SearchResultsDto<CelestialBodyDto> search(Integer page, Integer itemsPerPage) {
+    if (itemsPerPage < 0 || itemsPerPage > 10 || page < 0) throw new InvalidPaginationException();
+    var pageable = PageRequest.of(page, itemsPerPage);
+    var celestialBodies = celestialBodyRepository.findAll(pageable);
+    var celestialBodiesDto =
+        celestialBodies.stream()
+            .map(celestialBody -> modelMapper.map(celestialBody, CelestialBodyDto.class))
+            .toList();
+    return new SearchResultsDto<>(
+        celestialBodiesDto,
+        celestialBodies.getNumberOfElements(),
+        (int) celestialBodies.getTotalElements(),
+        celestialBodies.getNumber(),
+        celestialBodies.getTotalPages());
+  }
+
+  public CelestialBodyDto update(Long id, UpdateCelestialBodyDto dto) {
+    var celestialBody =
+        celestialBodyRepository.findById(id).orElseThrow(UnknownCelestialBodyException::new);
+    if (dto.getName().isPresent()) {
+      var name = dto.getName().get();
+      if (!celestialBody.getName().equalsIgnoreCase(name)
+          && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
+        throw new CelestialBodyNameAlreadyUsedException();
+      if (name.length() < 4 || name.length() > 64) throw new InvalidCelestialBodyNameException();
+      celestialBody.setName(name);
     }
-
-    public SearchResults<CelestialBodyDto> getCelestialBodies(Pageable pageable) {
-        Page<CelestialBody> celestialBodies = celestialBodyRepository.findAll(pageable);
-
-        List<CelestialBodyDto> celestialBodyDtos = celestialBodies.stream()
-                .map(celestialBody -> modelMapper.map(celestialBody, CelestialBodyDto.class))
-                .collect(Collectors.toList());
-
-        return new SearchResults<>(celestialBodyDtos,
-                                    celestialBodies.getNumberOfElements(),
-                                    (int) celestialBodies.getTotalElements(),
-                                    celestialBodies.getNumber(),
-                                    celestialBodies.getTotalPages());
+    if (dto.getValidityTime().isPresent()) {
+      var validityTime = dto.getValidityTime().get();
+      if (validityTime < 1 || validityTime > 12)
+        throw new InvalidCelestialBodyValidityTimeException();
+      celestialBody.setValidityTime(validityTime);
     }
-
-    public Optional<CelestialBodyDto> getCelestialBodyById(UUID id) {
-        Optional<CelestialBody> celestialBody = celestialBodyRepository.findById(id);
-        return Optional.ofNullable(modelMapper.map(celestialBody, CelestialBodyDto.class));
+    if (dto.getImage().isPresent()) {
+      var image = dto.getImage().get();
+      celestialBody.setImage(image);
     }
-
-    public CelestialBodyDto addCelestialBody(CelestialBodyDto celestialBodyDto) {
-        if (celestialBodyRepository.existsCelestialBodyByName(celestialBodyDto.getName())) {
-            throw new ConflictException("Celestial body's name already in use.");
-        }
-
-        CelestialBody celestialBody = new CelestialBody();
-        celestialBody.setName(celestialBodyDto.getName());
-        celestialBody.setImage(celestialBodyDto.getImage());
-        celestialBody.setValidityTime(celestialBodyDto.getValidityTime());
-
-        celestialBody = celestialBodyRepository.save(celestialBody);
-
-        return modelMapper.map(celestialBody, celestialBodyDto.getClass());
-    }
-
-    public CelestialBodyDto updateCelestialBody(CelestialBodyDto celestialBodyDto, UUID id) {
-        CelestialBody celestialBody = celestialBodyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        if (celestialBodyDto.getImage() != null) {
-            if (celestialBodyRepository.existsCelestialBodyByName(celestialBodyDto.getName())) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT);
-            }
-            celestialBody.setName(celestialBodyDto.getName());
-        }
-
-        if (celestialBodyDto.getImage() != null)
-            celestialBody.setImage(celestialBodyDto.getImage());
-
-        if (celestialBodyDto.getValidityTime() != null)
-            celestialBody.setValidityTime(celestialBodyDto.getValidityTime());
-
-        return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
-    }
-
-    public void deleteCelestialBody(UUID id) {
-        // TODO
-        celestialBodyRepository.deleteById(id);
-    }
+    return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
+  }
 }

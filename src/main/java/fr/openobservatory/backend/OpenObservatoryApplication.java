@@ -1,6 +1,6 @@
 package fr.openobservatory.backend;
 
-import fr.openobservatory.backend.config.RsaKeyProperties;
+import fr.openobservatory.backend.configuration.RsaKeyProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,8 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 public class OpenObservatoryApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(OpenObservatoryApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(OpenObservatoryApplication.class, args);
+  }
 }
