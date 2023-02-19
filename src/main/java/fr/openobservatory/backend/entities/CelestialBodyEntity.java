@@ -1,9 +1,8 @@
 package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Objects;
+import lombok.Data;
 
 @Data
 @Entity
