@@ -85,7 +85,10 @@ function CelestialBodyAdminPage() {
             {image && 
               <div className='relative w-96 h-52 flex justify-center items-center rounded-2xl'>
                 <img src={image} className="rounded-2xl" />
-                <FontAwesomeIcon icon={faCamera} size="lg" color='black' className='rounded-full p-3 bg-[#D9D9D9] absolute bottom-0 right-5'/>
+                <label className="absolute bottom-0 right-5 cursor-pointer p-3 bg-[#D9D9D9]  flex justify-center items-center rounded-full">
+                  <input type="file" className='hidden' onChange={(evt) => handleChange(evt)} />
+                  <FontAwesomeIcon icon={faCamera} size="xl" color='black'/>
+                </label>
               </div>
             }
             {!image && 
