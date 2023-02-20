@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { celestialBodies, CelestialBody } from '@/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const UpdateCelestialBodySchema = z.object({
   name: z
@@ -35,6 +36,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
       image: celestialBody.image,
       validityTime: celestialBody.validityTime,
     },
+    resolver: zodResolver(UpdateCelestialBodySchema),
   });
   const update = useMutation({
     mutationFn: celestialBodies.update,

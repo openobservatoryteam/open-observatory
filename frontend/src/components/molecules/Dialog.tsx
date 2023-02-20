@@ -19,8 +19,13 @@ function Dialog({ children, title, className, ...props }: DialogProps) {
     ref,
   );
   return (
-    <div {...dialogProps} ref={ref} style={{ padding: 30 }} className={clsx('text-white bg-[#333C47] rounded-2xl w-1/2', className)}>
-      <Title as='h2' {...titleProps} style={{ marginTop: 0, paddingBottom: 30 }} centered>
+    <div
+      {...dialogProps}
+      className={clsx('text-white bg-[#333C47] rounded-2xl w-1/2', className)}
+      ref={ref}
+      style={{ padding: 30 }}
+    >
+      <Title as="h2" {...titleProps} style={{ marginTop: 0, paddingBottom: 30 }} centered>
         {title}
       </Title>
       {children}
