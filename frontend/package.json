@@ -1,0 +1,53 @@
+{
+  "name": "open-observatory-website",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "format": "prettier --config .prettierrc --write src"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@hookform/resolvers": "^2.9.11",
+    "@tanstack/react-location": "^3.7.4",
+    "@tanstack/react-query": "^4.24.9",
+    "autoprefixer": "^10.4.13",
+    "clsx": "^1.2.1",
+    "dayjs": "^1.11.7",
+    "ky": "^0.33.2",
+    "leaflet": "^1.9.3",
+    "postcss": "^8.4.21",
+    "react": "^18.2.0",
+    "react-aria": "3.22.1-nightly.3711",
+    "react-dom": "^18.2.0",
+    "react-head": "^3.4.2",
+    "react-hook-form": "^7.43.1",
+    "react-leaflet": "^4.2.0",
+    "react-stately": "^3.20.0",
+    "tailwindcss": "^3.2.6",
+    "zod": "^3.20.6"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "@vitejs/plugin-react-swc": "^3.1.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.1",
+    "vite-tsconfig-paths": "^4.0.5"
+  }
+}
