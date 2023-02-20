@@ -17,6 +17,11 @@ public class ObservationController {
   private final ObservationService observationService;
 
   // ---
+  @GetMapping(path="/observations/nearby")
+  public ResponseEntity<List<ObservationDto>> nearbyObservations(Double lng, Double lat)
+  {
+    return ResponseEntity.ok(observationService.findNearbyObservations(lng,lat));
+  }
 
   @GetMapping
   public ResponseEntity<List<ObservationDto>> observations(int limit, int page) {
