@@ -12,6 +12,10 @@ L.Marker.prototype.setIcon(
   L.icon({
     iconUrl: markerIcon,
     iconRetinaUrl: markerRetinaIcon,
+    iconSize: [25, 41],
+    shadowSize: [30, 65],
+    iconAnchor: [12, 41],
+    shadowAnchor: [7, 65],
   }),
 );
 
