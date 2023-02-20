@@ -1,5 +1,6 @@
 import { faCamera, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
@@ -8,7 +9,6 @@ import * as z from 'zod';
 import { celestialBodies, CelestialBody } from '@/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 const UpdateCelestialBodySchema = z.object({
   name: z
@@ -69,9 +69,9 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
           className="flex flex-col items-center"
           onSubmit={form.handleSubmit((data) => update.mutate({ id: celestialBody.id, ...data }))}
         >
-          {celestialBody.image ? (
+          {form.watch('image') ? (
             <div className="flex items-center justify-center relative w-3/4">
-              <img src={celestialBody.image} className="h-60 object-cover rounded-2xl w-full" />
+              <img src={form.watch('image')} className="h-60 object-cover rounded-2xl w-full" />
               <label className="absolute bg-[#D9D9D9] bottom-3 cursor-pointer flex items-center justify-center p-3 right-5 rounded-full">
                 <input aria-label="Image de l'objet céleste" className="hidden" onChange={handleChange} type="file" />
                 <FontAwesomeIcon icon={faCamera} size="xl" color="black" />
