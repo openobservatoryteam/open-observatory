@@ -8,7 +8,6 @@ import { useAuthentication } from '@/providers';
 
 export function Header() {
   const authentication = useAuthentication();
-  console.log(authentication);
   return (
     <header className="flex items-center justify-between mx-auto my-2 px-5 md:px-10">
       <Link to="/">
