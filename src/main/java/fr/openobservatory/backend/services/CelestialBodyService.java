@@ -70,7 +70,7 @@ public class CelestialBodyService {
       var name = dto.getName().get();
       if (name.length() < 4 || name.length() > 64) throw new InvalidCelestialBodyNameException();
       if (!celestialBody.getName().equalsIgnoreCase(name)
-              && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
+          && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
         throw new CelestialBodyNameAlreadyUsedException();
       celestialBody.setName(name);
     }

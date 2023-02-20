@@ -9,7 +9,6 @@ import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
@@ -17,10 +18,11 @@ public class ObservationController {
   private final ObservationService observationService;
 
   // ---
-  @GetMapping(path="/observations/nearby")
-  public ResponseEntity<List<ObservationDto>> nearbyObservations(Double lng, Double lat)
-  {
-    return ResponseEntity.ok(observationService.findNearbyObservations(lng,lat));
+
+  @GetMapping("/nearby")
+  public ResponseEntity<List<ObservationDto>> nearbyObservations(
+      @RequestParam Double lng, @RequestParam Double lat) {
+    return ResponseEntity.ok(observationService.findNearbyObservations(lng, lat));
   }
 
   @GetMapping
