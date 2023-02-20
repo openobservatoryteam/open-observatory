@@ -10,6 +10,10 @@ import lombok.Data;
 @Table(name = "\"user\"")
 public class UserEntity {
 
+  public static final String USERNAME_PATTERN = "^[A-Za-z][A-Za-z0-9_]{0,31}$";
+
+  // ---
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

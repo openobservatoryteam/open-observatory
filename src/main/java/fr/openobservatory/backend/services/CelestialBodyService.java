@@ -23,12 +23,12 @@ public class CelestialBodyService {
   // ---
 
   public CelestialBodyDto create(CreateCelestialBodyDto dto) {
-    if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
-      throw new CelestialBodyNameAlreadyUsedException();
     if (dto.getName().length() < 4 || dto.getName().length() > 64)
       throw new InvalidCelestialBodyNameException();
     if (dto.getValidityTime() < 1 || dto.getValidityTime() > 12)
       throw new InvalidCelestialBodyValidityTimeException();
+    if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
+      throw new CelestialBodyNameAlreadyUsedException();
     var celestialBody = new CelestialBodyEntity();
     celestialBody.setName(dto.getName());
     celestialBody.setValidityTime(dto.getValidityTime());
@@ -68,10 +68,10 @@ public class CelestialBodyService {
         celestialBodyRepository.findById(id).orElseThrow(UnknownCelestialBodyException::new);
     if (dto.getName().isPresent()) {
       var name = dto.getName().get();
-      if (!celestialBody.getName().equalsIgnoreCase(name)
-          && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
-        throw new CelestialBodyNameAlreadyUsedException();
       if (name.length() < 4 || name.length() > 64) throw new InvalidCelestialBodyNameException();
+      if (!celestialBody.getName().equalsIgnoreCase(name)
+              && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
+        throw new CelestialBodyNameAlreadyUsedException();
       celestialBody.setName(name);
     }
     if (dto.getValidityTime().isPresent()) {

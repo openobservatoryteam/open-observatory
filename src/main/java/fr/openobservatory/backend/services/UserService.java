@@ -3,10 +3,13 @@ package fr.openobservatory.backend.services;
 import fr.openobservatory.backend.dto.RegisterUserDto;
 import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.entities.UserEntity;
+import fr.openobservatory.backend.exceptions.InvalidUsernameException;
 import fr.openobservatory.backend.exceptions.UsernameAlreadyUsedException;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.regex.Pattern;
+
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,9 +32,10 @@ public class UserService {
   }
 
   public UserDto register(RegisterUserDto dto) {
-    if (userRepository.existsByUsernameIgnoreCase(dto.getUsername())) {
+    if (!Pattern.matches(UserEntity.USERNAME_PATTERN, dto.getUsername()))
+      throw new InvalidUsernameException();
+    if (userRepository.existsByUsernameIgnoreCase(dto.getUsername()))
       throw new UsernameAlreadyUsedException();
-    }
     var entity = new UserEntity();
     entity.setUsername(dto.getUsername());
     entity.setPassword(passwordEncoder.encode(dto.getPassword()));
