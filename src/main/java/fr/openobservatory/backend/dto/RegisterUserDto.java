@@ -1,14 +1,17 @@
 package fr.openobservatory.backend.dto;
 
+import fr.openobservatory.backend.entities.UserEntity;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class RegisterUserDto {
 
-  @NotBlank
-  @Size(min = 1, max = 32)
+  @NotNull
+  @Pattern(regexp = UserEntity.USERNAME_PATTERN)
   private String username;
 
   @NotBlank private String password;
