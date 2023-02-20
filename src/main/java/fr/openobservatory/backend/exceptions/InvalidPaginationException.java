@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(
     code = HttpStatus.BAD_REQUEST,
-    reason = "Pagination settings could not be validated.")
+    reason = "INVALID_PAGINATION")
 public class InvalidPaginationException extends RuntimeException {}

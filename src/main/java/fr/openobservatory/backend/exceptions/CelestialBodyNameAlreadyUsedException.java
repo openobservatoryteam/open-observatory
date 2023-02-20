@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(
     code = HttpStatus.CONFLICT,
-    reason = "The name is already used by another celestial body.")
+    reason = "CELESTIAL_BODY_NAME_ALREADY_USED")
 public class CelestialBodyNameAlreadyUsedException extends RuntimeException {}

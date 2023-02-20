@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(
     code = HttpStatus.BAD_REQUEST,
-    reason = "The validity time of the celestial body is not in the expected range.")
+    reason = "INVALID_CELESTIAL_BODY_VALIDITY_TIME")
 public class InvalidCelestialBodyValidityTimeException extends RuntimeException {}

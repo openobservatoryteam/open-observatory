@@ -16,7 +16,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @AllArgsConstructor
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
   private final Environment environment;
@@ -66,6 +69,8 @@ public class SecurityConfiguration {
                 request
                     .requestMatchers("/")
                     .authenticated()
+                        .requestMatchers("/users/current")
+                        .authenticated()
                     .requestMatchers("/users/register")
                     .anonymous()
                     .requestMatchers("/celestial-bodies/{id}")

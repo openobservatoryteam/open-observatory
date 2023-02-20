@@ -1,20 +1,57 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-location';
+import { useMutation } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
+import z from 'zod';
 
-import { Button, Slider, TextInput, Title } from '@/components';
+import { ProblemDetail, users } from '@/api';
+import { Button, TextInput, Title } from '@/components';
 import { Footer, Header } from '@/layout';
 
+const RegistrationSchema = z
+  .object({
+    username: z
+      .string()
+      .regex(new RegExp('^[A-Za-z]'), 'Le pseudonyme doit débuter par une lettre.')
+      .regex(
+        new RegExp('^[A-Za-z0-9_]*$'),
+        'Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.',
+      )
+      .max(32, 'Le pseudonyme ne doit pas dépasser 32 caractères.'),
+    password: z
+      .string()
+      .min(8, "Le mot de passe doit être composé d'au au moins 8 caractères.")
+      .max(32, 'Le mot de passe ne doit pas dépasser 32 caractères.'),
+    passwordConfirmation: z.string(),
+    biography: z.string().max(2048, 'La biographie ne doit pas dépasser 2048 caractères.').optional(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Les mots de passe ne correspondent pas.',
+    path: ['passwordConfirmation'],
+  });
+
 function RegistrationPage() {
-  const { handleSubmit, register } = useForm({
+  const navigate = useNavigate();
+  const form = useForm({
     defaultValues: {
       username: '',
       password: '',
       passwordConfirmation: '',
       biography: '',
-      visibility: 10,
+    },
+    resolver: zodResolver(RegistrationSchema),
+  });
+  const registration = useMutation({
+    mutationFn: users.register,
+    mutationKey: ['registration'],
+    onSuccess: () => navigate({ to: '/login' }),
+    onError: ({ cause }: { cause?: ProblemDetail }) => {
+      if (cause?.message === 'USERNAME_ALREADY_USED') {
+        form.setError('username', { message: 'Ce pseudonyme est déjà utilisé.' });
+      }
     },
   });
-  const { onChange: changeVisibility, ...visibilityProps } = register('visibility');
   return (
     <>
       <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
@@ -22,50 +59,38 @@ function RegistrationPage() {
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription
       </Title>
-      <form className="mx-auto px-2 sm:w-96 w-72" onSubmit={handleSubmit((v) => console.table(v))}>
+      <form
+        className="flex flex-col gap-8 items-stretch mx-auto px-2 w-72 sm:w-96"
+        onSubmit={form.handleSubmit((data) => registration.mutate(data))}
+      >
         <TextInput
           aria-label="Pseudonyme"
-          className="mb-10"
+          errorMessage={form.getFieldState('username').error?.message}
           placeholder="Pseudonyme"
           type="text"
-          {...register('username')}
+          {...form.register('username')}
         />
         <TextInput
           aria-label="Mot de passe"
-          className="mb-10"
+          errorMessage={form.getFieldState('password').error?.message}
           placeholder="Mot de passe"
-          required
           type="password"
-          {...register('password')}
+          {...form.register('password')}
         />
         <TextInput
           aria-label="Confirmation du mot de passe"
-          className="mb-10"
+          errorMessage={form.getFieldState('passwordConfirmation').error?.message}
           placeholder="Confirmation du mot de passe"
-          required
           type="password"
-          {...register('passwordConfirmation')}
-        />
-        <Slider
-          className="mb-10"
-          label="Péremption"
-          minValue={5}
-          maxValue={30}
-          onChange={(value) => changeVisibility({ target: { name: visibilityProps.name, value } })}
-          step={5}
-          withMarks
-          {...visibilityProps}
+          {...form.register('passwordConfirmation')}
         />
         <TextInput
           aria-label="Biographie"
-          className="mb-10"
+          errorMessage={form.getFieldState('biography').error?.message}
           placeholder="Biographie"
-          required
-          {...register('biography')}
+          {...form.register('biography')}
         />
-        <div className="flex justify-center">
-          <Button type="submit">S&apos;inscrire</Button>
-        </div>
+        <Button type="submit">S&apos;inscrire</Button>
       </form>
       <Footer />
     </>

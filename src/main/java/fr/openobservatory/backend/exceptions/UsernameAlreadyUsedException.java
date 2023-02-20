@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(
     code = HttpStatus.CONFLICT,
-    reason = "This username is already used by someone else.")
+    reason = "USERNAME_ALREADY_USED")
 public class UsernameAlreadyUsedException extends RuntimeException {}

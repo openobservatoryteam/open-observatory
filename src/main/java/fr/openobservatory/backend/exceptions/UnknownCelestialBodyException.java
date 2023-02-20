@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(
     code = HttpStatus.NOT_FOUND,
-    reason = "The targeted celestial body could not be found.")
+    reason = "UNKNOWN_CELESTIAL_BODY")
 public class UnknownCelestialBodyException extends RuntimeException {}
