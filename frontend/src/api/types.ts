@@ -13,6 +13,17 @@ export type ProblemDetail = {
   message?: string;
 };
 
+export type Observation = {
+  id: number;
+  description: string | null;
+  latitude: number;
+  longitude: number;
+  orientation: number;
+  celestialBody: CelestialBody;
+  author: User;
+  time: string;
+};
+
 export type SearchResults<T> = {
   data: T[];
   count: number;

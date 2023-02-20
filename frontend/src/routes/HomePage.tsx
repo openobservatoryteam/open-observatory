@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 
-import { Button, Map } from '@/components';
+import { Button, Map, NearbyObservations } from '@/components';
 import { Header } from '@/layout';
 
 function HomePage() {
@@ -17,7 +17,9 @@ function HomePage() {
           Se connecter
         </Button>
       </div>
-      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]" />
+      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]">
+        <NearbyObservations />
+      </Map>
     </>
   );
 }
