@@ -1,9 +1,23 @@
+import L from 'leaflet';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerRetinaIcon from 'leaflet/dist/images/marker-icon.png';
 import leafletStylesheet from 'leaflet/dist/leaflet.css?inline';
 import { Style } from 'react-head';
 import { MapContainer, MapContainerProps, TileLayer } from 'react-leaflet';
 
 import { CurrentPosition } from '@/components';
 import { removeKeys } from '@/utils';
+
+L.Marker.prototype.setIcon(
+  L.icon({
+    iconUrl: markerIcon,
+    iconRetinaUrl: markerRetinaIcon,
+    iconSize: [25, 41],
+    shadowSize: [30, 65],
+    iconAnchor: [12, 41],
+    shadowAnchor: [7, 65],
+  }),
+);
 
 type MapProps = {
   noFly?: boolean;

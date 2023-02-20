@@ -1,17 +1,26 @@
-import { Link } from '@tanstack/react-location';
+import { Link, useNavigate } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
+import { LoginData } from '@/api/authentication';
 import { Button, Text, TextInput, Title } from '@/components';
 import { Footer, Header } from '@/layout';
+import { useAuthentication } from '@/providers';
 
 function LoginPage() {
-  const { handleSubmit, register } = useForm({
+  const auth = useAuthentication();
+  const navigate = useNavigate();
+  const form = useForm({
     defaultValues: {
       username: '',
       password: '',
     },
   });
+  const onSubmit = (data: LoginData) =>
+    auth.login.mutate(data, {
+      onSuccess: () => navigate({ to: '/' }),
+      onError: () => form.setError('password', { message: 'Les identifiants sont incorrects.' }),
+    });
   return (
     <>
       <DocumentTitle>Connexion – Open Observatory</DocumentTitle>
@@ -19,27 +28,27 @@ function LoginPage() {
       <Title as="h2" className="mb-10 mt-16 text-center">
         Connexion
       </Title>
-      <form className="mx-auto px-2 sm:w-96 w-72" onSubmit={handleSubmit(() => void 0)}>
+      <form
+        className="flex flex-col gap-10 items-stretch mb-4 mx-auto px-2 w-72 sm:w-96"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <TextInput
           aria-label="Pseudonyme"
-          className="mb-10"
+          errorMessage={form.getFieldState('username').error?.message}
           placeholder="Pseudonyme"
+          required
           type="text"
-          {...register('username')}
+          {...form.register('username')}
         />
         <TextInput
           aria-label="Mot de passe"
-          className="mb-10"
+          errorMessage={form.getFieldState('password').error?.message}
           placeholder="Mot de passe"
           required
           type="password"
-          {...register('password')}
+          {...form.register('password')}
         />
-        <div className="flex justify-center">
-          <Button className="mb-4" onPress={() => alert('Coucou')} type="submit">
-            Se connecter
-          </Button>
-        </div>
+        <Button type="submit">Se connecter</Button>
       </form>
       <Text centered>
         <Link to="/register">Pas de compte ? Inscrivez-vous.</Link>
