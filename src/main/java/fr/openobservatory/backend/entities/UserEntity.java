@@ -33,7 +33,7 @@ public class UserEntity {
   @Column(columnDefinition = "BOOLEAN")
   private boolean isPublic;
 
-  @Column(columnDefinition = "TINYINT")
+  @Column(columnDefinition = "SMALLINT")
   private Type type;
 
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)

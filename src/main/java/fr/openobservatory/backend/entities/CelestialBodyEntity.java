@@ -17,7 +17,6 @@ public class CelestialBodyEntity {
   private String name;
 
   @Column(columnDefinition = "TEXT", nullable = false)
-  @Lob
   private String image;
 
   @Column(columnDefinition = "INTEGER", nullable = false)

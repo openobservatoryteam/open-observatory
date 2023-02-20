@@ -15,7 +15,6 @@ public class ObservationEntity {
   private Long id;
 
   @Column(columnDefinition = "TEXT")
-  @Lob
   private String description;
 
   @Column(columnDefinition = "FLOAT", nullable = false)
@@ -35,7 +34,7 @@ public class ObservationEntity {
   @JoinColumn(name = "author_id")
   private UserEntity author;
 
-  @Column(columnDefinition = "TINYINT", nullable = false)
+  @Column(columnDefinition = "SMALLINT", nullable = false)
   private Visibility visibility;
 
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)

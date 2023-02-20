@@ -10,6 +10,7 @@ public class ObservationDto {
   private double latitude;
   private double longitude;
   private Integer orientation;
-  private OffsetDateTime time;
+  private CelestialBodyDto celestialBody;
   private UserDto author;
+  private OffsetDateTime time;
 }
