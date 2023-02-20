@@ -17,7 +17,7 @@ function HomePage() {
           Se connecter
         </Button>
       </div>
-      <Map className="h-[calc(100vh-14.8rem)] md:h-[calc(100vh-9.7rem)]" />
+      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]" />
     </>
   );
 }
