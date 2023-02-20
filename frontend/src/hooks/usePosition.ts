@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 type Position = { lat: number; lng: number };
 
-export function usePosition() {
+function usePosition() {
   const [position, setPosition] = useState<Position | null>(null);
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
@@ -14,3 +14,5 @@ export function usePosition() {
   }, []);
   return position;
 }
+
+export { usePosition };

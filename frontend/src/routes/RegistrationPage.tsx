@@ -1,7 +1,7 @@
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
-import { Button, TextInput, Title } from '@/components';
+import { Button, Slider, TextInput, Title } from '@/components';
 import { Footer, Header } from '@/layout';
 
 function RegistrationPage() {
@@ -11,8 +11,10 @@ function RegistrationPage() {
       password: '',
       passwordConfirmation: '',
       biography: '',
+      visibility: 10,
     },
   });
+  const { onChange: changeVisibility, ...visibilityProps } = register('visibility');
   return (
     <>
       <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
@@ -20,7 +22,7 @@ function RegistrationPage() {
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription
       </Title>
-      <form className="mx-auto px-2 sm:w-96 w-72" onSubmit={handleSubmit(() => void 0)}>
+      <form className="mx-auto px-2 sm:w-96 w-72" onSubmit={handleSubmit((v) => console.table(v))}>
         <TextInput
           aria-label="Pseudonyme"
           className="mb-10"
@@ -43,6 +45,16 @@ function RegistrationPage() {
           required
           type="password"
           {...register('passwordConfirmation')}
+        />
+        <Slider
+          className="mb-10"
+          label="Péremption"
+          minValue={5}
+          maxValue={30}
+          onChange={(value) => changeVisibility({ target: { name: visibilityProps.name, value } })}
+          step={5}
+          withMarks
+          {...visibilityProps}
         />
         <TextInput
           aria-label="Biographie"
