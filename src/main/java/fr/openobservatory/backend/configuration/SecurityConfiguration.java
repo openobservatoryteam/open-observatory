@@ -73,8 +73,6 @@ public class SecurityConfiguration {
                         .authenticated()
                     .requestMatchers("/users/register")
                     .anonymous()
-                    .requestMatchers("/celestial-bodies/{id}")
-                    .hasAuthority("ADMINISTRATOR")
                     .anyRequest()
                     .permitAll())
         .cors(withDefaults())

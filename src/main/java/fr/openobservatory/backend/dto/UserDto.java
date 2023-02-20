@@ -15,5 +15,5 @@ public class UserDto {
 
   private String avatar;
 
-  @JsonIgnore private UserEntity.Type type;
+  private UserEntity.Type type;
 }

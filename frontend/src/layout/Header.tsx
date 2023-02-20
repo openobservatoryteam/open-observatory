@@ -22,13 +22,18 @@ export function Header() {
           </Text>
           <Button
             aria-label="Se déconnecter"
-            className="p-3 sm:p-4 justify-self-end"
+            className="p-3 sm:p-3.5 justify-self-end"
             onPress={() => authentication.logout.mutate()}
             rounded
             title="Se déconnecter"
           >
             <FontAwesomeIcon icon={faDoorOpen} />
           </Button>
+          {authentication.user?.type === 'ADMIN' && (
+            <Button as={Link} to="/admin/celestial-bodies">
+              ADMINISTRATION
+            </Button>
+          )}
         </div>
       )}
     </header>

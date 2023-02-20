@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-location';
+import { Link, useNavigate } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
@@ -9,6 +9,7 @@ import { useAuthentication } from '@/providers';
 
 function LoginPage() {
   const auth = useAuthentication();
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       username: '',
@@ -17,6 +18,7 @@ function LoginPage() {
   });
   const onSubmit = (data: LoginData) =>
     auth.login.mutate(data, {
+      onSuccess: () => navigate({ to: '/' }),
       onError: () => form.setError('password', { message: 'Les identifiants sont incorrects.' }),
     });
   return (
