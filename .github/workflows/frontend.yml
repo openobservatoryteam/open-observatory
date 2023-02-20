@@ -16,7 +16,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          corepack-enable: true
+      - uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
       - run: cd frontend
       - run: pnpm install
       - run: pnpm lint
@@ -29,7 +33,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          corepack-enable: true
+      - uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
       - run: cd frontend
       - run: pnpm install
       - run: pnpm build
