@@ -18,13 +18,15 @@ function NearbyObservations() {
     return () => void map.removeEventListener('moveend', updateObservations);
   }, []);
   return (
-    nearbyObservations.data?.map((o) => (
-      <Marker
-        key={o.id}
-        eventHandlers={{ click: () => navigate({ to: `/observations/${o.id}` }) }}
-        position={{ lng: o.longitude, lat: o.latitude }}
-      />
-    )) ?? null
+    <>
+      {nearbyObservations.data?.map((o) => (
+        <Marker
+          key={o.id}
+          eventHandlers={{ click: () => navigate({ to: `/observations/${o.id}` }) }}
+          position={{ lng: o.longitude, lat: o.latitude }}
+        />
+      ))}
+    </>
   );
 }
 
