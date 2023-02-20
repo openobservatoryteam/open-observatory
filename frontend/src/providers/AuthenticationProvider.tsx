@@ -3,12 +3,12 @@ import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanst
 import { createContext, ReactNode, useContext } from 'react';
 
 type AuthenticationContextProps = {
+  isLoading: boolean;
+  isLoggedIn: boolean;
   login: UseMutationResult<undefined, unknown, authentication.LoginData, unknown>;
   logout: UseMutationResult<undefined, unknown, void, unknown>;
-} & (
-  | ({ isLoading: false; isLoggedIn: true } & { user: User })
-  | ({ isLoading: boolean; isLoggedIn: boolean } & { user: User | null })
-);
+  user: User | null;
+};
 
 const AuthenticationContext = createContext<AuthenticationContextProps>(null!);
 
@@ -36,7 +36,6 @@ function AuthenticationProvider({ children }: UserProviderProps) {
     logout,
     user: currentUser.data ?? null,
   };
-  console.log(value);
   return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>;
 }
 
