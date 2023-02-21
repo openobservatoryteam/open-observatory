@@ -1,0 +1,59 @@
+name: Frontend - Continuous Integration
+
+on:
+  pull_request:
+    paths:
+      - frontend/**
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - develop
+      - feature/*
+      - fix/*
+      - main
+    paths:
+      - frontend/**
+
+jobs:
+  lint:
+    name: Frontend - Lint phase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          node-version: '18'
+      - run: pnpm install
+        working-directory: frontend
+      - run: pnpm lint
+        working-directory: frontend
+
+  build:
+    name: Frontend - Build phase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          node-version: '18'
+      - run: pnpm install
+        working-directory: frontend
+      - run: pnpm build
+        working-directory: frontend
