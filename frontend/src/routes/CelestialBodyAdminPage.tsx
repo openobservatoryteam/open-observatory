@@ -88,7 +88,11 @@ function CelestialBodyAdminPage() {
                   unstyled
                   onPress={() => openUpdateModal(e)}
                 >
-                  <img className="h-32 rounded-t-2xl" src={e.image} alt={`Illustration de ${e.name}`} />
+                  <img
+                    className="h-64 object-cover rounded-t-2xl w-full"
+                    src={e.image}
+                    alt={`Illustration de ${e.name}`}
+                  />
                   <Text color="black">{e.name}</Text>
                   <Text className="mb-3" color="black">
                     Validité : {e.validityTime}h
