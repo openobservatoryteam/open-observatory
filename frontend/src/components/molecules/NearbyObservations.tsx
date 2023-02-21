@@ -1,9 +1,9 @@
+import { useNavigate } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Marker, useMap } from 'react-leaflet';
 
 import { observations } from '@/api';
-import { useNavigate } from '@tanstack/react-location';
 
 function NearbyObservations() {
   const map = useMap();
@@ -15,7 +15,9 @@ function NearbyObservations() {
   useEffect(() => {
     const updateObservations = () => nearbyObservations.refetch();
     map.addEventListener('moveend', updateObservations);
-    return () => void map.removeEventListener('moveend', updateObservations);
+    return () => {
+      map.removeEventListener('moveend', updateObservations);
+    };
   }, []);
   return (
     <>

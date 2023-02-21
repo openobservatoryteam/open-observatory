@@ -1,6 +1,6 @@
 import { authentication, User, users } from '@/api';
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 
 type AuthenticationContextProps = {
   isLoading: boolean;
@@ -29,13 +29,16 @@ function AuthenticationProvider({ children }: UserProviderProps) {
     mutationKey: ['logout'],
     onSuccess: () => queryClient.setQueryData(['users', 'current'], null),
   });
-  const value = {
-    isLoading: currentUser.isInitialLoading,
-    isLoggedIn: !!currentUser.data,
-    login,
-    logout,
-    user: currentUser.data ?? null,
-  };
+  const value = useMemo(
+    () => ({
+      isLoading: currentUser.isInitialLoading,
+      isLoggedIn: !!currentUser.data,
+      login,
+      logout,
+      user: currentUser.data ?? null,
+    }),
+    [currentUser],
+  );
   return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>;
 }
 

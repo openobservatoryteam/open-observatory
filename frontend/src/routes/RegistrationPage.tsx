@@ -13,11 +13,8 @@ const RegistrationSchema = z
   .object({
     username: z
       .string()
-      .regex(new RegExp('^[A-Za-z]'), 'Le pseudonyme doit débuter par une lettre.')
-      .regex(
-        new RegExp('^[A-Za-z0-9_]*$'),
-        'Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.',
-      )
+      .regex(/^[A-Za-z]/, 'Le pseudonyme doit débuter par une lettre.')
+      .regex(/^\w*$/, 'Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.')
       .max(32, 'Le pseudonyme ne doit pas dépasser 32 caractères.'),
     password: z
       .string()
