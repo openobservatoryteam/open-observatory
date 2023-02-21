@@ -18,7 +18,10 @@ on:
       - fix/*
       - main
     paths:
+      - gradle/**
       - src/**
+      - build.gradle
+      - settings.gradle
 
 jobs:
   lint:
