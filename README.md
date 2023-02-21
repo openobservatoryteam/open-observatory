@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="833" height="233" src="https://raw.githubusercontent.com/OpenObservatoryTeam/assets/main/logo_light.svg">
+  <img width="833" height="233" src="https://raw.githubusercontent.com/OpenObservatoryTeam/assets/main/logo_dark.svg">
 </p>
 
 **Open Observatory** est une plateforme collaborative d'observation d'objets célestes.  
