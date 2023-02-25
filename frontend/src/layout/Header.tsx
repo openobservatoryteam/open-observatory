@@ -9,13 +9,13 @@ import { useAuthentication } from '@/providers';
 export function Header() {
   const authentication = useAuthentication();
   return (
-    <header className="flex items-center justify-between mx-auto my-2 px-5 md:px-10">
+    <header className="flex items-center justify-center mx-auto my-2 px-5 md:px-10">
       <Link to="/">
         <Title className="hidden">Open Observatory</Title>
         <Logo className="mx-auto sm:ml-0 w-40 sm:w-64" />
       </Link>
       {authentication.isLoggedIn && (
-        <div className="flex items-center gap-4">
+        <div className="flex gap-4 ml-5">
           <Text as="span" className="hidden sm:inline">
             {authentication.user?.username}
           </Text>
