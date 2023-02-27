@@ -12,11 +12,11 @@ const changePasswordSchema = z
     oldPassword: z.string(),
     newPassword: z
       .string()
-      .regex(new RegExp('.*[A-Z].*'), 'Le mot de passe doit contenir au moins une majuscule.')
-      .regex(new RegExp('.*[a-z].*'), 'Le mot de passe doit contenir au moins une minuscule.')
-      .regex(new RegExp('.*\\d.*'), 'Le mot de passe doit contenir au moins un chiffre.')
+      .regex(/.*[A-Z].*/, 'Le mot de passe doit contenir au moins une majuscule.')
+      .regex(/.*[a-z].*/, 'Le mot de passe doit contenir au moins une minuscule.')
+      .regex(/.*\\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
       .regex(
-        new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+        /.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*/,
         'Le mot de passe doit contenir au moins un caractère spécial.',
       )
       .min(8, "Le mot de passe doit être composé d'au moins 8 caractères.")
@@ -28,7 +28,7 @@ const changePasswordSchema = z
     path: ['confirmPassword'],
   });
 
-function ChangePasswordPage(): JSX.Element {
+function ChangePasswordPage() {
   const form = useForm({
     defaultValues: {
       oldPassword: '',
