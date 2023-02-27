@@ -20,8 +20,8 @@ type SliderProps = AriaSliderProps<number> &
     withMarks?: boolean;
   };
 
-function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, ref: ForwardedRef<HTMLInputElement>) {
-  const inputRef = ref ? useForwardedRef(ref) : useRef<HTMLInputElement>(null);
+function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, ref?: ForwardedRef<HTMLInputElement>) {
+  const inputRef = useForwardedRef(ref);
   const trackRef = useRef(null);
   const numberFormatter = useNumberFormatter(formatOptions);
   const state = useSliderState({ numberFormatter, ...props });

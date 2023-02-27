@@ -1,25 +1,23 @@
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import clsx from 'clsx';
-import { ChangeEvent, ComponentPropsWithRef, ElementType, forwardRef, useRef, useState } from 'react';
+import { clsx } from 'clsx';
+import { ChangeEvent, ComponentPropsWithRef, ForwardedRef, forwardRef, useState } from 'react';
 import { AriaTextFieldOptions, useTextField } from 'react-aria';
 
 import { Button } from '@/components';
-import { AsProps, PolymorphicRef } from '@/types';
+import { useForwardedRef } from '@/hooks';
 
-type TextInputProps<C extends ElementType> = AsProps<C> &
-  Omit<AriaTextFieldOptions<'input'>, 'onChange'> &
+type TextInputProps = Omit<AriaTextFieldOptions<'input'>, 'onChange'> &
   ComponentPropsWithRef<'input'> & { withVisibilityToggle?: boolean };
 
 const classes = () => clsx('bg-white flex px-4 py-2 rounded-3xl text-black w-full');
 
-function TextInput<C extends ElementType = 'input'>(
-  { as, onChange, type, withVisibilityToggle = type === 'password', ...props }: TextInputProps<C>,
-  ref: PolymorphicRef<C>,
+function TextInput(
+  { onChange, type, withVisibilityToggle = type === 'password', ...props }: TextInputProps,
+  forwardedRef?: ForwardedRef<HTMLInputElement>,
 ) {
-  ref ??= useRef(null);
-  const Component = as ?? 'input';
-  const [isVisible, setVisible] = withVisibilityToggle ? useState(false) : [false, () => void 0];
+  const ref = useForwardedRef(forwardedRef);
+  const [isVisible, setVisible] = useState(false);
   const { errorMessageProps, inputProps } = useTextField(
     {
       onChange: (value) => onChange?.({ target: { value } } as ChangeEvent<HTMLInputElement>),
@@ -31,7 +29,7 @@ function TextInput<C extends ElementType = 'input'>(
   return (
     <div className={props.className}>
       <div className={classes()}>
-        <Component
+        <input
           {...inputProps}
           className={clsx('bg-inherit outline-none w-full')}
           ref={ref}
