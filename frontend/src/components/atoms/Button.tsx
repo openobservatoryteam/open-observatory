@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { ComponentPropsWithoutRef, ElementType, forwardRef, ReactNode, useRef } from 'react';
+import { ComponentPropsWithoutRef, ElementType, ForwardedRef, forwardRef, ReactNode } from 'react';
 import { AriaButtonProps, useButton, useFocusVisible } from 'react-aria';
 
-import { AsProps, PolymorphicRef } from '@/types';
+import { AsProps } from '@/types';
 import { removeKeys } from '@/utils';
+import { useForwardedRef } from '@/hooks';
 
 type ButtonColor = 'lightGray' | 'darkGray' | 'red' | 'transparent' | 'white';
 type ButtonProps<C extends ElementType> = AsProps<C> &
@@ -60,10 +61,10 @@ const excludedAriaHandlers = [
 
 function Button<C extends ElementType = 'button'>(
   { as, className, color, fullWidth, rounded, unstyled, ...props }: ButtonProps<C>,
-  ref?: PolymorphicRef<C>,
+  forwardedRef?: ForwardedRef<Element>,
 ) {
-  ref ??= useRef(null);
   const Component = as ?? 'button';
+  const ref = useForwardedRef(forwardedRef);
   const { buttonProps, isPressed } = useButton(props, ref);
   const { isFocusVisible } = useFocusVisible();
   const finalProps = { ...buttonProps, ...removeKeys(props, excludedAriaHandlers) };
