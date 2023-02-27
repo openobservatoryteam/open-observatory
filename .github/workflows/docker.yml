@@ -23,7 +23,7 @@ jobs:
       - uses: docker/metadata-action@v4
         id: meta
         with:
-          images: ghcr.io/openobservatoryteam/oo-backend
+          images: ghcr.io/openobservatoryteam/open-observatory-backend
           tags: type=ref,event=tag
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v4
@@ -51,7 +51,7 @@ jobs:
       - uses: docker/metadata-action@v4
         id: meta
         with:
-          images: ghcr.io/openobservatoryteam/oo-frontend
+          images: ghcr.io/openobservatoryteam/open-observatory-frontend
           tags: type=ref,event=tag
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v4
