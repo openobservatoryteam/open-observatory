@@ -18,11 +18,11 @@ const RegistrationSchema = z
       .max(32, 'Le pseudonyme ne doit pas dépasser 32 caractères.'),
     password: z
       .string()
-      .regex(new RegExp('.*[A-Z].*'), 'Le mot de passe doit contenir au moins une majuscule.')
-      .regex(new RegExp('.*[a-z].*'), 'Le mot de passe doit contenir au moins une minuscule.')
-      .regex(new RegExp('.*\\d.*'), 'Le mot de passe doit contenir au moins un chiffre.')
+      .regex(/.*[A-Z].*/, 'Le mot de passe doit contenir au moins une majuscule.')
+      .regex(/.*[a-z].*/, 'Le mot de passe doit contenir au moins une minuscule.')
+      .regex(/.*\\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
       .regex(
-        new RegExp('.*[`~<>?,./!@#$%^&*()\\-_+="\'|{}\\[\\];:\\\\].*'),
+        /.*[`~<>?,./!@#$%^&*()\\-_+="'|{}\\[\\];:\\\\].*/,
         'Le mot de passe doit contenir au moins un caractère spécial.',
       )
       .min(8, "Le mot de passe doit être composé d'au moins 8 caractères.")
