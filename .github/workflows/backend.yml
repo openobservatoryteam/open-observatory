@@ -12,11 +12,6 @@ on:
       - synchronize
       - reopened
   push:
-    branches:
-      - develop
-      - feature/*
-      - fix/*
-      - main
     paths:
       - gradle/**
       - src/**

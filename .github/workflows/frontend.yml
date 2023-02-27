@@ -9,11 +9,6 @@ on:
       - synchronize
       - reopened
   push:
-    branches:
-      - develop
-      - feature/*
-      - fix/*
-      - main
     paths:
       - frontend/**
 
