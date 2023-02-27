@@ -5,7 +5,7 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
-COPY public/* src/* index.html postcss.config.cjs tailwind.config.cjs tsconfig.json tsconfig.node.json vite.config.ts ./
+COPY . ./
 RUN pnpm build
 
 FROM nginx:stable-alpine
