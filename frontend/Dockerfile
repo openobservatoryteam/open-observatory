@@ -9,6 +9,7 @@ COPY . ./
 RUN pnpm build
 
 FROM nginx:stable-alpine
+USER nginx
 WORKDIR /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist ./
