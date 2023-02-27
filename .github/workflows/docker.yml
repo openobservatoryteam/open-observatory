@@ -1,14 +1,12 @@
 name: Docker
 
 on:
-  push:
-    branches:
-      - develop
-      - main
+  release:
+    types: [published]
 
 jobs:
   backend:
-    name: Backend - Docker image
+    name: Docker image - Backend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,11 +20,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker build -t ghcr.io/openobservatoryteam/open-observatory-backend:${{ github.sha }} -t ghcr.io/openobservatoryteam/open-observatory-backend:latest .
-      - run: docker push -a ghcr.io/openobservatoryteam/open-observatory-backend
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          images: ghcr.io/openobservatoryteam/oo-backend
+          tags: type=ref,event=tag
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   frontend:
-    name: Frontend - Docker image
+    name: Docker image - Frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,5 +48,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker build -t ghcr.io/openobservatoryteam/open-observatory-frontend:${{ github.sha }} -t ghcr.io/openobservatoryteam/open-observatory-frontend:latest ./frontend
-      - run: docker push -a ghcr.io/openobservatoryteam/open-observatory-frontend
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          images: ghcr.io/openobservatoryteam/oo-frontend
+          tags: type=ref,event=tag
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
