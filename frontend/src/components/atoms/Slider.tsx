@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, RefObject, useRef } from 'react';
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, RefObject, useId, useRef } from 'react';
 import {
   AriaSliderProps,
   mergeProps,
@@ -26,6 +26,7 @@ function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, 
   const numberFormatter = useNumberFormatter(formatOptions);
   const state = useSliderState({ numberFormatter, ...props });
   const { groupProps, labelProps, outputProps, trackProps } = useSlider(props, state, trackRef);
+  const marksId = useId();
   const marksCount = withMarks ? Math.floor((state.getThumbMaxValue(0) - state.getThumbMinValue(0)) / state.step) : 0;
   return (
     <div className={className} {...groupProps}>
@@ -56,7 +57,7 @@ function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, 
         ></div>
         <Thumb index={0} inputRef={inputRef} state={state} trackRef={trackRef} />
         {marksCount > 0 &&
-          [...Array(marksCount)].map((_, i) => <Mark key={`step_${i}/${marksCount}`} nth={i} total={marksCount} />)}
+          [...Array(marksCount)].map((_, i) => <Mark key={`${marksId}_${i}`} nth={i} total={marksCount} />)}
       </div>
     </div>
   );
