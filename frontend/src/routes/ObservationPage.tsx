@@ -1,4 +1,4 @@
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
 import dayjs from 'dayjs';
@@ -38,7 +38,12 @@ export default function ObservationPage() {
     <div className="md:flex">
       <div className="w-full">
         <div className="h-[50vh] relative">
-          {observation.hasExpired && <Chip className="absolute left-5 top-5">Expirée</Chip>}
+          <div className="absolute left-5 top-5 flex">
+            <Button as={Link} to="/" className="px-3 mr-5" color="white" rounded>
+              <FontAwesomeIcon icon={faArrowLeft} size="xl" />
+            </Button>
+            {observation.hasExpired && <Chip>Expirée</Chip>}
+          </div>
           {isAuthor && (
             <Button
               as={Link}
