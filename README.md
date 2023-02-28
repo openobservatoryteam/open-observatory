@@ -27,4 +27,5 @@ Les éventuels rôles spéciaux sont précisés entre parenthèses.
 
 ## Licence
 
-Ce projet est gardé sous la licence open-source **GNU General Public Licence v3**.
+Ce projet est gardé sous la licence open-source **[GNU General Public 
+Licence v3](LICENSE)**.
