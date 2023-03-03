@@ -75,7 +75,7 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
               aria-label="Nom de l'objet céleste"
               className="w-3/4"
               defaultValue={form.formState.defaultValues?.name}
-              errorMessage={form.getFieldState('name').error?.message}
+              errorMessage={form.formState.errors.name?.message}
               placeholder="Nom de l'objet céleste"
               {...form.register('name')}
             />

@@ -69,28 +69,28 @@ function RegistrationPage() {
       >
         <TextInput
           aria-label="Pseudonyme"
-          errorMessage={form.getFieldState('username').error?.message}
+          errorMessage={form.formState.errors.username?.message}
           placeholder="Pseudonyme"
           type="text"
           {...form.register('username')}
         />
         <TextInput
           aria-label="Mot de passe"
-          errorMessage={form.getFieldState('password').error?.message}
+          errorMessage={form.formState.errors.password?.message}
           placeholder="Mot de passe"
           type="password"
           {...form.register('password')}
         />
         <TextInput
           aria-label="Confirmation du mot de passe"
-          errorMessage={form.getFieldState('passwordConfirmation').error?.message}
+          errorMessage={form.formState.errors.passwordConfirmation?.message}
           placeholder="Confirmation du mot de passe"
           type="password"
           {...form.register('passwordConfirmation')}
         />
         <TextInput
           aria-label="Biographie"
-          errorMessage={form.getFieldState('biography').error?.message}
+          errorMessage={form.formState.errors.biography?.message}
           placeholder="Biographie"
           {...form.register('biography')}
         />

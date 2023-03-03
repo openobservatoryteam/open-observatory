@@ -34,7 +34,7 @@ function LoginPage() {
       >
         <TextInput
           aria-label="Pseudonyme"
-          errorMessage={form.getFieldState('username').error?.message}
+          errorMessage={form.formState.errors.username?.message}
           placeholder="Pseudonyme"
           required
           type="text"
@@ -42,7 +42,7 @@ function LoginPage() {
         />
         <TextInput
           aria-label="Mot de passe"
-          errorMessage={form.getFieldState('password').error?.message}
+          errorMessage={form.formState.errors.password?.message}
           placeholder="Mot de passe"
           required
           type="password"

@@ -90,7 +90,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
             <TextInput
               aria-label="Nom de l'objet céleste"
               className="w-3/4"
-              errorMessage={form.getFieldState('name').error?.message}
+              errorMessage={form.formState.errors.name?.message}
               placeholder="Nom de l'objet céleste"
               {...form.register('name')}
             />
