@@ -20,11 +20,8 @@ const RegistrationSchema = z
       .string()
       .regex(/.*[A-Z].*/, 'Le mot de passe doit contenir au moins une majuscule.')
       .regex(/.*[a-z].*/, 'Le mot de passe doit contenir au moins une minuscule.')
-      .regex(/.*\\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
-      .regex(
-        /.*[`~<>?,./!@#$%^&*()\\-_+="'|{}\\[\\];:\\\\].*/,
-        'Le mot de passe doit contenir au moins un caractère spécial.',
-      )
+      .regex(/.*\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
+      .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, 'Le mot de passe doit contenir au moins un caractère spécial.')
       .min(8, "Le mot de passe doit être composé d'au moins 8 caractères.")
       .max(32, 'Le mot de passe ne doit pas dépasser 32 caractères.'),
     passwordConfirmation: z.string(),
