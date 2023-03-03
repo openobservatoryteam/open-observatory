@@ -18,7 +18,6 @@ services:
     build:
       context: .
     environment:
-      - CORS_ALLOWED_ORIGINS=http://localhost:8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database/openobservatory
       - SPRING_DATASOURCE_USERNAME=openobservatory
       - SPRING_DATASOURCE_PASSWORD=openobservatory
