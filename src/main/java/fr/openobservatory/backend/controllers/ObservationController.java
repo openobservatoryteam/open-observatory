@@ -4,7 +4,6 @@ import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.services.ObservationService;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;

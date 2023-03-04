@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ObservationDetailedDto extends ObservationDto {
-    private boolean hasExpired;
-    private int votes;
+  private boolean hasExpired;
+  private int votes;
 }

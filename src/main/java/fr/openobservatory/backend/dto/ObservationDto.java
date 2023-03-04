@@ -1,8 +1,7 @@
 package fr.openobservatory.backend.dto;
 
-import java.time.OffsetDateTime;
-
 import fr.openobservatory.backend.entities.ObservationEntity;
+import java.time.OffsetDateTime;
 import lombok.Data;
 
 @Data

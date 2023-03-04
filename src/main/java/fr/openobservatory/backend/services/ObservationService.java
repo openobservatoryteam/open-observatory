@@ -5,18 +5,12 @@ import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.repositories.ObservationRepository;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalUnit;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
 import lombok.AllArgsConstructor;
-import org.hibernate.validator.internal.constraintvalidators.bv.time.future.FutureValidatorForOffsetDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
