@@ -24,6 +24,20 @@ export type Observation = {
   time: string;
 };
 
+export type ObservationDetail = {
+  id: number;
+  description: string | null;
+  latitude: number;
+  longitude: number;
+  orientation: number;
+  celestialBody: CelestialBody;
+  author: User;
+  time: string;
+  hasExpired: boolean;
+  votes: number;
+  visibility: string;
+};
+
 export type SearchResults<T> = {
   data: T[];
   count: number;

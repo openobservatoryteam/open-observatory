@@ -1,6 +1,8 @@
 package fr.openobservatory.backend.dto;
 
 import java.time.OffsetDateTime;
+
+import fr.openobservatory.backend.entities.ObservationEntity;
 import lombok.Data;
 
 @Data
@@ -13,4 +15,5 @@ public class ObservationDto {
   private CelestialBodyDto celestialBody;
   private UserDto author;
   private OffsetDateTime time;
+  private ObservationEntity.Visibility visibility;
 }
