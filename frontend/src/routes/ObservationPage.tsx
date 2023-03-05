@@ -26,10 +26,11 @@ const visibilityLevels: visibilyType = {
   BARELY_VISIBLE: 'Peu visible',
 };
 
-export default function ObservationPage() {
+function ObservationPage(): JSX.Element {
   const {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
+
   const [myVote, submitVote] = useState<boolean | null>(null);
   const observation = useQuery({
     queryFn: () => observations.findById(id),
@@ -122,4 +123,8 @@ export default function ObservationPage() {
       </div>
     );
   }
+
+  return <Text as="h1">Observation introuvable</Text>;
 }
+
+export default ObservationPage;
