@@ -11,7 +11,15 @@ import { Button, Chip, Map, Text, UpDownVote } from '@/components';
 import { useQuery } from '@tanstack/react-query';
 import { observations } from '@/api';
 
-const visibilityLevels = {
+interface visibilyType {
+  CLEARLY_VISIBLE: string;
+  VISIBLE: string;
+  SLIGHTLY_VISIBLE: string;
+  BARELY_VISIBLE: string;
+  [key: string]: string;
+}
+
+const visibilityLevels: visibilyType = {
   CLEARLY_VISIBLE: "À l'oeil nue",
   VISIBLE: 'Visible',
   SLIGHTLY_VISIBLE: 'Légèrement visible',
