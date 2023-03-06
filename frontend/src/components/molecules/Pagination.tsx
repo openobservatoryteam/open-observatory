@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ComponentPropsWithoutRef } from 'react';
 import { Button } from '../atoms/Button';
 

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useRef } from 'react';
 import { AriaDialogProps, useDialog } from 'react-aria';
 import { Title } from '../atoms/Title';

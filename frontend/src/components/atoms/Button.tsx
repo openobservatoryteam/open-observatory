@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ComponentPropsWithoutRef, ElementType, ForwardedRef, forwardRef, ReactNode } from 'react';
 import { AriaButtonProps, useButton, useFocusVisible } from 'react-aria';
 

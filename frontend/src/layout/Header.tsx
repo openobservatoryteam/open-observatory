@@ -1,9 +1,9 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { Link } from '@tanstack/react-location';
 
 import { Logo } from '@/assets';
 import { Button, Text, Title } from '@/components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { useAuthentication } from '@/providers';
 
 export function Header() {
