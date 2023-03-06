@@ -35,7 +35,7 @@ export type ObservationDetail = {
   time: string;
   hasExpired: boolean;
   votes: number;
-  visibility: string;
+  visibility: 'CLEARLY_VISIBLE' | 'VISIBLE' | 'SLIGHTLY_VISIBLE' | 'BARELY_VISIBLE';
 };
 
 export type SearchResults<T> = {
