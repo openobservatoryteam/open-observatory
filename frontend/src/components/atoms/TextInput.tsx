@@ -4,8 +4,8 @@ import { clsx } from 'clsx';
 import { ForwardedRef, forwardRef, useState } from 'react';
 import { AriaTextFieldOptions, useTextField } from 'react-aria';
 
-import { Button } from '@/components';
-import { useForwardedRef } from '@/hooks';
+import { Button } from '~/components';
+import { useForwardedRef } from '~/hooks';
 
 type TextInputProps = AriaTextFieldOptions<'input'> & { className?: string; withVisibilityToggle?: boolean };
 

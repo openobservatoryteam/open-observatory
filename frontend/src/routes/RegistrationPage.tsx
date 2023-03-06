@@ -5,10 +5,10 @@ import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { ProblemDetail, users } from '@/api';
-import { Button, TextInput, Title } from '@/components';
-import { Footer, Header } from '@/layout';
-import { registerAdapter as r } from '@/utils';
+import { ProblemDetail, users } from '~/api';
+import { Button, TextInput, Title } from '~/components';
+import { Footer, Header } from '~/layout';
+import { registerAdapter as r } from '~/utils';
 
 const RegistrationSchema = z
   .object({

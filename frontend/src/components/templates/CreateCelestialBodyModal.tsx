@@ -7,9 +7,9 @@ import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
-import { celestialBodies } from '@/api';
-import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
-import { registerAdapter as r } from '@/utils';
+import { celestialBodies } from '~/api';
+import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
+import { registerAdapter as r } from '~/utils';
 
 const CreateCelestialBodySchema = z.object({
   name: z

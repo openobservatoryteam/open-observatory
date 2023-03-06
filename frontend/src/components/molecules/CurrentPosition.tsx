@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Circle, useMap, CircleMarker, Tooltip } from 'react-leaflet';
 
-import { usePosition } from '@/hooks';
+import { usePosition } from '~/hooks';
 
 type CurrentPositionProps = { noFly?: boolean; withoutNotificationCircle?: boolean };
 

@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 
-import { authentication, User, users } from '@/api';
+import { authentication, User, users } from '~/api';
 
 type AuthenticationContextProps = {
   isLoading: boolean;

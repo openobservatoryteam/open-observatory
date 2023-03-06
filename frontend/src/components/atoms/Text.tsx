@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 import { ComponentPropsWithoutRef, ElementType } from 'react';
 
-import { AsProps } from '@/types';
-import { removeKeys } from '@/utils';
+import { AsProps } from '~/types';
+import { removeKeys } from '~/utils';
 
 type TextColor = 'black' | 'red' | 'white';
 type TextProps<C extends ElementType = 'p'> = AsProps<C> &

@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { Link } from '@tanstack/react-location';
 
-import { Logo } from '@/assets';
-import { Button, Text, Title } from '@/components';
-import { useAuthentication } from '@/providers';
+import { Logo } from '~/assets';
+import { Button, Text, Title } from '~/components';
+import { useAuthentication } from '~/providers';
 
 export function Header() {
   const authentication = useAuthentication();

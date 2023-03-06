@@ -2,11 +2,11 @@ import { Link, useNavigate } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
-import { LoginData } from '@/api/authentication';
-import { Button, Text, TextInput, Title } from '@/components';
-import { Footer, Header } from '@/layout';
-import { useAuthentication } from '@/providers';
-import { registerAdapter as r } from '@/utils';
+import { LoginData } from '~/api/authentication';
+import { Button, Text, TextInput, Title } from '~/components';
+import { Footer, Header } from '~/layout';
+import { useAuthentication } from '~/providers';
+import { registerAdapter as r } from '~/utils';
 
 function LoginPage() {
   const auth = useAuthentication();

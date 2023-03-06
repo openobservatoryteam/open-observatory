@@ -6,10 +6,10 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
-import { observations } from '@/api';
-import celestialBodyImage from '@/assets/png/celeste.png';
-import userIcon from '@/assets/png/icon-user.png';
-import { Button, Chip, Map, Text, UpDownVote } from '@/components';
+import { observations } from '~/api';
+import celestialBodyImage from '~/assets/png/celeste.png';
+import userIcon from '~/assets/png/icon-user.png';
+import { Button, Chip, Map, Text, UpDownVote } from '~/components';
 
 const visibilityLevels = {
   CLEARLY_VISIBLE: "À l'oeil nue",
