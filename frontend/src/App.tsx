@@ -1,6 +1,7 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadProvider } from 'react-head';
+
 // trigger ci
 import { AuthenticationProvider } from '~/providers';
 import routes from '~/routes';

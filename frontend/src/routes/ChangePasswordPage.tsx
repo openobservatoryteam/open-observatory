@@ -5,7 +5,7 @@ import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { Text, TextInput, Button } from '~/components';
+import { Button, Text, TextInput } from '~/components';
 import { Footer, Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 

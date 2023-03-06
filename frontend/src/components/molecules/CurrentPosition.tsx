@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Circle, useMap, CircleMarker, Tooltip } from 'react-leaflet';
+import { Circle, CircleMarker, Tooltip, useMap } from 'react-leaflet';
 
 import { usePosition } from '~/hooks';
 
