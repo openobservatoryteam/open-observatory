@@ -8,6 +8,7 @@ import z from 'zod';
 import { ProblemDetail, users } from '@/api';
 import { Button, TextInput, Title } from '@/components';
 import { Footer, Header } from '@/layout';
+import { registerAdapter as r } from '@/utils';
 
 const RegistrationSchema = z
   .object({
@@ -34,7 +35,7 @@ const RegistrationSchema = z
 
 function RegistrationPage() {
   const navigate = useNavigate();
-  const form = useForm({
+  const { formState, handleSubmit, register, setError } = useForm({
     defaultValues: {
       username: '',
       password: '',
@@ -49,7 +50,7 @@ function RegistrationPage() {
     onSuccess: () => navigate({ to: '/login' }),
     onError: ({ cause }: { cause?: ProblemDetail }) => {
       if (cause?.message === 'USERNAME_ALREADY_USED') {
-        form.setError('username', { message: 'Ce pseudonyme est déjà utilisé.' });
+        setError('username', { message: 'Ce pseudonyme est déjà utilisé.' });
       }
     },
   });
@@ -62,34 +63,34 @@ function RegistrationPage() {
       </Title>
       <form
         className="flex flex-col gap-8 items-stretch mx-auto px-2 w-72 sm:w-96"
-        onSubmit={form.handleSubmit((data) => registration.mutate(data))}
+        onSubmit={handleSubmit((data) => registration.mutate(data))}
       >
         <TextInput
           aria-label="Pseudonyme"
-          errorMessage={form.formState.errors.username?.message}
+          errorMessage={formState.errors.username?.message}
           placeholder="Pseudonyme"
           type="text"
-          {...form.register('username')}
+          {...r(register, 'username')}
         />
         <TextInput
           aria-label="Mot de passe"
-          errorMessage={form.formState.errors.password?.message}
+          errorMessage={formState.errors.password?.message}
           placeholder="Mot de passe"
           type="password"
-          {...form.register('password')}
+          {...r(register, 'password')}
         />
         <TextInput
           aria-label="Confirmation du mot de passe"
-          errorMessage={form.formState.errors.passwordConfirmation?.message}
+          errorMessage={formState.errors.passwordConfirmation?.message}
           placeholder="Confirmation du mot de passe"
           type="password"
-          {...form.register('passwordConfirmation')}
+          {...r(register, 'passwordConfirmation')}
         />
         <TextInput
           aria-label="Biographie"
-          errorMessage={form.formState.errors.biography?.message}
+          errorMessage={formState.errors.biography?.message}
           placeholder="Biographie"
-          {...form.register('biography')}
+          {...r(register, 'biography')}
         />
         <Button type="submit">S&apos;inscrire</Button>
       </form>
