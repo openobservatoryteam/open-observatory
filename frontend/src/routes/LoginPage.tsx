@@ -20,7 +20,7 @@ function LoginPage() {
   const onSubmit = (data: LoginData) =>
     auth.login.mutate(data, {
       onSuccess: () => navigate({ to: '/' }),
-      onError: () => setError('password', { message: 'Les identifiants sont incorrects.' }),
+      onError: () => setError('root', { message: 'Les identifiants sont incorrects.' }),
     });
   return (
     <>
@@ -29,12 +29,10 @@ function LoginPage() {
       <Title as="h2" className="mb-10 mt-16 text-center">
         Connexion
       </Title>
-      <form
-        className="flex flex-col gap-10 items-stretch mb-4 mx-auto px-2 w-72 sm:w-96"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="flex flex-col mb-4 mx-auto px-2 w-72 sm:w-96" onSubmit={handleSubmit(onSubmit)}>
         <TextInput
           aria-label="Pseudonyme"
+          className="mb-10"
           errorMessage={formState.errors.username?.message}
           placeholder="Pseudonyme"
           required
@@ -43,13 +41,21 @@ function LoginPage() {
         />
         <TextInput
           aria-label="Mot de passe"
+          className="mb-10"
           errorMessage={formState.errors.password?.message}
           placeholder="Mot de passe"
           required
           type="password"
           {...r(register, 'password')}
         />
-        <Button type="submit">Se connecter</Button>
+        <Button className="mb-5" type="submit">
+          Se connecter
+        </Button>
+        {formState.errors.root && (
+          <Text centered color="red">
+            {formState.errors.root.message}
+          </Text>
+        )}
       </form>
       <Text centered>
         <Link to="/register">Pas de compte ? Inscrivez-vous.</Link>
