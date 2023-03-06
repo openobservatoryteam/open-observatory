@@ -1,12 +1,9 @@
-import { FieldValues, UseFormRegister } from 'react-hook-form';
-
-type FieldName<T extends FieldValues> = Parameters<UseFormRegister<T>>[0];
-type FieldOptions<T extends FieldValues> = Parameters<UseFormRegister<T>>[1];
+import { FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form';
 
 function registerAdapter<T extends FieldValues>(
   register: UseFormRegister<T>,
-  name: FieldName<T>,
-  options?: FieldOptions<T>,
+  name: Path<T>,
+  options?: RegisterOptions<T, Path<T>>,
 ) {
   const { onChange, ...registered } = register(name, options);
   return {
