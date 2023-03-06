@@ -1,11 +1,12 @@
-import { Text, TextInput, Button } from '@/components';
-import { Footer, Header } from '@/layout';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
+
+import { Text, TextInput, Button } from '@/components';
+import { Footer, Header } from '@/layout';
 
 const changePasswordSchema = z
   .object({

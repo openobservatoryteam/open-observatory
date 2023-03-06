@@ -11,8 +11,8 @@ import {
 import { SliderState, useSliderState } from 'react-stately';
 
 import { Text } from '@/components';
-import { removeKeys } from '@/utils';
 import { useForwardedRef } from '@/hooks';
+import { removeKeys } from '@/utils';
 
 type SliderProps = AriaSliderProps<number> &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AriaSliderProps<number>> & {

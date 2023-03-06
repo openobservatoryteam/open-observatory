@@ -1,6 +1,7 @@
 import { faCamera, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
@@ -8,7 +9,6 @@ import * as z from 'zod';
 
 import { celestialBodies, CelestialBody } from '@/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const UpdateCelestialBodySchema = z.object({
   name: z

@@ -1,15 +1,15 @@
 import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
+import { observations } from '@/api';
 import celestialBodyImage from '@/assets/png/celeste.png';
 import userIcon from '@/assets/png/icon-user.png';
 import { Button, Chip, Map, Text, UpDownVote } from '@/components';
-import { useQuery } from '@tanstack/react-query';
-import { observations } from '@/api';
 
 const visibilityLevels = {
   CLEARLY_VISIBLE: "À l'oeil nue",
@@ -29,7 +29,7 @@ function ObservationPage(): JSX.Element {
     queryKey: ['observation'],
   });
 
-  if (!observationQuery.data) return <Text as="h1">Observation introuvable</Text>;
+  if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
 
   const observation = observationQuery.data;
   const isAuthor = observation.author.username === 'EikjosTV';
