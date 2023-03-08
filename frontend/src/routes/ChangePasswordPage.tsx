@@ -1,11 +1,13 @@
-import { Text, TextInput, Button } from '@/components';
-import { Footer, Header } from '@/layout';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
+
+import { Button, Text, TextInput } from '~/components';
+import { Footer, Header } from '~/layout';
+import { registerAdapter as r } from '~/utils';
 
 const changePasswordSchema = z
   .object({
@@ -26,7 +28,7 @@ const changePasswordSchema = z
   });
 
 function ChangePasswordPage() {
-  const form = useForm({
+  const { formState, handleSubmit, register } = useForm({
     defaultValues: {
       oldPassword: '',
       newPassword: '',
@@ -42,29 +44,29 @@ function ChangePasswordPage() {
       <Text as="h1" centered className="mt-10">
         Changement du mot de passe
       </Text>
-      <form className="flex flex-col mt-5 mx-auto w-72 md:w-[50%]" onSubmit={form.handleSubmit(() => 0)}>
+      <form className="flex flex-col mt-5 mx-auto w-72 md:w-[50%]" onSubmit={handleSubmit(() => 0)}>
         <TextInput
-          errorMessage={form.formState.errors.oldPassword?.message}
+          errorMessage={formState.errors.oldPassword?.message}
           type="password"
           className="mt-7"
           placeholder="Ancien mot de passe"
-          {...form.register('oldPassword')}
+          {...r(register, 'oldPassword')}
         />
         <TextInput
-          errorMessage={form.formState.errors.newPassword?.message}
+          errorMessage={formState.errors.newPassword?.message}
           type="password"
           className="mt-7"
           placeholder="Nouveau mot de passe"
-          {...form.register('newPassword')}
+          {...r(register, 'newPassword')}
         />
         <TextInput
-          errorMessage={form.formState.errors.confirmPassword?.message}
+          errorMessage={formState.errors.confirmPassword?.message}
           type="password"
           className="mt-7"
           placeholder="Confirmation mot de passe"
-          {...form.register('confirmPassword')}
+          {...r(register, 'confirmPassword')}
         />
-        <Button className="mt-10 flex justify-between" type="submit">
+        <Button className="flex justify-between mt-10" type="submit">
           Enregistrer
           <FontAwesomeIcon icon={faSave} />
         </Button>

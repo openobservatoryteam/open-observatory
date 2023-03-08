@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef, ReactElement } from 'react';
 
-import { Pagination } from '@/components';
+import { Pagination } from '~/components';
 
 type ListProps<T> = ComponentPropsWithoutRef<'div'> & {
   data: readonly T[];

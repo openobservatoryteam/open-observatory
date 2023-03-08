@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useOverlayTriggerState } from 'react-stately';
 
-import { celestialBodies, CelestialBody } from '@/api';
-import { Logo } from '@/assets';
-import { Button, List, Text, Title, EditCelestialBody, CreateCelestialBodyModal } from '@/components';
+import { CelestialBody, celestialBodies } from '~/api';
+import { Logo } from '~/assets';
+import { Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
 
 function CelestialBodyAdminPage() {
   const [editedBody, setEditedBody] = useState<CelestialBody | null>(null);

@@ -1,14 +1,15 @@
 import { faCamera, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
-import { celestialBodies, CelestialBody } from '@/api';
-import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CelestialBody, celestialBodies } from '~/api';
+import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
+import { registerAdapter as r } from '~/utils';
 
 const UpdateCelestialBodySchema = z.object({
   name: z
@@ -30,7 +31,7 @@ type EditCelestialBodyProps = {
 
 export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyProps) {
   const queryClient = useQueryClient();
-  const form = useForm({
+  const { formState, handleSubmit, setValue, register, watch } = useForm({
     defaultValues: {
       name: celestialBody.name,
       image: celestialBody.image,
@@ -54,11 +55,10 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
       state.close();
     },
   });
-  const { onChange: sliderChange, ...sliderProps } = form.register('validityTime');
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (evt.target.files && evt.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => form.setValue('image', e.target?.result?.toString());
+      reader.onload = (e) => setValue('image', e.target?.result?.toString());
       reader.readAsDataURL(evt.target.files[0]);
     }
   };
@@ -67,11 +67,11 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
       <Dialog title="Modification d'un objet céleste">
         <form
           className="flex flex-col items-center"
-          onSubmit={form.handleSubmit((data) => update.mutate({ id: celestialBody.id, ...data }))}
+          onSubmit={handleSubmit((data) => update.mutate({ id: celestialBody.id, ...data }))}
         >
-          {form.watch('image') ? (
+          {watch('image') ? (
             <div className="flex items-center justify-center relative w-3/4">
-              <img src={form.watch('image')} className="h-60 object-cover rounded-2xl w-full" />
+              <img src={watch('image')} className="h-60 object-cover rounded-2xl w-full" />
               <label className="absolute bg-[#D9D9D9] bottom-3 cursor-pointer flex items-center justify-center p-3 right-5 rounded-full">
                 <input aria-label="Image de l'objet céleste" className="hidden" onChange={handleChange} type="file" />
                 <FontAwesomeIcon icon={faCamera} size="xl" color="black" />
@@ -90,9 +90,9 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
             <TextInput
               aria-label="Nom de l'objet céleste"
               className="w-3/4"
-              errorMessage={form.formState.errors.name?.message}
+              errorMessage={formState.errors.name?.message}
               placeholder="Nom de l'objet céleste"
-              {...form.register('name')}
+              {...r(register, 'name')}
             />
           </div>
           <div className="flex items-center justify-evenly mt-8 w-full">
@@ -106,13 +106,12 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
                 defaultValue={celestialBody.validityTime}
                 maxValue={10}
                 minValue={1}
-                onChange={(value) => sliderChange({ target: { name: sliderProps.name, value } })}
                 step={1}
                 withMarks
-                {...sliderProps}
+                {...r(register, 'validityTime')}
               />
               <Text as="span" className="ml-5 w-1/5">
-                {form.watch('validityTime')} {form.watch('validityTime') > 1 ? ' heures' : ' heure'}
+                {watch('validityTime')} {watch('validityTime') > 1 ? ' heures' : ' heure'}
               </Text>
             </div>
           </div>

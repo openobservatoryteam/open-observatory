@@ -70,7 +70,7 @@ public class SecurityConfiguration {
                     .authenticated()
                     .requestMatchers("/users/current")
                     .authenticated()
-                    .requestMatchers("/users/register")
+                    .requestMatchers("/users/register", "/observations/\\d*")
                     .anonymous()
                     .anyRequest()
                     .permitAll())

@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 
-import { Button, Map, NearbyObservations } from '@/components';
-import { Header } from '@/layout';
+import { Button, Map, NearbyObservations } from '~/components';
+import { Header } from '~/layout';
 
 function HomePage() {
   return (

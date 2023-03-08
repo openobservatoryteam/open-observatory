@@ -1,18 +1,18 @@
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, RefObject, useId, useRef } from 'react';
+import { ComponentPropsWithoutRef, ForwardedRef, RefObject, forwardRef, useId, useRef } from 'react';
 import {
   AriaSliderProps,
+  VisuallyHidden,
   mergeProps,
   useFocusRing,
   useNumberFormatter,
   useSlider,
   useSliderThumb,
-  VisuallyHidden,
 } from 'react-aria';
 import { SliderState, useSliderState } from 'react-stately';
 
-import { Text } from '@/components';
-import { removeKeys } from '@/utils';
-import { useForwardedRef } from '@/hooks';
+import { Text } from '~/components';
+import { useForwardedRef } from '~/hooks';
+import { removeKeys } from '~/utils';
 
 type SliderProps = AriaSliderProps<number> &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AriaSliderProps<number>> & {

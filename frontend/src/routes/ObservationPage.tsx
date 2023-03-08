@@ -1,39 +1,38 @@
 import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
-import celestialBodyImage from '@/assets/png/celeste.png';
-import userIcon from '@/assets/png/icon-user.png';
-import { Button, Chip, Map, Text, UpDownVote } from '@/components';
+import { observations } from '~/api';
+import celestialBodyImage from '~/assets/png/celeste.png';
+import userIcon from '~/assets/png/icon-user.png';
+import { Button, Chip, Map, Text, UpDownVote } from '~/components';
 
 const visibilityLevels = {
-  NAKED_EYE: "à l'oeil nu",
-  UNKNOWN: 'inconnue',
+  CLEARLY_VISIBLE: "À l'oeil nue",
+  VISIBLE: 'Visible',
+  SLIGHTLY_VISIBLE: 'Légèrement visible',
+  BARELY_VISIBLE: 'Peu visible',
 };
 
-export default function ObservationPage() {
+function ObservationPage(): JSX.Element {
   const {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
-  const observation = {
-    author: {
-      avatarURL: null,
-      username: 'EikjosTV',
-    },
-    description: "L'observation est somptueuse",
-    hasExpired: true,
-    name: 'Observation de test',
-    orientation: 98,
-    position: [49.4049375, 0.4180013],
-    sentAt: '2023-02-13T13:12:44+01:00',
-    visibility: 'NAKED_EYE',
-    votes: 200,
-  } as const;
-  const isAuthor = observation.author.username === 'EikjosTV';
+
   const [myVote, submitVote] = useState<boolean | null>(null);
+  const observationQuery = useQuery({
+    queryFn: () => observations.findById(id),
+    queryKey: ['observation'],
+  });
+
+  if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
+
+  const observation = observationQuery.data;
+  const isAuthor = observation.author.username === 'EikjosTV';
   return (
     <div className="md:flex">
       <div className="w-full">
@@ -67,10 +66,10 @@ export default function ObservationPage() {
           <div className="flex justify-between pl-3 pt-4">
             <div className="w-1/2">
               <Text as="h2" bold className="text-lg md:text-2xl">
-                {observation.name}
+                {observation.celestialBody.name}
               </Text>
               <Text as="p" className="text-xs md:text-base">
-                {dayjs(observation.sentAt).format('le DD/MM/YYYY à HH:mm')}
+                {dayjs(observation.time).format('le DD/MM/YYYY à HH:mm')}
               </Text>
             </div>
             <Button
@@ -79,7 +78,7 @@ export default function ObservationPage() {
               color="transparent"
               to={`/users/${observation.author.username}`}
             >
-              <img className="rounded-full w-10 md:w-12" src={observation.author.avatarURL ?? userIcon} />
+              <img className="rounded-full w-10 md:w-12" src={observation.author.avatar ?? userIcon} />
               <Text as="span" color="white">
                 {observation.author.username}
               </Text>
@@ -89,7 +88,7 @@ export default function ObservationPage() {
             <Text as="span" bold>
               Visibilité :
             </Text>{' '}
-            {visibilityLevels[observation.visibility ?? 'UNKNOWN']}
+            {visibilityLevels[observation.visibility]}
           </Text>
           <Text className="mt-3 md:mt-10 px-5">
             <Text as="span" bold>
@@ -106,15 +105,17 @@ export default function ObservationPage() {
         </div>
       </div>
       <Map
-        center={[...observation.position]}
+        center={[observation.latitude, observation.longitude]}
         className="h-[calc(100vh-20rem)] md:h-[100vh] w-full"
         noFly
         withoutNotificationCircle
       >
-        <Marker position={[...observation.position]}>
-          <Popup>{observation.name}</Popup>
+        <Marker position={[observation.latitude, observation.longitude]}>
+          <Popup>{observation.celestialBody.name}</Popup>
         </Marker>
       </Map>
     </div>
   );
 }
+
+export default ObservationPage;

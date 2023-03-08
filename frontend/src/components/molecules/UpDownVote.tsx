@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentPropsWithoutRef } from 'react';
 
-import { Button, Text } from '@/components';
+import { Button, Text } from '~/components';
 
 type UpDownVoteProps = {
   currentVotes: number;
@@ -22,7 +22,7 @@ const UpDownVote = ({ currentVotes, onVote, vote, ...props }: UpDownVoteProps) =
       >
         <FontAwesomeIcon color={vote === true ? 'white' : 'gray'} icon={faArrowUp} size="2xl" />
       </Button>
-      <Text as="p" className="mt-1.5 mb-0.5">
+      <Text as="p" centered className="mt-1.5 mb-0.5">
         {currentVotes}
       </Text>
       <Button

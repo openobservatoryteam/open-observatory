@@ -1,7 +1,14 @@
 package fr.openobservatory.backend.services;
 
+import fr.openobservatory.backend.dto.CelestialBodyDto;
+import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
+import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.repositories.ObservationRepository;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +22,28 @@ public class ObservationService {
   private final ObservationRepository observationRepository;
 
   // ---
+
+  public ObservationDetailedDto findById(Long id) {
+    var obs = observationRepository.findById(id);
+    if (obs.isEmpty()) {
+      return null;
+    }
+    var o = obs.get();
+    var dto = new ObservationDetailedDto();
+    dto.setId(o.getId());
+    dto.setAuthor(modelMapper.map(o.getAuthor(), UserDto.class));
+    dto.setDescription(o.getDescription());
+    dto.setLongitude(o.getLongitude());
+    dto.setLatitude(o.getLatitude());
+    var duration = Duration.ofHours(o.getCelestialBody().getValidityTime());
+    var date = OffsetDateTime.ofInstant(o.getCreatedAt(), ZoneOffset.UTC);
+    dto.setCelestialBody(modelMapper.map(o.getCelestialBody(), CelestialBodyDto.class));
+    dto.setTime(OffsetDateTime.ofInstant(o.getCreatedAt(), ZoneOffset.UTC));
+    dto.setHasExpired((Instant.now().isAfter(date.plus(duration).toInstant())));
+    dto.setOrientation(o.getOrientation());
+    dto.setVisibility(o.getVisibility());
+    return dto;
+  }
 
   public List<ObservationDto> search(Integer limit, Integer page) {
     return observationRepository.findAll().stream()
