@@ -1,9 +1,12 @@
 package fr.openobservatory.backend.services;
 
+import fr.openobservatory.backend.dto.ChangePasswordDto;
 import fr.openobservatory.backend.dto.RegisterUserDto;
 import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.entities.UserEntity;
+import fr.openobservatory.backend.exceptions.InvalidPasswordException;
 import fr.openobservatory.backend.exceptions.InvalidUsernameException;
+import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.exceptions.UsernameAlreadyUsedException;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
@@ -43,5 +46,15 @@ public class UserService {
     entity.setPublic(true);
     entity.setCreatedAt(Instant.now());
     return modelMapper.map(userRepository.save(entity), UserDto.class);
+  }
+
+  public void modifyPassword(String username, ChangePasswordDto dto) {
+    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+      user.setPassword(dto.getNewPassword());
+      modelMapper.map(userRepository.save(user), UserDto.class);
+    } else {
+      throw new InvalidPasswordException();
+    }
   }
 }
