@@ -1,5 +1,6 @@
 export * from './atoms/Button';
 export * from './atoms/Chip';
+export * from './atoms/Select';
 export * from './atoms/Slider';
 export * from './atoms/Text';
 export * from './atoms/TextInput';
