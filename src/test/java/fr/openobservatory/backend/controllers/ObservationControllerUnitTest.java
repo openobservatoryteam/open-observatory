@@ -15,44 +15,41 @@ import org.springframework.http.ResponseEntity;
 
 class ObservationControllerUnitTest {
 
-    @Mock
-    private ObservationService observationService;
+  @Mock private ObservationService observationService;
 
-    @InjectMocks
-    private ObservationController observationController;
+  @InjectMocks private ObservationController observationController;
 
-    @BeforeEach
-    void setUp() throws Exception {
-        MockitoAnnotations.openMocks(this);
-    }
+  @BeforeEach
+  void setUp() throws Exception {
+    MockitoAnnotations.openMocks(this);
+  }
 
-    @Test
-    void testGetObservation() {
-        // GIVEN
-        Long id = 1L;
-        ObservationDetailedDto observation = new ObservationDetailedDto();
-        observation.setId(id);
-        when(observationService.findById(id)).thenReturn(observation);
+  @Test
+  void testGetObservation() {
+    // GIVEN
+    Long id = 1L;
+    ObservationDetailedDto observation = new ObservationDetailedDto();
+    observation.setId(id);
+    when(observationService.findById(id)).thenReturn(observation);
 
-        // WHEN
-        ResponseEntity<ObservationDetailedDto> response = observationController.getObservation(id);
+    // WHEN
+    ResponseEntity<ObservationDetailedDto> response = observationController.getObservation(id);
 
-        // THEN
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(id, response.getBody().getId());
-    }
+    // THEN
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(id, response.getBody().getId());
+  }
 
-    @Test
-    void testGetObservationNotFound() {
-        // GIVEN
-        Long id = 1L;
-        when(observationService.findById(id)).thenReturn(null);
+  @Test
+  void testGetObservationNotFound() {
+    // GIVEN
+    Long id = 1L;
+    when(observationService.findById(id)).thenReturn(null);
 
-        // WHEN
-        ResponseEntity<ObservationDetailedDto> response = observationController.getObservation(id);
+    // WHEN
+    ResponseEntity<ObservationDetailedDto> response = observationController.getObservation(id);
 
-        // THEN
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
+    // THEN
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
 }
