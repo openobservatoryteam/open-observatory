@@ -49,9 +49,10 @@ public class UserService {
   }
 
   public void modifyPassword(String username, ChangePasswordDto dto) {
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-      user.setPassword(dto.getNewPassword());
+      user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
       modelMapper.map(userRepository.save(user), UserDto.class);
     } else {
       throw new InvalidPasswordException();

@@ -5,9 +5,6 @@ import lombok.Data;
 
 @Data
 public class ChangePasswordDto {
-
-    @JsonIgnore
-    private String oldPassword;
-    @JsonIgnore
-    private String newPassword;
+  private String oldPassword;
+  private String newPassword;
 }
