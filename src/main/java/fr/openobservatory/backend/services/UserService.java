@@ -1,13 +1,12 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.ChangePasswordDto;
-import fr.openobservatory.backend.dto.ProfileDto;
-import fr.openobservatory.backend.dto.RegisterUserDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.UserRepository;
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -57,10 +56,28 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public ProfileDto getProfile(String targetedUser, String currentUser) {
+  public ProfileDto getProfile(String targetedUser) {
     var user = userRepository.findByUsernameIgnoreCase(targetedUser).orElseThrow(UnknownUserException::new);
-    if (!user.isPublic() && (!Objects.equals(currentUser, targetedUser))) {
+    if (!user.isPublic()) {
       throw new ProfileNotAccessibleException();
     }
+    var profile = new ProfileDto();
+    profile.setBiography(user.getBiography());
+    profile.setKarma(0);
+    profile.setAchievements(new AchievementDto[] {new AchievementDto()});
+    var userDto = findByUsername(targetedUser).orElseThrow(InvalidUsernameException::new);
+    profile.setUser(userDto);
+    return profile;
+  }
+
+  public ProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
+    var user = userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
+    user.setBiography(dto.getBiography());
+    userRepository.save(user);
+    return getProfile(currentUser);
+  }
+
+  public Boolean canEditUser(String targetedUser, String currentUser) {
+    return Objects.equals(targetedUser, currentUser);
   }
 }

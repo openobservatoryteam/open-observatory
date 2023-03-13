@@ -1,9 +1,6 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.ChangePasswordDto;
-import fr.openobservatory.backend.dto.ProfileDto;
-import fr.openobservatory.backend.dto.RegisterUserDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
@@ -42,7 +39,7 @@ public class UserController {
       Authentication authentication,
       @RequestBody @Valid ChangePasswordDto dto,
       @PathVariable("username") String username) {
-    if (!(Objects.equals(username, authentication.getName()))) {
+    if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     userService.modifyPassword(authentication.getName(), dto);
@@ -51,8 +48,20 @@ public class UserController {
 
   @GetMapping("/{username}/profile")
   public ResponseEntity<ProfileDto> getProfile(Authentication authentication,@PathVariable("username") String username) {
-    var profile = userService.
-    return ResponseEntity<>(profile, HttpStatus.OK);
+    if (!userService.canEditUser(username, authentication.getName())) {
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    var profile = userService.getProfile(username);
+    return new ResponseEntity<>(profile, HttpStatus.OK);
+  }
+
+  @PatchMapping("/{username}/profile")
+  public ResponseEntity<ProfileDto> updateProfile(Authentication authentication, @PathVariable("username") String username, @RequestBody @Valid UpdateProfileDto dto) {
+    if (!userService.canEditUser(username, authentication.getName())) {
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    var profile = userService.updateProfile(username, dto);
+    return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
 }
