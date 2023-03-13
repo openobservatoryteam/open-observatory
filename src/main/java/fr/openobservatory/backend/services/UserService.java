@@ -54,7 +54,7 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public ProfileDto getProfile(String targetedUser) {
+  public UserWithProfileDto getProfile(String targetedUser) {
     var user =
         userRepository
             .findByUsernameIgnoreCase(targetedUser)
@@ -62,16 +62,10 @@ public class UserService {
     if (!user.isPublic()) {
       throw new ProfileNotAccessibleException();
     }
-    var profile = new ProfileDto();
-    profile.setBiography(user.getBiography());
-    profile.setKarma(0);
-    profile.setAchievements(new AchievementDto[] {new AchievementDto()});
-    var userDto = findByUsername(targetedUser).orElseThrow(InvalidUsernameException::new);
-    profile.setUser(userDto);
-    return profile;
+    return modelMapper.map(user, UserWithProfileDto.class);
   }
 
-  public ProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
+  public UserWithProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
     var user =
         userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
     user.setBiography(dto.getBiography());

@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-  private UserService userService;
-  private PasswordEncoder passwordEncoder;
+  private final UserService userService;
 
   // ---
 
@@ -44,8 +43,8 @@ public class UserController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @GetMapping("/{username}/profile")
-  public ResponseEntity<ProfileDto> getProfile(
+  @GetMapping("/{username}")
+  public ResponseEntity<UserWithProfileDto> getProfile(
       Authentication authentication, @PathVariable("username") String username) {
     if (!userService.isViewable(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -54,8 +53,8 @@ public class UserController {
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
-  @PatchMapping("/{username}/profile")
-  public ResponseEntity<ProfileDto> updateProfile(
+  @PatchMapping("/{username}")
+  public ResponseEntity<UserWithProfileDto> updateProfile(
       Authentication authentication,
       @PathVariable("username") String username,
       @RequestBody @Valid UpdateProfileDto dto) {
