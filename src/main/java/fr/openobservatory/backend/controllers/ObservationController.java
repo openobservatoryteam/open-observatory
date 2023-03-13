@@ -44,4 +44,16 @@ public class ObservationController {
         observationService.findById(id).map(o -> modelMapper.map(o, ObservationDetailedDto.class));
     return ResponseEntity.of(observation);
   }
+
+  @PutMapping("/{id}/vote")
+  public ResponseEntity<Void> voteObservation(@PathVariable("id") Long id, String vote) {
+    var observation = observationService.findById(id);
+    if (observation == null) {
+      return ResponseEntity.notFound().build();
+    }
+    // TODO get the userId
+    Long userId = null;
+    observationService.voteObservation(id, userId, vote);
+    return ResponseEntity.noContent().build();
+  }
 }
