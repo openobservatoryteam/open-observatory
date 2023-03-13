@@ -5,6 +5,8 @@ import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.repositories.ObservationRepository;
+import fr.openobservatory.backend.repositories.ObservationVoteRepository;
+import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -20,6 +22,8 @@ public class ObservationService {
 
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
+  private final UserRepository userRepository;
+  private final ObservationVoteRepository observationVoteRepository;
 
   // ---
 
@@ -60,6 +64,23 @@ public class ObservationService {
                     <= 30)
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
+  }
+
+  public boolean voteObservation(Long observationId, Long userId, String vote) {
+    var observation = observationRepository.findById(observationId).orElse(null);
+    var user = userRepository.findById(userId).orElse(null);
+    if (observation == null || user == null) {
+      return false;
+    }
+    var voteEntity =
+        observationVoteRepository.findByObservationAndUser(observation, user).orElse(null);
+    if (voteEntity != null) {
+      // TODO
+    } else {
+      // TODO
+    }
+    observationVoteRepository.save(voteEntity);
+    return true;
   }
 
   // Calculate distance between two points using the "haversine" formula
