@@ -1,15 +1,14 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.ChangePasswordDto;
+import fr.openobservatory.backend.dto.ProfileDto;
 import fr.openobservatory.backend.dto.RegisterUserDto;
 import fr.openobservatory.backend.dto.UserDto;
 import fr.openobservatory.backend.entities.UserEntity;
-import fr.openobservatory.backend.exceptions.InvalidPasswordException;
-import fr.openobservatory.backend.exceptions.InvalidUsernameException;
-import fr.openobservatory.backend.exceptions.UnknownUserException;
-import fr.openobservatory.backend.exceptions.UsernameAlreadyUsedException;
+import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
@@ -56,5 +55,12 @@ public class UserService {
     }
     user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
     userRepository.save(user);
+  }
+
+  public ProfileDto getProfile(String targetedUser, String currentUser) {
+    var user = userRepository.findByUsernameIgnoreCase(targetedUser).orElseThrow(UnknownUserException::new);
+    if (!user.isPublic() && (!Objects.equals(currentUser, targetedUser))) {
+      throw new ProfileNotAccessibleException();
+    }
   }
 }

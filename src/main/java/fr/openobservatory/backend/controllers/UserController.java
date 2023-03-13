@@ -1,8 +1,10 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.ChangePasswordDto;
+import fr.openobservatory.backend.dto.ProfileDto;
 import fr.openobservatory.backend.dto.RegisterUserDto;
 import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
 import java.util.Objects;
@@ -46,4 +48,11 @@ public class UserController {
     userService.modifyPassword(authentication.getName(), dto);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
+
+  @GetMapping("/{username}/profile")
+  public ResponseEntity<ProfileDto> getProfile(Authentication authentication,@PathVariable("username") String username) {
+    var profile = userService.
+    return ResponseEntity<>(profile, HttpStatus.OK);
+  }
+
 }
