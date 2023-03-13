@@ -1,10 +1,8 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.*;
-import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +45,8 @@ public class UserController {
   }
 
   @GetMapping("/{username}/profile")
-  public ResponseEntity<ProfileDto> getProfile(Authentication authentication,@PathVariable("username") String username) {
+  public ResponseEntity<ProfileDto> getProfile(
+      Authentication authentication, @PathVariable("username") String username) {
     if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -56,12 +55,14 @@ public class UserController {
   }
 
   @PatchMapping("/{username}/profile")
-  public ResponseEntity<ProfileDto> updateProfile(Authentication authentication, @PathVariable("username") String username, @RequestBody @Valid UpdateProfileDto dto) {
+  public ResponseEntity<ProfileDto> updateProfile(
+      Authentication authentication,
+      @PathVariable("username") String username,
+      @RequestBody @Valid UpdateProfileDto dto) {
     if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     var profile = userService.updateProfile(username, dto);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
-
 }

@@ -4,9 +4,7 @@ import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.UserRepository;
-
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -57,7 +55,10 @@ public class UserService {
   }
 
   public ProfileDto getProfile(String targetedUser) {
-    var user = userRepository.findByUsernameIgnoreCase(targetedUser).orElseThrow(UnknownUserException::new);
+    var user =
+        userRepository
+            .findByUsernameIgnoreCase(targetedUser)
+            .orElseThrow(UnknownUserException::new);
     if (!user.isPublic()) {
       throw new ProfileNotAccessibleException();
     }
@@ -71,7 +72,8 @@ public class UserService {
   }
 
   public ProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
-    var user = userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
     user.setBiography(dto.getBiography());
     userRepository.save(user);
     return getProfile(currentUser);
