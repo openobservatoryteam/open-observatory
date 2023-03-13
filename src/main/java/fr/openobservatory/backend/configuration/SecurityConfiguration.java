@@ -116,6 +116,8 @@ public class SecurityConfiguration {
     return (request, response, authentication) -> {
       var token = jwtService.generateToken(authentication);
       var cookie = new Cookie(CookieJwtFilter.COOKIE_NAME, token);
+      cookie.setMaxAge(3600);
+      cookie.setPath("/");
       response.addCookie(cookie);
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setStatus(HttpStatus.OK.value());
