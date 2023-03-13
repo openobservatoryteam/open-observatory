@@ -47,7 +47,7 @@ public class UserController {
   @GetMapping("/{username}/profile")
   public ResponseEntity<ProfileDto> getProfile(
       Authentication authentication, @PathVariable("username") String username) {
-    if (!userService.canEditUser(username, authentication.getName())) {
+    if (!userService.isViewable(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     var profile = userService.getProfile(username);

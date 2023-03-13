@@ -82,4 +82,14 @@ public class UserService {
   public Boolean canEditUser(String targetedUser, String currentUser) {
     return Objects.equals(targetedUser, currentUser);
   }
+
+  public Boolean isViewable(String targetedUser, String currentUser) {
+    if (!userRepository
+        .findByUsernameIgnoreCase(targetedUser)
+        .orElseThrow(UnknownUserException::new)
+        .isPublic()) {
+      return !Objects.equals(targetedUser, currentUser);
+    }
+    return true;
+  }
 }
