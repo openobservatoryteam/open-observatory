@@ -1,15 +1,11 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.ChangePasswordDto;
-import fr.openobservatory.backend.dto.RegisterUserDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.entities.UserEntity;
-import fr.openobservatory.backend.exceptions.InvalidPasswordException;
-import fr.openobservatory.backend.exceptions.InvalidUsernameException;
-import fr.openobservatory.backend.exceptions.UnknownUserException;
-import fr.openobservatory.backend.exceptions.UsernameAlreadyUsedException;
+import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
@@ -56,5 +52,38 @@ public class UserService {
     }
     user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
     userRepository.save(user);
+  }
+
+  public UserWithProfileDto getProfile(String targetedUser) {
+    var user =
+        userRepository
+            .findByUsernameIgnoreCase(targetedUser)
+            .orElseThrow(UnknownUserException::new);
+    if (!user.isPublic()) {
+      throw new ProfileNotAccessibleException();
+    }
+    return modelMapper.map(user, UserWithProfileDto.class);
+  }
+
+  public UserWithProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
+    var user =
+        userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
+    user.setBiography(dto.getBiography());
+    userRepository.save(user);
+    return getProfile(currentUser);
+  }
+
+  public Boolean canEditUser(String targetedUser, String currentUser) {
+    return Objects.equals(targetedUser, currentUser);
+  }
+
+  public Boolean isViewable(String targetedUser, String currentUser) {
+    if (!userRepository
+        .findByUsernameIgnoreCase(targetedUser)
+        .orElseThrow(UnknownUserException::new)
+        .isPublic()) {
+      return !Objects.equals(targetedUser, currentUser);
+    }
+    return true;
   }
 }

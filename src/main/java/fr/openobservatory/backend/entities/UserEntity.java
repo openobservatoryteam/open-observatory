@@ -1,7 +1,9 @@
 package fr.openobservatory.backend.entities;
 
+import fr.openobservatory.backend.dto.AchievementDto;
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import lombok.Data;
 
@@ -59,5 +61,13 @@ public class UserEntity {
   public enum Type {
     USER,
     ADMIN
+  }
+
+  public int getKarma() {
+    return 0;
+  }
+
+  public List<AchievementDto> getAchievements() {
+    return List.of();
   }
 }

@@ -1,16 +1,12 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.ChangePasswordDto;
-import fr.openobservatory.backend.dto.RegisterUserDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -18,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-  private UserService userService;
-  private PasswordEncoder passwordEncoder;
+  private final UserService userService;
 
   // ---
 
@@ -40,10 +35,32 @@ public class UserController {
       Authentication authentication,
       @RequestBody @Valid ChangePasswordDto dto,
       @PathVariable("username") String username) {
-    if (!(Objects.equals(username, authentication.getName()))) {
+    if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     userService.modifyPassword(authentication.getName(), dto);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/{username}")
+  public ResponseEntity<UserWithProfileDto> getProfile(
+      Authentication authentication, @PathVariable("username") String username) {
+    if (!userService.isViewable(username, authentication.getName())) {
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    var profile = userService.getProfile(username);
+    return new ResponseEntity<>(profile, HttpStatus.OK);
+  }
+
+  @PatchMapping("/{username}")
+  public ResponseEntity<UserWithProfileDto> updateProfile(
+      Authentication authentication,
+      @PathVariable("username") String username,
+      @RequestBody @Valid UpdateProfileDto dto) {
+    if (!userService.canEditUser(username, authentication.getName())) {
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+    var profile = userService.updateProfile(username, dto);
+    return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 }
