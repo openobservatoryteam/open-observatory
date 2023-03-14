@@ -1,12 +1,17 @@
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-location';
+import { useMutation } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
+import { ProblemDetail, users } from '~/api';
+import { ChangePasswordBody } from '~/api/users';
 import { Button, Text, TextInput } from '~/components';
 import { Footer, Header } from '~/layout';
+import { useAuthentication } from '~/providers';
 import { registerAdapter as r } from '~/utils';
 
 const changePasswordSchema = z
@@ -28,13 +33,27 @@ const changePasswordSchema = z
   });
 
 function ChangePasswordPage() {
-  const { formState, handleSubmit, register } = useForm({
+  const { formState, handleSubmit, register, setError } = useForm({
     defaultValues: {
       oldPassword: '',
       newPassword: '',
       confirmPassword: '',
     },
     resolver: zodResolver(changePasswordSchema),
+  });
+  const navigate = useNavigate();
+  const { user } = useAuthentication();
+
+  const changePassword = useMutation({
+    mutationFn: ({ username, json }: { username: string; json: ChangePasswordBody }) =>
+      users.changePassword(username, json),
+    mutationKey: ['changePassword'],
+    onSuccess: () => (user != null ? navigate({ to: `/users/${user.username}` }) : null),
+    onError: ({ cause }: { cause?: ProblemDetail }) => {
+      if (cause?.message === 'INVALID_PASSWORD') {
+        setError('oldPassword', { message: 'Le mot de passe est incorrect' });
+      }
+    },
   });
 
   return (
@@ -44,7 +63,15 @@ function ChangePasswordPage() {
       <Text as="h1" centered className="mt-10">
         Changement du mot de passe
       </Text>
-      <form className="flex flex-col mt-5 mx-auto w-72 md:w-[50%]" onSubmit={handleSubmit(() => 0)}>
+      <form
+        className="flex flex-col mt-5 mx-auto w-72 md:w-[50%]"
+        onSubmit={handleSubmit((data) =>
+          changePassword.mutate({
+            username: user != null ? user.username : '',
+            json: { newPassword: data.newPassword, oldPassword: data.oldPassword },
+          }),
+        )}
+      >
         <TextInput
           errorMessage={formState.errors.oldPassword?.message}
           type="password"
