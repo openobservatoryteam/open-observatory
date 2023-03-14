@@ -15,7 +15,7 @@ export function Header() {
         <Logo className="mx-auto sm:ml-0 w-40 sm:w-64" />
       </Link>
       {authentication.isLoggedIn && (
-        <div className="flex gap-4 ml-5">
+        <div className="flex items-center gap-4 ml-5">
           <Text as="span" className="hidden sm:inline">
             {authentication.user?.username}
           </Text>
