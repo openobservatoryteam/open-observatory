@@ -77,6 +77,7 @@ function RegistrationPage() {
           errorMessage={formState.errors.password?.message}
           placeholder="Mot de passe"
           type="password"
+          withVisibilityToggle
           {...r(register, 'password')}
         />
         <TextInput
@@ -84,6 +85,7 @@ function RegistrationPage() {
           errorMessage={formState.errors.passwordConfirmation?.message}
           placeholder="Confirmation du mot de passe"
           type="password"
+          withVisibilityToggle
           {...r(register, 'passwordConfirmation')}
         />
         <TextInput

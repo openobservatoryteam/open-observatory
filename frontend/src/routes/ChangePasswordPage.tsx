@@ -50,6 +50,7 @@ function ChangePasswordPage() {
           type="password"
           className="mt-7"
           placeholder="Ancien mot de passe"
+          withVisibilityToggle
           {...r(register, 'oldPassword')}
         />
         <TextInput
@@ -57,6 +58,7 @@ function ChangePasswordPage() {
           type="password"
           className="mt-7"
           placeholder="Nouveau mot de passe"
+          withVisibilityToggle
           {...r(register, 'newPassword')}
         />
         <TextInput
@@ -64,6 +66,7 @@ function ChangePasswordPage() {
           type="password"
           className="mt-7"
           placeholder="Confirmation mot de passe"
+          withVisibilityToggle
           {...r(register, 'confirmPassword')}
         />
         <Button className="flex justify-between mt-10" type="submit">

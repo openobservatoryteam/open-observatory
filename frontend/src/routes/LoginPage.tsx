@@ -46,6 +46,7 @@ function LoginPage() {
           placeholder="Mot de passe"
           required
           type="password"
+          withVisibilityToggle
           {...r(register, 'password')}
         />
         <Button className="mb-5" type="submit">
