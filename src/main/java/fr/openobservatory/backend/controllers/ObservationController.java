@@ -53,10 +53,6 @@ public class ObservationController {
   @PreAuthorize("hasAuthority('SCOPE_USER')")
   public ResponseEntity<Void> voteObservation(
       Authentication authentication, @PathVariable("id") Long id, String vote) {
-    var observation = observationService.findById(id);
-    if (observation == null) {
-      return ResponseEntity.notFound().build();
-    }
     var userId = userService.findByUsername(authentication.getName()).get().getId();
     observationService.voteObservation(id, userId, vote);
     return ResponseEntity.noContent().build();
