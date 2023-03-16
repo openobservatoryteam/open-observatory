@@ -71,16 +71,15 @@ public class UserServiceTest {
   @Test
   public void find_by_username_should_return_found_user_with_existing_username() {
     // Given
+    var id = 1L;
     var username = "eikjos_tv";
 
     // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(Mockito.isA(String.class)))
+    Mockito.when(userRepository.findByUsernameIgnoreCase(Mockito.anyString()))
         .thenAnswer(
             answer -> {
-              var search = answer.getArgument(0, String.class);
-              if (!"Eikjos_TV".equalsIgnoreCase(search)) return Optional.empty();
               var entity = new UserEntity();
-              entity.setId(1L);
+              entity.setId(id);
               entity.setUsername("Eikjos_TV");
               return Optional.of(entity);
             });
@@ -88,8 +87,22 @@ public class UserServiceTest {
 
     // Then
     assertThat(user).isPresent();
-    assertThat(user.get().getId()).isPositive();
+    assertThat(user.get().getId()).isEqualTo(id);
     assertThat(user.get().getUsername()).isEqualToIgnoringCase(username);
+  }
+
+  @DisplayName("UserService#findByUsername should return nothing with unknown username")
+  @Test
+  public void find_by_username_should_return_nothing_with_unknown_username() {
+    // Given
+    var username = "eikjos_tv";
+
+    // When
+    Mockito.when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
+    var user = userService.findByUsername(username);
+
+    // Then
+    assertThat(user).isNotPresent();
   }
 
   // --- UserService#getProfile
@@ -99,6 +112,7 @@ public class UserServiceTest {
   public void get_profile_should_return_profile_for_existing_user_and_public_profile() {
     // Given
     var biography = "I'm Coucoba, an Open Observatory developer";
+    var id = 1L;
     var username = "Coucoba";
 
     // When
@@ -106,7 +120,7 @@ public class UserServiceTest {
         .thenAnswer(
             answer -> {
               var user = new UserEntity();
-              user.setId(1L);
+              user.setId(id);
               user.setUsername(username);
               user.setBiography(biography);
               user.setPublic(true);
@@ -115,7 +129,7 @@ public class UserServiceTest {
     var user = userService.getProfile(username);
 
     // Then
-    assertThat(user.getId()).isPositive();
+    assertThat(user.getId()).isEqualTo(id);
     assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(biography);
   }
@@ -194,7 +208,7 @@ public class UserServiceTest {
             answer -> {
               var user = new UserEntity();
               user.setId(1L);
-              user.setUsername(answer.getArgument(0, String.class));
+              user.setUsername(targetedUser);
               return Optional.of(user);
             });
     var decision = userService.isViewable(targetedUser, currentUser);
@@ -217,7 +231,7 @@ public class UserServiceTest {
             answer -> {
               var user = new UserEntity();
               user.setId(1L);
-              user.setUsername(answer.getArgument(0, String.class));
+              user.setUsername(targetedUser);
               user.setPublic(false);
               return Optional.of(user);
             });
@@ -256,7 +270,7 @@ public class UserServiceTest {
     var dto = new ChangePasswordDto(oldPassword, newPassword);
 
     // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(Mockito.anyString()))
+    Mockito.when(userRepository.findByUsernameIgnoreCase(username))
         .thenAnswer(
             answer -> {
               if (!"Eikjos_TV".equalsIgnoreCase(answer.getArgument(0, String.class)))
@@ -309,7 +323,7 @@ public class UserServiceTest {
               var entity = new UserEntity();
               entity.setId(1L);
               entity.setUsername(username);
-              entity.setPassword(passwordEncoder.encode(newPassword));
+              entity.setPassword(passwordEncoder.encode("invalid password"));
               return Optional.of(entity);
             });
     ThrowableAssert.ThrowingCallable action = () -> userService.modifyPassword(username, dto);
@@ -323,6 +337,11 @@ public class UserServiceTest {
   @DisplayName("UserService#register should return registered user with valid input")
   @Test
   public void register_should_return_registered_user_with_valid_input() {
+    // Given
+    var id = 1L;
+    var dto = new RegisterUserDto("xX_superuser123_Xx", "myamazingpassword", "Hello, I'm a user!");
+
+    // When
     Mockito.when(userRepository.save(Mockito.isA(UserEntity.class)))
         .thenAnswer(
             answer -> {
@@ -332,15 +351,10 @@ public class UserServiceTest {
               entity.setCreatedAt(Instant.now());
               return entity;
             });
-
-    // Given
-    var dto = new RegisterUserDto("xX_superuser123_Xx", "myamazingpassword", "Hello, I'm a user!");
-
-    // When
     var user = userService.register(dto);
 
     // Then
-    assertThat(user.getId()).isPositive();
+    assertThat(user.getId()).isEqualTo(id);
     assertThat(user.getUsername()).isEqualTo(dto.getUsername());
     assertThat(user.getPassword()).isNotEqualTo(dto.getPassword());
     assertThat(user.getAvatar()).isNull();
@@ -404,8 +418,6 @@ public class UserServiceTest {
     var user = userService.updateProfile(username, dto);
 
     // Then
-    assertThat(user.getId()).isPositive();
-    assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(newBiography);
   }
 
