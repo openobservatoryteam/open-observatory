@@ -69,8 +69,7 @@ public class UserService {
     var user =
         userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
     user.setBiography(dto.getBiography());
-    userRepository.save(user);
-    return getProfile(currentUser);
+    return modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
   }
 
   public Boolean canEditUser(String targetedUser, String currentUser) {
@@ -78,12 +77,10 @@ public class UserService {
   }
 
   public Boolean isViewable(String targetedUser, String currentUser) {
-    if (!userRepository
-        .findByUsernameIgnoreCase(targetedUser)
-        .orElseThrow(UnknownUserException::new)
-        .isPublic()) {
-      return !Objects.equals(targetedUser, currentUser);
-    }
-    return true;
+    var user =
+        userRepository
+            .findByUsernameIgnoreCase(targetedUser)
+            .orElseThrow(UnknownUserException::new);
+    return user.isPublic() || Objects.equals(targetedUser, currentUser);
   }
 }
