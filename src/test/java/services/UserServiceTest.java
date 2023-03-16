@@ -344,6 +344,8 @@ public class UserServiceTest {
     assertThat(user.getUsername()).isEqualTo(dto.getUsername());
     assertThat(user.getPassword()).isNotEqualTo(dto.getPassword());
     assertThat(user.getAvatar()).isNull();
+    assertThat(user.getType()).isEqualTo(UserEntity.Type.USER);
+    assertThat(user.getCreatedAt()).isBefore(Instant.now());
   }
 
   @DisplayName("UserService#register should fail with an invalid username")
