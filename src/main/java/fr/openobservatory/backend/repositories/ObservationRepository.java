@@ -1,9 +1,6 @@
 package fr.openobservatory.backend.repositories;
 
 import fr.openobservatory.backend.entities.ObservationEntity;
-import fr.openobservatory.backend.entities.User;
-import java.util.Collection;
-
 import fr.openobservatory.backend.entities.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

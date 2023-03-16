@@ -41,7 +41,8 @@ public class ObservationService {
   }
 
   public Collection<? extends Observation> findObservationsByAuthor(String username) {
-    var user = (UserEntity) userService.findByUsername(username).orElseThrow(UnknownUserException::new);
+    var user =
+        (UserEntity) userService.findByUsername(username).orElseThrow(UnknownUserException::new);
     return observationRepository.findAllByAuthor(user, Pageable.ofSize(100)).stream().toList();
   }
 
