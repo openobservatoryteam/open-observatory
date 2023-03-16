@@ -52,7 +52,7 @@ public class ObservationController {
   @PutMapping("/{id}/vote")
   @PreAuthorize("hasAuthority('SCOPE_USER')")
   public ResponseEntity<Void> voteObservation(
-      Authentication authentication, @PathVariable("id") Long id, String vote) {
+      Authentication authentication, @PathVariable("id") Long id, @RequestBody String vote) {
     var userId = userService.findByUsername(authentication.getName()).get().getId();
     observationService.voteObservation(id, userId, vote);
     return ResponseEntity.noContent().build();
