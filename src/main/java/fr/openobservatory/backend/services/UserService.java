@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.entities.User;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.UserRepository;
@@ -23,13 +24,13 @@ public class UserService {
 
   // ---
 
-  public Optional<UserDto> findByUsername(String username) {
+  public Optional<User> findByUsername(String username) {
     return userRepository
         .findByUsernameIgnoreCase(username)
-        .map(u -> modelMapper.map(u, UserDto.class));
+        .map(u -> modelMapper.map(u, User.class));
   }
 
-  public UserDto register(RegisterUserDto dto) {
+  public User register(RegisterUserDto dto) {
     if (!Pattern.matches(UserEntity.USERNAME_PATTERN, dto.getUsername()))
       throw new InvalidUsernameException();
     if (userRepository.existsByUsernameIgnoreCase(dto.getUsername()))
@@ -41,7 +42,7 @@ public class UserService {
     entity.setType(UserEntity.Type.USER);
     entity.setPublic(true);
     entity.setCreatedAt(Instant.now());
-    return modelMapper.map(userRepository.save(entity), UserDto.class);
+    return modelMapper.map(userRepository.save(entity), User.class);
   }
 
   public void modifyPassword(String username, ChangePasswordDto dto) {
@@ -54,7 +55,7 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public UserWithProfileDto getProfile(String targetedUser) {
+  public User getProfile(String targetedUser) {
     var user =
         userRepository
             .findByUsernameIgnoreCase(targetedUser)
@@ -62,21 +63,21 @@ public class UserService {
     if (!user.isPublic()) {
       throw new ProfileNotAccessibleException();
     }
-    return modelMapper.map(user, UserWithProfileDto.class);
+    return modelMapper.map(user, User.class);
   }
 
-  public UserWithProfileDto updateProfile(String currentUser, UpdateProfileDto dto) {
+  public User updateProfile(String currentUser, UpdateProfileDto dto) {
     var user =
         userRepository.findByUsernameIgnoreCase(currentUser).orElseThrow(UnknownUserException::new);
     user.setBiography(dto.getBiography());
-    return modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
+    return userRepository.save(user);
   }
 
-  public Boolean canEditUser(String targetedUser, String currentUser) {
+  public boolean canEditUser(String targetedUser, String currentUser) {
     return Objects.equals(targetedUser, currentUser);
   }
 
-  public Boolean isViewable(String targetedUser, String currentUser) {
+  public boolean isViewable(String targetedUser, String currentUser) {
     var user =
         userRepository
             .findByUsernameIgnoreCase(targetedUser)
