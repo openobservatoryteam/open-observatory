@@ -77,7 +77,10 @@ public class UserService {
   }
 
   public Boolean isViewable(String targetedUser, String currentUser) {
-    var user = userRepository.findByUsernameIgnoreCase(targetedUser).orElseThrow(UnknownUserException::new);
+    var user =
+        userRepository
+            .findByUsernameIgnoreCase(targetedUser)
+            .orElseThrow(UnknownUserException::new);
     return user.isPublic() || Objects.equals(targetedUser, currentUser);
   }
 }
