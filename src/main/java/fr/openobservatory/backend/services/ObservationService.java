@@ -1,17 +1,15 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.CelestialBodyDto;
-import fr.openobservatory.backend.dto.ObservationDetailedDto;
-import fr.openobservatory.backend.dto.ObservationDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.entities.Observation;
+import fr.openobservatory.backend.entities.UserEntity;
+import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.repositories.ObservationRepository;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -20,46 +18,32 @@ public class ObservationService {
 
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
+  private final UserService userService;
 
   // ---
 
-  public ObservationDetailedDto findById(Long id) {
-    var obs = observationRepository.findById(id);
-    if (obs.isEmpty()) {
-      return null;
-    }
-    var o = obs.get();
-    var dto = new ObservationDetailedDto();
-    dto.setId(o.getId());
-    dto.setAuthor(modelMapper.map(o.getAuthor(), UserDto.class));
-    dto.setDescription(o.getDescription());
-    dto.setLongitude(o.getLongitude());
-    dto.setLatitude(o.getLatitude());
-    var duration = Duration.ofHours(o.getCelestialBody().getValidityTime());
-    var date = OffsetDateTime.ofInstant(o.getCreatedAt(), ZoneOffset.UTC);
-    dto.setCelestialBody(modelMapper.map(o.getCelestialBody(), CelestialBodyDto.class));
-    dto.setTime(OffsetDateTime.ofInstant(o.getCreatedAt(), ZoneOffset.UTC));
-    dto.setHasExpired((Instant.now().isAfter(date.plus(duration).toInstant())));
-    dto.setOrientation(o.getOrientation());
-    dto.setVisibility(o.getVisibility());
-    return dto;
+  public Optional<? extends Observation> findById(Long id) {
+    return observationRepository.findById(id);
   }
 
-  public List<ObservationDto> search(Integer limit, Integer page) {
-    return observationRepository.findAll().stream()
-        .limit(limit)
-        .map(o -> modelMapper.map(o, ObservationDto.class))
-        .toList();
+  public List<? extends Observation> search(Integer limit, Integer page) {
+    return observationRepository.findAll().stream().limit(limit).toList();
   }
 
-  public List<ObservationDto> findNearbyObservations(Double lng, Double lat) {
+  public List<Observation> findNearbyObservations(Double lng, Double lat) {
     return observationRepository.findAll().stream()
         .filter(
             o ->
                 calculateDistanceBetweenTwoPoints(lng, lat, o.getLongitude(), o.getLatitude())
                     <= 30)
-        .map(o -> modelMapper.map(o, ObservationDto.class))
+        .map(o -> modelMapper.map(o, Observation.class))
         .toList();
+  }
+
+  public Collection<? extends Observation> findObservationsByAuthor(String username) {
+    var user =
+        (UserEntity) userService.findByUsername(username).orElseThrow(UnknownUserException::new);
+    return observationRepository.findAllByAuthor(user, Pageable.ofSize(100)).stream().toList();
   }
 
   // Calculate distance between two points using the "haversine" formula

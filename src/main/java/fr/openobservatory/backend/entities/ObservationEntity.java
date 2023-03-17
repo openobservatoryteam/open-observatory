@@ -2,13 +2,14 @@ package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "observation")
-public class ObservationEntity {
+public class ObservationEntity implements Observation {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,5 +63,11 @@ public class ObservationEntity {
     VISIBLE,
     SLIGHTLY_VISIBLE,
     BARELY_VISIBLE
+  }
+
+  public boolean hasExpired() {
+    return createdAt
+        .plus(celestialBody.getValidityTime(), ChronoUnit.HOURS)
+        .isBefore(Instant.now());
   }
 }

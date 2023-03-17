@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "\"user\"")
-public class UserEntity {
+public class UserEntity implements User {
 
   public static final String USERNAME_PATTERN = "^[A-Za-z][A-Za-z0-9_]{0,31}$";
 

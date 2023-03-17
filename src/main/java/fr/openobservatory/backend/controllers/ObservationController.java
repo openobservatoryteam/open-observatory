@@ -22,20 +22,26 @@ public class ObservationController {
   @GetMapping("/nearby")
   public ResponseEntity<List<ObservationDto>> nearbyObservations(
       @RequestParam Double lng, @RequestParam Double lat) {
-    return ResponseEntity.ok(observationService.findNearbyObservations(lng, lat));
+    var observations =
+        observationService.findNearbyObservations(lng, lat).stream()
+            .map(o -> modelMapper.map(o, ObservationDto.class))
+            .toList();
+    return ResponseEntity.ok(observations);
   }
 
   @GetMapping
   public ResponseEntity<List<ObservationDto>> observations(int limit, int page) {
-    return ResponseEntity.ok(observationService.search(limit, page));
+    var observations =
+        observationService.search(limit, page).stream()
+            .map(o -> modelMapper.map(o, ObservationDto.class))
+            .toList();
+    return ResponseEntity.ok(observations);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<ObservationDetailedDto> getObservation(@PathVariable("id") Long id) {
-    var observation = observationService.findById(id);
-    if (observation == null) {
-      return ResponseEntity.notFound().build();
-    }
-    return ResponseEntity.ok(observation);
+    var observation =
+        observationService.findById(id).map(o -> modelMapper.map(o, ObservationDetailedDto.class));
+    return ResponseEntity.of(observation);
   }
 }
