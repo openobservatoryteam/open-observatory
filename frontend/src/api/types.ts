@@ -32,7 +32,7 @@ export type ObservationDetail = {
   orientation: number;
   celestialBody: CelestialBody;
   author: User;
-  time: string;
+  createdAt: string;
   hasExpired: boolean;
   karma: number;
   currentVote: 'UPVOTE' | 'DOWNVOTE' | null;
