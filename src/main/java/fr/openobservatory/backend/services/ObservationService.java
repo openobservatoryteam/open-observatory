@@ -1,9 +1,13 @@
 package fr.openobservatory.backend.services;
 
+import fr.openobservatory.backend.dto.VoteDto;
 import fr.openobservatory.backend.entities.Observation;
-import fr.openobservatory.backend.entities.UserEntity;
+import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.exceptions.UnknownObservationException;
 import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.repositories.ObservationRepository;
+import fr.openobservatory.backend.repositories.ObservationVoteRepository;
+import fr.openobservatory.backend.repositories.UserRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +22,8 @@ public class ObservationService {
 
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
-  private final UserService userService;
+  private final ObservationVoteRepository observationVoteRepository;
+  private final UserRepository userRepository;
 
   // ---
 
@@ -42,8 +47,26 @@ public class ObservationService {
 
   public Collection<? extends Observation> findObservationsByAuthor(String username) {
     var user =
-        (UserEntity) userService.findByUsername(username).orElseThrow(UnknownUserException::new);
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     return observationRepository.findAllByAuthor(user, Pageable.ofSize(100)).stream().toList();
+  }
+
+  public void voteObservation(Long observationId, String username, VoteDto dto) {
+    var observation =
+        observationRepository.findById(observationId).orElseThrow(UnknownObservationException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    var currentVote = observationVoteRepository.findByObservationAndUser(observation, user);
+    if (dto.getVote() == null) {
+      if (currentVote.isEmpty()) return;
+      observationVoteRepository.delete(currentVote.get());
+      return;
+    }
+    var vote = currentVote.orElse(new ObservationVoteEntity());
+    vote.setUser(user);
+    vote.setObservation(observation);
+    vote.setVote(dto.getVote());
+    observationVoteRepository.save(vote);
   }
 
   // Calculate distance between two points using the "haversine" formula

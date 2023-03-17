@@ -7,6 +7,7 @@ import fr.openobservatory.backend.services.ObservationService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/observations")
 public class ObservationController {
 
+  private final ModelMapper modelMapper;
   private final ObservationService observationService;
 
   // ---
