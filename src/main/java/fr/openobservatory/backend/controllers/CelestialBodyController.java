@@ -24,7 +24,7 @@ public class CelestialBodyController {
   // ---
 
   @GetMapping
-  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(
       @RequestParam(required = false, defaultValue = "10") Integer limit,
       @RequestParam(required = false, defaultValue = "0") Integer page) {
@@ -37,6 +37,7 @@ public class CelestialBodyController {
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<CelestialBodyDto> findById(@PathVariable Long id) {
     var celestialBody = modelMapper.map(celestialBodyService.findById(id), CelestialBodyDto.class);
     return ResponseEntity.ok(celestialBody);

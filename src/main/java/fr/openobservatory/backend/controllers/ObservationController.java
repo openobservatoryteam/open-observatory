@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,15 @@ public class ObservationController {
 
   // ---
 
+  @GetMapping
+  public ResponseEntity<List<ObservationDto>> observations(int limit, int page) {
+    var observations =
+        observationService.search(limit, page).stream()
+            .map(o -> modelMapper.map(o, ObservationDto.class))
+            .toList();
+    return ResponseEntity.ok(observations);
+  }
+
   @GetMapping("/nearby")
   public ResponseEntity<List<ObservationDto>> nearbyObservations(
       @RequestParam Double lng, @RequestParam Double lat) {
@@ -32,23 +42,15 @@ public class ObservationController {
     return ResponseEntity.ok(observations);
   }
 
-  @GetMapping
-  public ResponseEntity<List<ObservationDto>> observations(int limit, int page) {
-    var observations =
-        observationService.search(limit, page).stream()
-            .map(o -> modelMapper.map(o, ObservationDto.class))
-            .toList();
-    return ResponseEntity.ok(observations);
-  }
-
   @GetMapping("/{id}")
-  public ResponseEntity<ObservationDetailedDto> getObservation(@PathVariable("id") Long id) {
+  public ResponseEntity<ObservationDetailedDto> getObservation(@PathVariable Long id) {
     var observation =
         observationService.findById(id).map(o -> modelMapper.map(o, ObservationDetailedDto.class));
     return ResponseEntity.of(observation);
   }
 
   @PutMapping("/{id}/vote")
+  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> voteObservation(
       Authentication authentication, @PathVariable Long id, @RequestBody @Valid VoteDto vote) {
     observationService.voteObservation(id, authentication.getName(), vote);
