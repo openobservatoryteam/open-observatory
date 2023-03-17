@@ -34,7 +34,8 @@ export type ObservationDetail = {
   author: User;
   time: string;
   hasExpired: boolean;
-  votes: number;
+  karma: number;
+  currentVote: 'UPVOTE' | 'DOWNVOTE' | null;
   visibility: 'CLEARLY_VISIBLE' | 'VISIBLE' | 'SLIGHTLY_VISIBLE' | 'BARELY_VISIBLE';
 };
 

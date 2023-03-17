@@ -1,9 +1,8 @@
 import { faArrowLeft, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
 import { observations } from '~/api';
@@ -18,15 +17,22 @@ const visibilityLevels = {
   BARELY_VISIBLE: 'Peu visible',
 };
 
+type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;
+
 function ObservationPage(): JSX.Element {
   const {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
 
-  const [myVote, submitVote] = useState<boolean | null>(null);
   const observationQuery = useQuery({
     queryFn: () => observations.findById(id),
     queryKey: ['observation'],
+  });
+
+  const vote = useMutation({
+    mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => observations.vote({ id, vote }),
+    mutationKey: ['observation', 'vote'],
+    onSuccess: () => observationQuery.refetch(),
   });
 
   if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
@@ -38,7 +44,7 @@ function ObservationPage(): JSX.Element {
       <div className="w-full">
         <div className="h-[50vh] relative">
           <div className="absolute left-5 top-5 flex">
-            <Button as={Link} to="/" className="px-3 mr-5" color="white" rounded>
+            <Button as={Link} to="/" className="py-1 px-3 mr-5" color="white" rounded>
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
             {observation.hasExpired && <Chip>Expirée</Chip>}
@@ -57,9 +63,9 @@ function ObservationPage(): JSX.Element {
           <img src={celestialBodyImage} alt="Objet céleste de l'observation" className="h-full object-cover w-full" />
           <UpDownVote
             className="absolute bottom-1 right-2"
-            currentVotes={observation.votes}
-            onVote={submitVote}
-            vote={myVote}
+            currentVotes={observation.karma}
+            onVote={(value) => vote.mutate({ id, vote: value })}
+            vote={observation.currentVote}
           />
         </div>
         <div className="bg-slate-500 h-1/4 pb-5 md:h-[50vh] w-full">
