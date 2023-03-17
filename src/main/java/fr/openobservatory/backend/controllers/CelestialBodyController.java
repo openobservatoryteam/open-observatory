@@ -60,7 +60,7 @@ public class CelestialBodyController {
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<?> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
     celestialBodyService.delete(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
