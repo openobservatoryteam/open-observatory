@@ -3,14 +3,21 @@ import { Title as DocumentTitle } from 'react-head';
 
 import { Button, Map, NearbyObservations } from '~/components';
 import { Header } from '~/layout';
+import { useAuthentication } from '~/providers';
 
 function HomePage() {
+  const { isLoggedIn } = useAuthentication();
   return (
     <>
       <DocumentTitle>Accueil – Open Observatory</DocumentTitle>
       <Header />
       <div className="flex justify-around items-center my-2">
-        <Button as={Link} className="h-16 w-44 md:w-96" color="darkGray" to="/login">
+        <Button
+          as={Link}
+          className="h-16 w-44 md:w-96"
+          color="darkGray"
+          to={isLoggedIn ? '/report-observation' : '/login'}
+        >
           Nouvelle observation
         </Button>
         <Button as={Link} className="h-16 w-44 md:w-96" color="darkGray" to="/login">
