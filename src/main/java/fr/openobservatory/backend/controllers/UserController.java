@@ -1,7 +1,6 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.*;
-import fr.openobservatory.backend.entities.User;
 import fr.openobservatory.backend.services.ObservationService;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
@@ -26,7 +25,10 @@ public class UserController {
 
   @GetMapping("/current")
   public ResponseEntity<UserDto> current(Authentication authentication) {
-    var user = userService.findByUsername(authentication.getName()).map(u -> modelMapper.map(u, UserDto.class));
+    var user =
+        userService
+            .findByUsername(authentication.getName())
+            .map(u -> modelMapper.map(u, UserDto.class));
     return ResponseEntity.of(user);
   }
 
