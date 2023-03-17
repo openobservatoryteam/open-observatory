@@ -13,6 +13,6 @@ public class ObservationDto {
   private Integer orientation;
   private CelestialBodyDto celestialBody;
   private UserDto author;
-  private OffsetDateTime time;
+  private OffsetDateTime createdAt;
   private ObservationEntity.Visibility visibility;
 }
