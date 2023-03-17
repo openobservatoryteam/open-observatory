@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
 
   // ---
 
-  public Optional<User> findByUsername(String username) {
-    return userRepository
-        .findByUsernameIgnoreCase(username)
-        .map(u -> modelMapper.map(u, User.class));
+  public Optional<? extends User> findByUsername(String username) {
+    return userRepository.findByUsernameIgnoreCase(username);
   }
 
   public User register(RegisterUserDto dto) {
@@ -42,7 +38,7 @@ public class UserService {
     entity.setType(UserEntity.Type.USER);
     entity.setPublic(true);
     entity.setCreatedAt(Instant.now());
-    return modelMapper.map(userRepository.save(entity), User.class);
+    return userRepository.save(entity);
   }
 
   public void modifyPassword(String username, ChangePasswordDto dto) {
@@ -63,7 +59,7 @@ public class UserService {
     if (!user.isPublic()) {
       throw new ProfileNotAccessibleException();
     }
-    return modelMapper.map(user, User.class);
+    return user;
   }
 
   public User updateProfile(String currentUser, UpdateProfileDto dto) {

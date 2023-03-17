@@ -8,7 +8,6 @@ import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class CelestialBodyService {
 
   private final CelestialBodyRepository celestialBodyRepository;
-  private final ModelMapper modelMapper;
 
   // ---
 

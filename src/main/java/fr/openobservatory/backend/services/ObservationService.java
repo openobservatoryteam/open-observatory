@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ObservationService {
 
-  private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
   private final ObservationVoteRepository observationVoteRepository;
   private final UserRepository userRepository;
@@ -35,13 +33,12 @@ public class ObservationService {
     return observationRepository.findAll().stream().limit(limit).toList();
   }
 
-  public List<Observation> findNearbyObservations(Double lng, Double lat) {
+  public List<? extends Observation> findNearbyObservations(Double lng, Double lat) {
     return observationRepository.findAll().stream()
         .filter(
             o ->
                 calculateDistanceBetweenTwoPoints(lng, lat, o.getLongitude(), o.getLatitude())
                     <= 30)
-        .map(o -> modelMapper.map(o, Observation.class))
         .toList();
   }
 
