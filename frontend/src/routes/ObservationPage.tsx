@@ -35,17 +35,8 @@ function ObservationPage(): JSX.Element {
   const vote = useMutation({
     mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => observations.vote({ id, vote }),
     mutationKey: ['observation', 'vote'],
-    onSuccess: () => {
-      observationQuery.refetch();
-      setDisabled(false);
-    },
-    onError: () => setDisabled(false),
+    onSuccess: () => observationQuery.refetch(),
   });
-
-  const handleVote = (value: VoteType) => {
-    setDisabled(true);
-    vote.mutate({ id, vote: value });
-  };
 
   if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
 
@@ -76,9 +67,9 @@ function ObservationPage(): JSX.Element {
           <UpDownVote
             className="absolute bottom-1 right-2"
             currentVotes={observation.karma}
-            onVote={(value) => handleVote(value)}
+            onVote={(value) => vote.mutate({ id, vote: value })}
             vote={observation.currentVote}
-            disabled={disabled}
+            disabled={vote.isLoading}
           />
         </div>
         <div className="bg-slate-500 h-1/4 pb-5 md:h-[50vh] w-full">
