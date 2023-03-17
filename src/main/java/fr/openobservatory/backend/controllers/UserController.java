@@ -25,14 +25,14 @@ public class UserController {
   // ---
 
   @GetMapping("/current")
-  public ResponseEntity<User> current(Authentication authentication) {
-    var user = userService.findByUsername(authentication.getName());
+  public ResponseEntity<UserDto> current(Authentication authentication) {
+    var user = userService.findByUsername(authentication.getName()).map(u -> modelMapper.map(u, UserDto.class));
     return ResponseEntity.of(user);
   }
 
   @PostMapping("/register")
-  public ResponseEntity<User> register(@RequestBody @Valid RegisterUserDto dto) {
-    var user = userService.register(dto);
+  public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterUserDto dto) {
+    var user = modelMapper.map(userService.register(dto), UserDto.class);
     return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
@@ -49,24 +49,24 @@ public class UserController {
   }
 
   @GetMapping("/{username}")
-  public ResponseEntity<User> getProfile(
+  public ResponseEntity<UserDto> getProfile(
       Authentication authentication, @PathVariable("username") String username) {
     if (!userService.isViewable(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-    var profile = userService.getProfile(username);
+    var profile = modelMapper.map(userService.getProfile(username), UserDto.class);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
   @PatchMapping("/{username}")
-  public ResponseEntity<User> updateProfile(
+  public ResponseEntity<UserDto> updateProfile(
       Authentication authentication,
       @PathVariable("username") String username,
       @RequestBody @Valid UpdateProfileDto dto) {
     if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-    var profile = userService.updateProfile(username, dto);
+    var profile = modelMapper.map(userService.updateProfile(username, dto), UserDto.class);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
