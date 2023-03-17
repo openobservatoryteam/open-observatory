@@ -25,7 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
   @Spy private ModelMapper modelMapper;
 
@@ -39,7 +39,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#canEditUser should return true with matching usernames")
   @Test
-  public void can_edit_user_should_return_true_with_matching_usernames() {
+  void can_edit_user_should_return_true_with_matching_usernames() {
     // Given
     var targetedUser = "Eikjos_TV";
     var currentUser = "Eikjos_TV";
@@ -53,7 +53,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#canEditUser should return false with mismatching usernames")
   @Test
-  public void can_edit_user_should_return_false_with_mismatching_usernames() {
+  void can_edit_user_should_return_false_with_mismatching_usernames() {
     // Given
     var targetedUser = "Eikjos_TV";
     var currentUser = "Coucoba";
@@ -69,7 +69,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#findByUsername should return found user with existing username")
   @Test
-  public void find_by_username_should_return_found_user_with_existing_username() {
+  void find_by_username_should_return_found_user_with_existing_username() {
     // Given
     var id = 1L;
     var username = "eikjos_tv";
@@ -93,7 +93,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#findByUsername should return nothing with unknown username")
   @Test
-  public void find_by_username_should_return_nothing_with_unknown_username() {
+  void find_by_username_should_return_nothing_with_unknown_username() {
     // Given
     var username = "eikjos_tv";
 
@@ -109,7 +109,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#getProfile should return profile for existing user with public profile")
   @Test
-  public void get_profile_should_return_profile_for_existing_user_and_public_profile() {
+  void get_profile_should_return_profile_for_existing_user_and_public_profile() {
     // Given
     var biography = "I'm Coucoba, an Open Observatory developer";
     var id = 1L;
@@ -150,7 +150,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#getProfile should fail for existing user with private profile")
   @Test
-  public void get_profile_should_fail_for_existing_user_and_private_profile() {
+  void get_profile_should_fail_for_existing_user_and_private_profile() {
     // Given
     var username = "Coucoba";
 
@@ -174,7 +174,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#isViewable should return true with public profile")
   @Test
-  public void is_viewable_should_return_true_with_public_profile() {
+  void is_viewable_should_return_true_with_public_profile() {
     // Given
     var targetedUser = "Eikjos_TV";
     var currentUser = "Coucoba";
@@ -197,7 +197,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#isViewable should return true with matching usernames")
   @Test
-  public void is_viewable_should_return_true_with_matching_usernames() {
+  void is_viewable_should_return_true_with_matching_usernames() {
     // Given
     var targetedUser = "Coucoba";
     var currentUser = "Coucoba";
@@ -220,7 +220,7 @@ public class UserServiceTest {
   @DisplayName(
       "UserService#isViewable should return false with mismatching usernames and private profile")
   @Test
-  public void is_viewable_should_return_false_with_mismatching_usernames_and_private_profile() {
+  void is_viewable_should_return_false_with_mismatching_usernames_and_private_profile() {
     // Given
     var targetedUser = "Eikjos_TV";
     var currentUser = "Coucoba";
@@ -243,7 +243,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#isViewable should fail with unknown targeted user")
   @Test
-  public void is_viewable_should_fail_with_unknown_targeted_user() {
+  void is_viewable_should_fail_with_unknown_targeted_user() {
     // Given
     var targetedUser = "Eikjos_TV";
     var currentUser = "Coucoba";
@@ -262,7 +262,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#modifyPassword should pass with valid credentials and valid input")
   @Test
-  public void modify_password_should_pass_with_valid_credentials_and_valid_input() {
+  void modify_password_should_pass_with_valid_credentials_and_valid_input() {
     // Given
     var username = "Eikjos_TV";
     var oldPassword = "thisIsMyCurrentPassword";
@@ -291,7 +291,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#modifyPassword should fail with an invalid username")
   @Test
-  public void modify_password_should_fail_with_an_invalid_username() {
+  void modify_password_should_fail_with_an_invalid_username() {
     // Given
     var username = "Eikjos_TV";
     var oldPassword = "thisIsMyCurrentPassword";
@@ -309,7 +309,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#modifyPassword should fail with a password mismatch")
   @Test
-  public void modify_password_should_fail_with_a_password_mismatch() {
+  void modify_password_should_fail_with_a_password_mismatch() {
     // Given
     var username = "Eikjos_TV";
     var oldPassword = "thisIsMyCurrentPassword";
@@ -336,7 +336,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#register should return registered user with valid input")
   @Test
-  public void register_should_return_registered_user_with_valid_input() {
+  void register_should_return_registered_user_with_valid_input() {
     // Given
     var id = 1L;
     var dto = new RegisterUserDto("xX_superuser123_Xx", "myamazingpassword", "Hello, I'm a user!");
@@ -364,7 +364,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#register should fail with an invalid username")
   @Test
-  public void register_should_fail_with_an_invalid_username() {
+  void register_should_fail_with_an_invalid_username() {
     // Given
     var dto = new RegisterUserDto("this is not a good username", "somepassword256", "Hello World!");
 
@@ -377,7 +377,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#register should fail with an existing username")
   @Test
-  public void register_should_fail_with_an_existing_username() {
+  void register_should_fail_with_an_existing_username() {
     Mockito.when(userRepository.existsByUsernameIgnoreCase(Mockito.isA(String.class)))
         .thenReturn(true);
 
@@ -395,7 +395,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#updateProfile should return updated profile for existing user")
   @Test
-  public void update_profile_should_return_updated_profile_for_existing_user() {
+  void update_profile_should_return_updated_profile_for_existing_user() {
     // Given
     var currentBiography = "I'm Coucoba, an Open Observatory developer";
     var newBiography = "This is my new biography";
@@ -423,7 +423,7 @@ public class UserServiceTest {
 
   @DisplayName("UserService#updateProfile should fail for unknown user")
   @Test
-  public void update_profile_should_fail_for_unknown_user() {
+  void update_profile_should_fail_for_unknown_user() {
     // Given
     var username = "Coucoba";
     var dto = new UpdateProfileDto("This is my new biography");
