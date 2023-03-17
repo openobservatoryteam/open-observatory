@@ -14,7 +14,7 @@ const visibilityOptions = [
   { name: 'Visible', value: 'VISIBLE' },
   { name: 'Légèrement visible', value: 'SLIGHTLY_VISIBLE' },
   { name: 'Difficilement visible', value: 'BARELY_VISIBLE' },
-] as const;
+];
 
 function ReportObservationPage() {
   const { data: celestialBodiesData } = useQuery({
