@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
 import { observations } from '~/api';
@@ -24,6 +25,8 @@ function ObservationPage(): JSX.Element {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
 
+  const [disabled, setDisabled] = useState<boolean>(false);
+
   const observationQuery = useQuery({
     queryFn: () => observations.findById(id),
     queryKey: ['observation'],
@@ -32,8 +35,17 @@ function ObservationPage(): JSX.Element {
   const vote = useMutation({
     mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => observations.vote({ id, vote }),
     mutationKey: ['observation', 'vote'],
-    onSuccess: () => observationQuery.refetch(),
+    onSuccess: () => {
+      observationQuery.refetch();
+      setDisabled(false);
+    },
+    onError: () => setDisabled(false),
   });
+
+  const handleVote = (value: VoteType) => {
+    setDisabled(true);
+    vote.mutate({ id, vote: value });
+  };
 
   if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
 
@@ -64,8 +76,9 @@ function ObservationPage(): JSX.Element {
           <UpDownVote
             className="absolute bottom-1 right-2"
             currentVotes={observation.karma}
-            onVote={(value) => vote.mutate({ id, vote: value })}
+            onVote={(value) => handleVote(value)}
             vote={observation.currentVote}
+            disabled={disabled}
           />
         </div>
         <div className="bg-slate-500 h-1/4 pb-5 md:h-[50vh] w-full">

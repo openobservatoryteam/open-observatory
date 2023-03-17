@@ -1,6 +1,6 @@
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ComponentPropsWithoutRef, useState } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 
 import { Button, Text } from '~/components';
 import { useAuthentication } from '~/providers';
@@ -10,18 +10,12 @@ type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;
 type UpDownVoteProps = {
   currentVotes: number;
   onVote: (vote: VoteType) => unknown;
+  disabled?: boolean;
   vote: VoteType;
 } & ComponentPropsWithoutRef<'div'>;
 
-const UpDownVote = ({ currentVotes, onVote, vote, ...props }: UpDownVoteProps) => {
+const UpDownVote = ({ currentVotes, onVote, vote, disabled = false, ...props }: UpDownVoteProps) => {
   const { user } = useAuthentication();
-  const [disabled, setDisabled] = useState<boolean>(false);
-
-  const handleVote = (vote: VoteType) => {
-    setDisabled(true);
-    onVote(vote);
-    setDisabled(false);
-  };
 
   if (user) {
     return (
@@ -30,7 +24,7 @@ const UpDownVote = ({ currentVotes, onVote, vote, ...props }: UpDownVoteProps) =
           disabled={disabled}
           aria-label={vote === 'UPVOTE' ? 'Annuler mon vote' : 'Voter +1'}
           fullWidth
-          onPress={() => handleVote(vote === 'UPVOTE' ? null : 'UPVOTE')}
+          onPress={() => onVote(vote === 'UPVOTE' ? null : 'UPVOTE')}
           title={vote === 'UPVOTE' ? 'Annuler mon vote' : 'Voter +1'}
           unstyled
         >
@@ -43,7 +37,7 @@ const UpDownVote = ({ currentVotes, onVote, vote, ...props }: UpDownVoteProps) =
           disabled={disabled}
           aria-label={vote === 'DOWNVOTE' ? 'Annuler mon vote' : 'Voter -1'}
           fullWidth
-          onPress={() => handleVote(vote === 'DOWNVOTE' ? null : 'DOWNVOTE')}
+          onPress={() => onVote(vote === 'DOWNVOTE' ? null : 'DOWNVOTE')}
           title={vote === 'DOWNVOTE' ? 'Annuler mon vote' : 'Voter -1'}
           unstyled
         >
