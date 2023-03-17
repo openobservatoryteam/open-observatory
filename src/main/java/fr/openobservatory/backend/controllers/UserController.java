@@ -68,7 +68,8 @@ public class UserController {
     if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-    var profile = modelMapper.map(userService.updateProfile(username, dto), UserWithProfileDto.class);
+    var profile =
+        modelMapper.map(userService.updateProfile(username, dto), UserWithProfileDto.class);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
