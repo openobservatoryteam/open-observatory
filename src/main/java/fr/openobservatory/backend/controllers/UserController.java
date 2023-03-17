@@ -39,7 +39,7 @@ public class UserController {
   }
 
   @PatchMapping("/{username}/password")
-  public ResponseEntity<?> changePassword(
+  public ResponseEntity<Void> changePassword(
       Authentication authentication,
       @RequestBody @Valid ChangePasswordDto dto,
       @PathVariable("username") String username) {
