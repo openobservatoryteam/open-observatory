@@ -63,17 +63,7 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.apply(new JwtConfigurer())
         .and()
-        .authorizeHttpRequests(
-            request ->
-                request
-                    .requestMatchers("/")
-                    .authenticated()
-                    .requestMatchers("/users/current")
-                    .authenticated()
-                    .requestMatchers("/users/register", "/observations/\\d*")
-                    .anonymous()
-                    .anyRequest()
-                    .permitAll())
+        .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
         .cors(withDefaults())
         .csrf(CsrfConfigurer::disable)
         .exceptionHandling(

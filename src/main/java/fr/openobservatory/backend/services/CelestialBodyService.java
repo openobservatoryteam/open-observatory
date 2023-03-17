@@ -44,7 +44,7 @@ public class CelestialBodyService {
   }
 
   public Page<? extends CelestialBody> search(Integer page, Integer itemsPerPage) {
-    if (itemsPerPage < 0 || itemsPerPage > 10 || page < 0) throw new InvalidPaginationException();
+    if (itemsPerPage < 0 || itemsPerPage > 100 || page < 0) throw new InvalidPaginationException();
     var pageable = PageRequest.of(page, itemsPerPage);
     return celestialBodyRepository.findAll(pageable);
   }
