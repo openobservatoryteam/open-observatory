@@ -33,3 +33,12 @@ CREATE TABLE observation (
     CONSTRAINT fk_observation_celestial_body FOREIGN KEY (celestial_body_id) REFERENCES celestial_body(id) ON DELETE CASCADE,
     CONSTRAINT fk_observation_user FOREIGN KEY (author_id) REFERENCES "user"(id) ON DELETE CASCADE
 );
+
+CREATE TABLE observation_vote (
+    id SERIAL PRIMARY KEY,
+    user_id SERIAL NOT NULL,
+    observation_id SERIAL NOT NULL,
+    vote SMALLINT NOT NULL,
+    CONSTRAINT fk_observation_vote_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+    CONSTRAINT fk_observation_vote_observation FOREIGN KEY (observation_id) REFERENCES observation(id) ON DELETE CASCADE
+);
