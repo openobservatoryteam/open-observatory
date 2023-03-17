@@ -2,13 +2,12 @@ package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
+import fr.openobservatory.backend.dto.VoteDto;
 import fr.openobservatory.backend.services.ObservationService;
-import fr.openobservatory.backend.services.UserService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class ObservationController {
 
   private final ObservationService observationService;
-  private final ModelMapper modelMapper;
-  private final UserService userService;
 
   // ---
 
@@ -50,11 +47,9 @@ public class ObservationController {
   }
 
   @PutMapping("/{id}/vote")
-  @PreAuthorize("hasAuthority('SCOPE_USER')")
   public ResponseEntity<Void> voteObservation(
-      Authentication authentication, @PathVariable("id") Long id, @RequestBody String vote) {
-    var userId = userService.findByUsername(authentication.getName()).get().getId();
-    observationService.voteObservation(id, userId, vote);
+      Authentication authentication, @PathVariable Long id, @RequestBody @Valid VoteDto vote) {
+    observationService.voteObservation(id, authentication.getName(), vote);
     return ResponseEntity.noContent().build();
   }
 }
