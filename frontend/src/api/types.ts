@@ -21,7 +21,8 @@ export type Observation = {
   orientation: number;
   celestialBody: CelestialBody;
   author: User;
-  time: string;
+  createdAt: string;
+  hasExpired: boolean;
 };
 
 export type ObservationDetail = {

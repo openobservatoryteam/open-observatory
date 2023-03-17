@@ -1,5 +1,5 @@
 import client from './client';
-import { User } from './types';
+import { Observation, User } from './types';
 
 export const getCurrent = () => client.get('users/current').then((response) => response.json<User>());
 
@@ -10,3 +10,6 @@ export const register = (json: RegistrationBody) =>
 export type ChangePasswordBody = { oldPassword: string; newPassword: string };
 export const changePassword = (username: string, json: ChangePasswordBody) =>
   client.patch(`users/${username}/password`, { json });
+
+export const observations = (username: string) =>
+  client.get(`users/${username}/observations`).then((response) => response.json<Observation[]>());

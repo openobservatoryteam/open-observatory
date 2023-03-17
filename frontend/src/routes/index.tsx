@@ -7,6 +7,7 @@ const ObservationPage = () => import('./ObservationPage').then((page) => <page.d
 const CelestialBodyAdminPage = () => import('./CelestialBodyAdminPage').then((page) => <page.default />);
 const ChangePasswordPage = () => import('./ChangePasswordPage').then((page) => <page.default />);
 const ReportObservationPage = () => import('./ReportObservationPage').then((page) => <page.default />);
+const ObservationHistoryPage = () => import('./ObservationHistoryPage').then((page) => <page.default />);
 
 const routes: Route[] = [
   { path: '/', element: HomePage },
@@ -16,6 +17,7 @@ const routes: Route[] = [
   { path: '/admin/celestial-bodies', element: CelestialBodyAdminPage },
   { path: '/change-password', element: ChangePasswordPage },
   { path: '/report-observation', element: ReportObservationPage },
+  { path: '/users/:username/observations', element: ObservationHistoryPage },
 ];
 
 export default routes;

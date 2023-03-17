@@ -10,6 +10,7 @@ export * from './molecules/CurrentPosition';
 export * from './molecules/Dialog';
 export * from './molecules/List';
 export * from './molecules/Modal';
+export * from './molecules/ObservationItem';
 export * from './molecules/NearbyObservations';
 export * from './molecules/Pagination';
 export * from './molecules/UpDownVote';

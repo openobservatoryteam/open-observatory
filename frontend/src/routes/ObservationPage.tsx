@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 
 import { observations } from '~/api';
@@ -25,8 +24,6 @@ function ObservationPage(): JSX.Element {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
 
-  const [disabled, setDisabled] = useState<boolean>(false);
-
   const observationQuery = useQuery({
     queryFn: () => observations.findById(id),
     queryKey: ['observation'],
@@ -47,7 +44,7 @@ function ObservationPage(): JSX.Element {
       <div className="w-full">
         <div className="h-[50vh] relative">
           <div className="absolute left-5 top-5 flex">
-            <Button as={Link} to="/" className="py-1 px-3 mr-5" color="white" rounded>
+            <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
             {observation.hasExpired && <Chip>Expirée</Chip>}
