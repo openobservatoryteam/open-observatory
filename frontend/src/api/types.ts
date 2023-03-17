@@ -32,9 +32,10 @@ export type ObservationDetail = {
   orientation: number;
   celestialBody: CelestialBody;
   author: User;
-  time: string;
+  createdAt: string;
   hasExpired: boolean;
-  votes: number;
+  karma: number;
+  currentVote: 'UPVOTE' | 'DOWNVOTE' | null;
   visibility: 'CLEARLY_VISIBLE' | 'VISIBLE' | 'SLIGHTLY_VISIBLE' | 'BARELY_VISIBLE';
 };
 
