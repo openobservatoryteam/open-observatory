@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 
 import { celestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
-import { Button, Map, Select, TextInput, Title } from '~/components';
+import { Button, DatePicker, Map, Select, TextInput, Title } from '~/components';
 import { MarkerInput } from '~/components/molecules/MarkerInput';
 import { registerAdapter as r } from '~/utils';
 
@@ -30,7 +30,7 @@ function ReportObservationPage() {
   }>({
     defaultValues: {
       celestialBody: null,
-      date: null,
+      date: '2023-03-12T12:30',
       orientation: null,
       visibility: null,
       position: [0, 0],
@@ -55,13 +55,7 @@ function ReportObservationPage() {
               placeholder="Objet céleste observé"
               {...register('celestialBody', { required: true })}
             />
-            <input
-              className="px-3 py-2 rounded-3xl"
-              type="datetime-local"
-              aria-label="Date"
-              placeholder="Date"
-              {...register('date', { required: true })}
-            />
+            <DatePicker aria-label="Date" placeholder="Date" {...register('date', { required: true })} />
             <TextInput
               aria-label="Degré d'orientation"
               placeholder="Degré d'orientation"
