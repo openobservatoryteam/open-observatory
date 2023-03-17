@@ -51,24 +51,24 @@ public class UserController {
   }
 
   @GetMapping("/{username}")
-  public ResponseEntity<UserDto> getProfile(
+  public ResponseEntity<UserWithProfileDto> getProfile(
       Authentication authentication, @PathVariable("username") String username) {
     if (!userService.isViewable(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-    var profile = modelMapper.map(userService.getProfile(username), UserDto.class);
+    var profile = modelMapper.map(userService.getProfile(username), UserWithProfileDto.class);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
   @PatchMapping("/{username}")
-  public ResponseEntity<UserDto> updateProfile(
+  public ResponseEntity<UserWithProfileDto> updateProfile(
       Authentication authentication,
       @PathVariable("username") String username,
       @RequestBody @Valid UpdateProfileDto dto) {
     if (!userService.canEditUser(username, authentication.getName())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
-    var profile = modelMapper.map(userService.updateProfile(username, dto), UserDto.class);
+    var profile = modelMapper.map(userService.updateProfile(username, dto), UserWithProfileDto.class);
     return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
