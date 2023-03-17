@@ -1,9 +1,7 @@
 package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 
 @Data
 @Entity
@@ -26,8 +24,14 @@ public class ObservationVoteEntity {
   @Column(name = "vote", nullable = false)
   private VoteType vote;
 
+  @AllArgsConstructor
+  @Getter
   public enum VoteType {
-    UPVOTE,
-    DOWNVOTE
+    UPVOTE(1),
+    DOWNVOTE(-1);
+
+    // ---
+
+    private final int weight;
   }
 }

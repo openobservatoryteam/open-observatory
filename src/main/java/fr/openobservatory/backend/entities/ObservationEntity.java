@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Data;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Data
 @Entity
@@ -38,8 +40,33 @@ public class ObservationEntity implements Observation {
   @Column(columnDefinition = "SMALLINT", nullable = false)
   private Visibility visibility;
 
+  @OneToMany(mappedBy = "observation")
+  private Set<ObservationVoteEntity> votes;
+
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
+
+  // ---
+
+  public ObservationVoteEntity.VoteType getCurrentVote() {
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) return null;
+    var vote =
+        getVotes().stream()
+            .filter(v -> v.getUser().getUsername().equalsIgnoreCase(authentication.getName()))
+            .findFirst();
+    return vote.map(ObservationVoteEntity::getVote).orElse(null);
+  }
+
+  public int getKarma() {
+    return getVotes().stream().map(vote -> vote.getVote().getWeight()).reduce(0, Integer::sum);
+  }
+
+  public boolean hasExpired() {
+    return createdAt
+        .plus(celestialBody.getValidityTime(), ChronoUnit.HOURS)
+        .isBefore(Instant.now());
+  }
 
   // ---
 
@@ -63,11 +90,5 @@ public class ObservationEntity implements Observation {
     VISIBLE,
     SLIGHTLY_VISIBLE,
     BARELY_VISIBLE
-  }
-
-  public boolean hasExpired() {
-    return createdAt
-        .plus(celestialBody.getValidityTime(), ChronoUnit.HOURS)
-        .isBefore(Instant.now());
   }
 }
