@@ -21,7 +21,7 @@ function ObservationItem<C extends ElementType = 'div'>({
   return (
     <Component className={clsx('flex items-center bg-white rounded-full w-3/4 h-24 px-5', className)} {...props}>
       <img src={observation.celestialBody.image} className="object-contain h-20 w-20 rounded-full" />
-      <div className="flex flex-col items-cente w-full">
+      <div className="flex flex-col w-full h-full pt-4">
         <Text as="h1" bold centered color="black">
           {observation.celestialBody.name}
         </Text>
