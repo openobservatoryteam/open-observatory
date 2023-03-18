@@ -1,9 +1,11 @@
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 
 import { users } from '~/api';
-import { Text } from '~/components';
+import { Button, Text } from '~/components';
 import ObservationItem from '~/components/molecules/ObservationItem';
 import { Footer, Header } from '~/layout';
 
@@ -23,6 +25,11 @@ function ObservationHistoryPage(): JSX.Element {
     <>
       <DocumentTitle>Historique des observations</DocumentTitle>
       <Header />
+      <div className="absolute left-4 md:top-28 top-4">
+        <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
+          <FontAwesomeIcon icon={faArrowLeft} size="xl" />
+        </Button>
+      </div>
       <Text as="h1" centered className="mt-12" color="white">
         Historique des observations
       </Text>
