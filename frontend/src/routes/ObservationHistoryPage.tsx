@@ -1,5 +1,6 @@
 import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
+import { Title as DocumentTitle } from 'react-head';
 
 import { users } from '~/api';
 import { Text } from '~/components';
@@ -20,11 +21,12 @@ function ObservationHistoryPage(): JSX.Element {
 
   return (
     <>
+      <DocumentTitle>Historique des observations</DocumentTitle>
       <Header />
-      <Text as="h1" centered className="mt-10" color="white">
+      <Text as="h1" centered className="mt-12" color="white">
         Historique des observations
       </Text>
-      <div className="flex flex-col justify-around items-center mt-10">
+      <div className="flex flex-col items-center mt-12 h-[29em] overflow-y-scroll">
         {observations == null ||
           (observations != null && observations?.length === 0 && (
             <Text as="h1" centered color="white">
