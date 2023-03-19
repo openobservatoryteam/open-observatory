@@ -8,13 +8,12 @@ import fr.openobservatory.backend.exceptions.UnknownObservationException;
 import fr.openobservatory.backend.exceptions.UnknownUserException;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
+import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-
-import fr.openobservatory.backend.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -60,14 +59,15 @@ public class ObservationService {
         .toList();
   }
 
-  public ObservationDto update(Long id, String description)
-  {
-    if(description.replaceAll(" ","").length() > 2048)
+  public ObservationDto update(Long id, String description) {
+    if (description.replaceAll(" ", "").length() > 2048)
       throw new InvalidObservationDescriptionException();
-    ObservationEntity observation = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    ObservationEntity observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
     observation.setDescription(description);
-    return modelMapper.map(observationRepository.save(observation),ObservationDto.class);
+    return modelMapper.map(observationRepository.save(observation), ObservationDto.class);
   }
+
   public List<ObservationDto> findNearbyObservations(Double lng, Double lat) {
     return observationRepository.findAll().stream()
         .filter(
@@ -78,11 +78,13 @@ public class ObservationService {
         .toList();
   }
 
-  public ObservationDto createObservation(String username,CreateObservationDto dto){
+  public ObservationDto createObservation(String username, CreateObservationDto dto) {
     var celestialBody =
-            celestialBodyRepository.findById(dto.getCelestialBodyId()).orElseThrow(UnknownCelestialBodyException::new);
-    var user = userRepository.findByUsernameIgnoreCase(username)
-            .orElseThrow(UnknownUserException::new);
+        celestialBodyRepository
+            .findById(dto.getCelestialBodyId())
+            .orElseThrow(UnknownCelestialBodyException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     ObservationEntity observation = new ObservationEntity();
     observation.setCreatedAt(dto.getTimestamp());
     observation.setVisibility(dto.getVisibility());

@@ -4,9 +4,8 @@ import fr.openobservatory.backend.dto.CreateObservationDto;
 import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.services.ObservationService;
-import java.util.List;
-
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +29,16 @@ public class ObservationController {
   }
 
   @PostMapping
-  public ResponseEntity<ObservationDto> createObservation(Authentication authentication,@Valid CreateObservationDto createObservationDto)
-  {
-    return ResponseEntity.ok(observationService.createObservation(authentication.getName(),createObservationDto));
+  public ResponseEntity<ObservationDto> createObservation(
+      Authentication authentication, @Valid CreateObservationDto createObservationDto) {
+    return ResponseEntity.ok(
+        observationService.createObservation(authentication.getName(), createObservationDto));
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<ObservationDto> update(@PathVariable Long id, @RequestBody String description)
-  {
-    return ResponseEntity.ok(observationService.update(id,description));
+  public ResponseEntity<ObservationDto> update(
+      @PathVariable Long id, @RequestBody String description) {
+    return ResponseEntity.ok(observationService.update(id, description));
   }
 
   @GetMapping
