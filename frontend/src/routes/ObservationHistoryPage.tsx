@@ -40,7 +40,8 @@ function ObservationHistoryPage(): JSX.Element {
               L&apos;utilisateur n&apos;as pas encore effectuer d&apos;observations
             </Text>
           ))}
-        {observations?.length > 0 &&
+        {observations != null &&
+          observations?.length > 0 &&
           observations.map((obs) => (
             <ObservationItem as={Link} key={obs.id} observation={obs} className="my-3" to={`/observations/${obs.id}`} />
           ))}
