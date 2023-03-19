@@ -1,12 +1,16 @@
 package fr.openobservatory.backend.controllers;
 
+import fr.openobservatory.backend.dto.CreateObservationDto;
 import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.services.ObservationService;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -25,8 +29,20 @@ public class ObservationController {
     return ResponseEntity.ok(observationService.findNearbyObservations(lng, lat));
   }
 
+  @PostMapping
+  public ResponseEntity<ObservationDto> createObservation(Authentication authentication,@Valid CreateObservationDto createObservationDto)
+  {
+    return ResponseEntity.ok(observationService.createObservation(authentication.getName(),createObservationDto));
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<ObservationDto> update(@PathVariable Long id, @RequestBody String description)
+  {
+    return ResponseEntity.ok(observationService.update(id,description));
+  }
+
   @GetMapping
-  public ResponseEntity<List<ObservationDto>> observations(int limit, int page) {
+  public ResponseEntity<List<ObservationDto>> observations(Integer limit, Integer page) {
     return ResponseEntity.ok(observationService.search(limit, page));
   }
 

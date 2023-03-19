@@ -1,15 +1,20 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.CelestialBodyDto;
-import fr.openobservatory.backend.dto.ObservationDetailedDto;
-import fr.openobservatory.backend.dto.ObservationDto;
-import fr.openobservatory.backend.dto.UserDto;
+import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.entities.ObservationEntity;
+import fr.openobservatory.backend.exceptions.InvalidObservationDescriptionException;
+import fr.openobservatory.backend.exceptions.UnknownCelestialBodyException;
+import fr.openobservatory.backend.exceptions.UnknownObservationException;
+import fr.openobservatory.backend.exceptions.UnknownUserException;
+import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+
+import fr.openobservatory.backend.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,7 +25,8 @@ public class ObservationService {
 
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
-
+  private final CelestialBodyRepository celestialBodyRepository;
+  private final UserRepository userRepository;
   // ---
 
   public ObservationDetailedDto findById(Long id) {
@@ -46,12 +52,22 @@ public class ObservationService {
   }
 
   public List<ObservationDto> search(Integer limit, Integer page) {
+    limit = limit == null ? 5 : limit;
+    page = page == null ? 1 : page;
     return observationRepository.findAll().stream()
         .limit(limit)
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
   }
 
+  public ObservationDto update(Long id, String description)
+  {
+    if(description.replaceAll(" ","").length() > 2048)
+      throw new InvalidObservationDescriptionException();
+    ObservationEntity observation = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    observation.setDescription(description);
+    return modelMapper.map(observationRepository.save(observation),ObservationDto.class);
+  }
   public List<ObservationDto> findNearbyObservations(Double lng, Double lat) {
     return observationRepository.findAll().stream()
         .filter(
@@ -60,6 +76,24 @@ public class ObservationService {
                     <= 30)
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
+  }
+
+  public ObservationDto createObservation(String username,CreateObservationDto dto){
+    var celestialBody =
+            celestialBodyRepository.findById(dto.getCelestialBodyId()).orElseThrow(UnknownCelestialBodyException::new);
+    var user = userRepository.findByUsernameIgnoreCase(username)
+            .orElseThrow(UnknownUserException::new);
+    ObservationEntity observation = new ObservationEntity();
+    observation.setCreatedAt(dto.getTimestamp());
+    observation.setVisibility(dto.getVisibility());
+    observation.setDescription(dto.getDescription());
+    observation.setLongitude(dto.getLng());
+    observation.setLatitude(dto.getLat());
+    observation.setOrientation(dto.getOrientation());
+    observation.setCelestialBody(celestialBody);
+    observation.setAuthor(user);
+    observationRepository.save(observation);
+    return modelMapper.map(observation, ObservationDto.class);
   }
 
   // Calculate distance between two points using the "haversine" formula
