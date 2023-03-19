@@ -15,4 +15,5 @@ public class ObservationDto {
   private UserDto author;
   private OffsetDateTime createdAt;
   private ObservationEntity.Visibility visibility;
+  private boolean hasExpired;
 }

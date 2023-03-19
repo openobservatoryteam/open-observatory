@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Marker, Tooltip, useMap } from 'react-leaflet';
 
 type MarkerInputProps = {
