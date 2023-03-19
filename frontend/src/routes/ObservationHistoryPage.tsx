@@ -16,7 +16,7 @@ function ObservationHistoryPage(): JSX.Element {
 
   const observationsQuery = useQuery({
     queryFn: () => users.observations(username),
-    queryKey: ['user', 'observations'],
+    queryKey: ['user', 'observations', username],
   });
 
   const observations = observationsQuery.data;
@@ -40,8 +40,7 @@ function ObservationHistoryPage(): JSX.Element {
               L&apos;utilisateur n&apos;as pas encore effectuer d&apos;observations
             </Text>
           ))}
-        {observations != null &&
-          observations?.length > 0 &&
+        {observations?.length > 0 &&
           observations.map((obs) => (
             <ObservationItem as={Link} key={obs.id} observation={obs} className="my-3" to={`/observations/${obs.id}`} />
           ))}
