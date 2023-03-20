@@ -37,7 +37,7 @@ function ObservationHistoryPage(): JSX.Element {
         {observations == null ||
           (observations != null && observations?.length === 0 && (
             <Text as="h1" centered color="white">
-              L&apos;utilisateur n&apos;as pas encore effectuer d&apos;observations
+              L&apos;utilisateur n&apos;a pas encore envoyé d&apos;observation.
             </Text>
           ))}
         {observations != null &&
