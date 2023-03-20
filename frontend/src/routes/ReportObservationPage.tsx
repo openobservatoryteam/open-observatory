@@ -33,7 +33,15 @@ function ReportObservationPage() {
         src={celestialBodiesData?.data.find((c) => c.id === +selectedBody)?.image ?? celeste}
         alt="Objet céleste"
       />
-      <form onSubmit={handleSubmit((data) => mutate(data))}>
+      <form
+        onSubmit={handleSubmit(({ celestialBodyId, orientation, ...data }) =>
+          mutate({
+            celestialBodyId: +celestialBodyId,
+            orientation: +orientation,
+            ...data,
+          }),
+        )}
+      >
         <div className="bg-slate-600">
           <div className="flex flex-col gap-y-4 max-w-screen-sm mx-auto py-4 w-3/4">
             <Select
