@@ -5,8 +5,8 @@ import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { ProblemDetail, users } from '~/api';
-import { Button, TextInput, Title } from '~/components';
+import { ApplicationError, CreateUserData, postCreateUser } from '~/api';
+import { Button, Text, TextInput, Title } from '~/components';
 import { Footer, Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
@@ -35,23 +35,16 @@ const RegistrationSchema = z
 
 function RegistrationPage() {
   const navigate = useNavigate();
-  const { formState, handleSubmit, register, setError } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
-      passwordConfirmation: '',
-      biography: '',
-    },
+  const { formState, handleSubmit, register, setError } = useForm<CreateUserData>({
     resolver: zodResolver(RegistrationSchema),
   });
   const registration = useMutation({
-    mutationFn: users.register,
-    mutationKey: ['registration'],
+    mutationFn: postCreateUser,
     onSuccess: () => navigate({ to: '/login' }),
-    onError: ({ cause }: { cause?: ProblemDetail }) => {
-      if (cause?.message === 'USERNAME_ALREADY_USED') {
+    onError: ({ cause }: { cause?: ApplicationError }) => {
+      if (cause?.message === 'USERNAME_ALREADY_USED')
         setError('username', { message: 'Ce pseudonyme est déjà utilisé.' });
-      }
+      else setError('root', { message: 'Une erreur inconnue est survenue lors de votre inscription.' });
     },
   });
   return (
@@ -95,6 +88,11 @@ function RegistrationPage() {
           {...r(register, 'biography')}
         />
         <Button type="submit">S&apos;inscrire</Button>
+        {formState.errors.root && (
+          <Text centered color="red">
+            {formState.errors.root.message}
+          </Text>
+        )}
       </form>
       <Footer />
     </>

@@ -1,18 +1,22 @@
+import { Observation, UserWithProfile } from './@types';
 import client from './client';
-import { Observation, User, UserWithProfile } from './types';
 
-export const getCurrent = () => client.get('users/current').then((response) => response.json<User>());
+export const getSelfUser = () => client.get('users/@me').then((r) => r.json<UserWithProfile>());
 
-type RegistrationBody = { username: string; password: string; biography?: string };
-export const register = (json: RegistrationBody) =>
-  client.post('users/register', { json }).then((response) => response.json<User>());
+export type CreateUserData = { username: string; password: string; passwordConfirmation: string; biography?: string };
+export const postCreateUser = (json: CreateUserData) =>
+  client.post('users/register', { json }).then((r) => r.json<UserWithProfile>());
 
-export const get = (username: string) =>
-  client.get(`users/${username}`).then((response) => response.json<UserWithProfile>());
+export const findAllUserObservations = (username: string) =>
+  client.get(`users/${username}/observations`).then((r) => r.json<Observation[]>());
 
-export type ChangePasswordBody = { oldPassword: string; newPassword: string };
-export const changePassword = (username: string, json: ChangePasswordBody) =>
-  client.patch(`users/${username}/password`, { json });
+export const findUserByUsername = (username: string) =>
+  client.get(`users/${username}`).then((r) => r.json<UserWithProfile>());
 
-export const observations = (username: string) =>
-  client.get(`users/${username}/observations`).then((response) => response.json<Observation[]>());
+export type ChangeUserPasswordData = {
+  oldPassword: string;
+  newPassword: string;
+  newPasswordConfirmation: string;
+};
+export const changeUserPassword = ({ username, ...json }: ChangeUserPasswordData & { username: string }) =>
+  client.patch(`users/${username}/password`, { json }).then(() => null);

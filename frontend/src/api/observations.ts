@@ -1,31 +1,25 @@
+import { Observation, ObservationVisibility, ObservationVote, ObservationWithDetails } from './@types';
 import client from './client';
-import { Observation, ObservationDetail } from './types';
 
-type FindNearbyObservationsData = { lng: number; lat: number };
-export const findNearby = ({ lng, lat }: FindNearbyObservationsData) =>
-  client.get('observations/nearby', { searchParams: { lng, lat } }).then((response) => response.json<Observation[]>());
+type FindAllObservationsNearbyData = { lng: number; lat: number };
+export const findAllObservationsNearby = ({ lng, lat }: FindAllObservationsNearbyData) =>
+  client.get('observations/nearby', { searchParams: { lng, lat } }).then((r) => r.json<Observation[]>());
 
-export const findById = (id: string) => client.get('observations/' + id).then((r) => r.json<ObservationDetail>());
-
-export const visibilityOptions = [
-  { name: 'Bien visible', value: 'CLEARLY_VISIBLE' },
-  { name: 'Visible', value: 'VISIBLE' },
-  { name: 'Légèrement visible', value: 'SLIGHTLY_VISIBLE' },
-  { name: 'Difficilement visible', value: 'BARELY_VISIBLE' },
-] as const;
+export const findObservationById = (id: string) =>
+  client.get('observations/' + id).then((r) => r.json<ObservationWithDetails>());
 
 export type CreateObservationData = {
-  description: string;
   celestialBodyId: number;
-  lat: number;
+  description?: string;
   lng: number;
+  lat: number;
   orientation: number;
+  visibility: ObservationVisibility;
   timestamp: string;
-  visibility: (typeof visibilityOptions)[number]['value'];
 };
-export const create = (json: CreateObservationData) =>
-  client.post('observations', { json }).then((r) => r.json<Observation>());
+export const createObservation = (json: CreateObservationData) =>
+  client.post('observations', { json }).then((r) => r.json<ObservationWithDetails>());
 
-type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;
-type VoteRequest = { id: string; vote: VoteType };
-export const vote = ({ id, vote }: VoteRequest) => client.put(`observations/${id}/vote`, { json: { vote } });
+type PutVoteData = { id: string; vote: ObservationVote };
+export const putVote = ({ id, vote }: PutVoteData) =>
+  client.put(`observations/${id}/vote`, { json: { vote } }).then(() => null);

@@ -1,10 +1,9 @@
 import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
 
-import { users } from '~/api';
+import { findUserByUsername } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
-import { Button, Text } from '~/components';
-import { Achievements } from '~/components/molecules/Achievements';
+import { Achievements, Button, Text } from '~/components';
 import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 
@@ -15,7 +14,7 @@ function ProfilePage() {
   } = useMatch<{ Params: { username: string } }>();
   const { data: user } = useQuery({
     queryKey: ['user', username],
-    queryFn: () => users.get(username),
+    queryFn: () => findUserByUsername(username),
   });
   if (!user) return null;
   const isSelf = authentication.user?.username === user.username;

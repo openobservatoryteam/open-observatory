@@ -11,16 +11,18 @@ import { registerAdapter as r } from '~/utils';
 function LoginPage() {
   const auth = useAuthentication();
   const navigate = useNavigate();
-  const { formState, handleSubmit, register, setError } = useForm({
-    defaultValues: {
-      username: '',
-      password: '',
-    },
-  });
+  const { formState, handleSubmit, register, setError } = useForm<LoginData>();
   const onSubmit = (data: LoginData) =>
     auth.login.mutate(data, {
       onSuccess: () => navigate({ to: '/' }),
-      onError: () => setError('root', { message: 'Les identifiants sont incorrects.' }),
+      onError: (e) => {
+        if (e.response.status === 401)
+          setError('root', { message: 'Les identifiants sont incorrects, vérifiez votre saisie.' });
+        else
+          setError('root', {
+            message: 'Une erreur inconnue est survenue lors de la connexion, veuillez réessayer plus tard.',
+          });
+      },
     });
   return (
     <>
@@ -35,19 +37,17 @@ function LoginPage() {
           className="mb-10"
           errorMessage={formState.errors.username?.message}
           placeholder="Pseudonyme"
-          required
           type="text"
-          {...r(register, 'username')}
+          {...r(register, 'username', { required: { message: 'Ce champ est obligatoire.', value: true } })}
         />
         <TextInput
           aria-label="Mot de passe"
           className="mb-10"
           errorMessage={formState.errors.password?.message}
           placeholder="Mot de passe"
-          required
           type="password"
           withVisibilityToggle
-          {...r(register, 'password')}
+          {...r(register, 'password', { required: { message: 'Ce champ est obligatoire.', value: true } })}
         />
         <Button className="mb-5" type="submit">
           Se connecter

@@ -4,23 +4,20 @@ import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 
-import { users } from '~/api';
+import { findAllUserObservations } from '~/api';
 import { Button, Text } from '~/components';
 import ObservationItem from '~/components/molecules/ObservationItem';
 import { Footer, Header } from '~/layout';
 
-function ObservationHistoryPage(): JSX.Element {
+function ObservationHistoryPage() {
   const {
     params: { username },
   } = useMatch<{ Params: { username: string } }>();
-
   const observationsQuery = useQuery({
-    queryFn: () => users.observations(username),
-    queryKey: ['user', 'observations', username],
+    queryFn: () => findAllUserObservations(username),
+    queryKey: ['user', username, 'observations'],
   });
-
   const observations = observationsQuery.data;
-
   return (
     <>
       <DocumentTitle>Historique des observations</DocumentTitle>

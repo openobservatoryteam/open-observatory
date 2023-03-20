@@ -1,5 +1,5 @@
-export * from './types';
-export * as authentication from './authentication';
-export * as celestialBodies from './celestialBodies';
-export * as observations from './observations';
-export * as users from './users';
+export * from './@types';
+export * from './authentication';
+export * from './celestialBodies';
+export * from './observations';
+export * from './users';

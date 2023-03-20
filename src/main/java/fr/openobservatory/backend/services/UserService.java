@@ -37,7 +37,10 @@ public class UserService {
     entity.setType(UserEntity.Type.USER);
     entity.setPublic(true);
     entity.setCreatedAt(Instant.now());
-    return modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
+    var userDto = modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
+    userDto.setAchievements(List.of());
+    userDto.setKarma(0); // TODO: Craft the relevant SQL query.
+    return userDto;
   }
 
   public UserWithProfileDto findByUsername(String username, String issuerUsername) {
@@ -48,7 +51,10 @@ public class UserService {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
-    return modelMapper.map(user, UserWithProfileDto.class);
+    var dto = modelMapper.map(user, UserWithProfileDto.class);
+    dto.setAchievements(List.of());
+    dto.setKarma(0); // TODO: Craft the relevant SQL query.
+    return dto;
   }
 
   public List<ObservationDto> findObservationsByUsername(String username, String issuerUsername) {
@@ -65,10 +71,13 @@ public class UserService {
   }
 
   public UserWithProfileDto findSelf(String username) {
-    return userRepository
+    var dto = userRepository
             .findByUsernameIgnoreCase(username)
             .map(u -> modelMapper.map(u, UserWithProfileDto.class))
             .orElseThrow(UnavailableUserException::new);
+    dto.setAchievements(List.of());
+    dto.setKarma(0); // TODO: Craft the relevant SQL query.
+    return dto;
   }
 
   public void modifyPassword(String username, ChangePasswordDto dto, String issuerUsername) {
@@ -80,7 +89,7 @@ public class UserService {
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-      throw new InvalidPasswordException();
+      throw new PasswordMismatchException();
     }
     user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
     userRepository.save(user);
@@ -98,7 +107,10 @@ public class UserService {
       var biography = dto.getBiography().get();
       user.setBiography(biography);
     }
-    return modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
+    var userDto = modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
+    userDto.setAchievements(List.of());
+    userDto.setKarma(0); // TODO: Craft the relevant SQL query.
+    return userDto;
   }
 
   // ---
