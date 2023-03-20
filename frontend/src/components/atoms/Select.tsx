@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react';
 
 type SelectProps = ComponentPropsWithoutRef<'select'> & {
-  options?: { name: string; value: string }[];
+  options?: readonly { name: string; value: string }[];
 };
 
 function Select({ className, options = [], ...props }: SelectProps, ref?: ForwardedRef<HTMLSelectElement>) {
