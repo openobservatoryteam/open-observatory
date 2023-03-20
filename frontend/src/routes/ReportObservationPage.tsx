@@ -34,10 +34,11 @@ function ReportObservationPage() {
         alt="Objet céleste"
       />
       <form
-        onSubmit={handleSubmit(({ celestialBodyId, orientation, ...data }) =>
+        onSubmit={handleSubmit(({ celestialBodyId, orientation, timestamp, ...data }) =>
           mutate({
             celestialBodyId: +celestialBodyId,
             orientation: +orientation,
+            timestamp: new Date(timestamp).toISOString(),
             ...data,
           }),
         )}

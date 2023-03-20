@@ -20,7 +20,7 @@ export type CreateObservationData = {
   lat: number;
   lng: number;
   orientation: number;
-  timestamp: number;
+  timestamp: string;
   visibility: (typeof visibilityOptions)[number]['value'];
 };
 export const create = (json: CreateObservationData) =>
