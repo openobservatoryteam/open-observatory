@@ -5,10 +5,7 @@ import fr.openobservatory.backend.dto.VoteDto;
 import fr.openobservatory.backend.entities.Observation;
 import fr.openobservatory.backend.entities.ObservationEntity;
 import fr.openobservatory.backend.entities.ObservationVoteEntity;
-import fr.openobservatory.backend.exceptions.InvalidObservationDescriptionException;
-import fr.openobservatory.backend.exceptions.UnknownCelestialBodyException;
-import fr.openobservatory.backend.exceptions.UnknownObservationException;
-import fr.openobservatory.backend.exceptions.UnknownUserException;
+import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
@@ -39,12 +36,16 @@ public class ObservationService {
     return observationRepository.findAll().stream().limit(limit).toList();
   }
 
-  public Observation update(Long id, String description) {
-    if (description.replaceAll(" ", "").length() > 2048)
-      throw new InvalidObservationDescriptionException();
+  public Observation update(Long id, UpdateObservationDto dto, String issuer) {
     ObservationEntity observation =
         observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
-    observation.setDescription(description);
+    if (!observation.getAuthor().getUsername().equalsIgnoreCase(issuer))
+      throw new ObservationNotEditableException();
+    if (dto.getDescription().isPresent()) {
+      var description = dto.getDescription().get();
+      if (description.length() > 2048) throw new InvalidObservationDescriptionException();
+      observation.setDescription(description);
+    }
     return observationRepository.save(observation);
   }
 
