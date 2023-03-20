@@ -64,7 +64,7 @@ public class UserService {
         .toList();
   }
 
-  public UserWithProfileDto findSelfUser(String username) {
+  public UserWithProfileDto findSelf(String username) {
     return userRepository
             .findByUsernameIgnoreCase(username)
             .map(u -> modelMapper.map(u, UserWithProfileDto.class))

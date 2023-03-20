@@ -30,7 +30,7 @@ public class UserController {
   @GetMapping("/current")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<UserWithProfileDto> current(Authentication authentication) {
-    var user = userService.findSelfUser(authentication.getName());
+    var user = userService.findSelf(authentication.getName());
     return ResponseEntity.ok(user);
   }
 
