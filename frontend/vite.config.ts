@@ -12,7 +12,7 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tag.svg'],
       manifest: {
         name: 'Open Observatory',
-        short_name: 'Open Observatory',
+        short_name: 'Open Obs.',
         description: "Open Observatory est une plateforme collaborative de partage d'observations d'objets célestes.",
         theme_color: '#303030',
         display: 'standalone',
