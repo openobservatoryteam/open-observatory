@@ -1,10 +1,15 @@
 package fr.openobservatory.backend.services;
 
+import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.dto.VoteDto;
 import fr.openobservatory.backend.entities.Observation;
+import fr.openobservatory.backend.entities.ObservationEntity;
 import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.exceptions.InvalidObservationDescriptionException;
+import fr.openobservatory.backend.exceptions.UnknownCelestialBodyException;
 import fr.openobservatory.backend.exceptions.UnknownObservationException;
 import fr.openobservatory.backend.exceptions.UnknownUserException;
+import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ObservationService {
 
+  private final CelestialBodyRepository celestialBodyRepository;
   private final ObservationRepository observationRepository;
   private final ObservationVoteRepository observationVoteRepository;
   private final UserRepository userRepository;
@@ -31,6 +37,15 @@ public class ObservationService {
 
   public List<? extends Observation> search(Integer limit, Integer page) {
     return observationRepository.findAll().stream().limit(limit).toList();
+  }
+
+  public Observation update(Long id, String description) {
+    if (description.replaceAll(" ", "").length() > 2048)
+      throw new InvalidObservationDescriptionException();
+    ObservationEntity observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    observation.setDescription(description);
+    return observationRepository.save(observation);
   }
 
   public List<? extends Observation> findNearbyObservations(Double lng, Double lat) {
@@ -64,6 +79,25 @@ public class ObservationService {
     vote.setObservation(observation);
     vote.setVote(dto.getVote());
     observationVoteRepository.save(vote);
+  }
+
+  public Observation createObservation(String username, CreateObservationDto dto) {
+    var celestialBody =
+        celestialBodyRepository
+            .findById(dto.getCelestialBodyId())
+            .orElseThrow(UnknownCelestialBodyException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    ObservationEntity observation = new ObservationEntity();
+    observation.setCreatedAt(dto.getTimestamp());
+    observation.setVisibility(dto.getVisibility());
+    observation.setDescription(dto.getDescription());
+    observation.setLongitude(dto.getLng());
+    observation.setLatitude(dto.getLat());
+    observation.setOrientation(dto.getOrientation());
+    observation.setCelestialBody(celestialBody);
+    observation.setAuthor(user);
+    return observationRepository.save(observation);
   }
 
   // Calculate distance between two points using the "haversine" formula
