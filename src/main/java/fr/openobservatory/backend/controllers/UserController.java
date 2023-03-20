@@ -27,7 +27,7 @@ public class UserController {
     return ResponseEntity.created(URI.create("/users/" + user.getUsername())).body(user);
   }
 
-  @GetMapping("/current")
+  @GetMapping("/@me")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<UserWithProfileDto> current(Authentication authentication) {
     var user = userService.findSelf(authentication.getName());
