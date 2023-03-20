@@ -25,7 +25,7 @@ function ObservationHistoryPage(): JSX.Element {
     <>
       <DocumentTitle>Historique des observations</DocumentTitle>
       <Header />
-      <div className="absolute left-4 md:top-28 top-4">
+      <div className="absolute left-4 top-30">
         <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
           <FontAwesomeIcon icon={faArrowLeft} size="xl" />
         </Button>
