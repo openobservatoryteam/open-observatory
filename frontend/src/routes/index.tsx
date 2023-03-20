@@ -16,10 +16,15 @@ const routes: Route[] = [
   { path: '/register', element: RegistrationPage },
   { path: '/observations/:id', element: ObservationPage },
   { path: '/admin/celestial-bodies', element: CelestialBodyAdminPage },
-  { path: '/users/:username', element: ProfilePage },
+  {
+    path: '/users/:username',
+    children: [
+      { path: '/', element: ProfilePage },
+      { path: '/observations', element: ObservationHistoryPage },
+    ],
+  },
   { path: '/change-password', element: ChangePasswordPage },
   { path: '/report-observation', element: ReportObservationPage },
-  { path: '/users/:username/observations', element: ObservationHistoryPage },
 ];
 
 export default routes;
