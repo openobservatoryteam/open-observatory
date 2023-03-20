@@ -6,9 +6,8 @@ import fr.openobservatory.backend.dto.SearchResultsDto;
 import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
 import fr.openobservatory.backend.services.CelestialBodyService;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class CelestialBodyController {
 
   private final CelestialBodyService celestialBodyService;
-  private final ModelMapper modelMapper;
 
   // ---
 
@@ -28,41 +26,37 @@ public class CelestialBodyController {
   public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(
       @RequestParam(required = false, defaultValue = "10") Integer limit,
       @RequestParam(required = false, defaultValue = "0") Integer page) {
-    var celestialBodies =
-        celestialBodyService
-            .search(page, limit)
-            .map(c -> modelMapper.map(c, CelestialBodyDto.class));
-    var searchResult = SearchResultsDto.from(celestialBodies);
-    return ResponseEntity.ok(searchResult);
+    var celestialBodies = celestialBodyService.search(page, limit);
+    return ResponseEntity.ok(celestialBodies);
   }
 
   @GetMapping("/{id}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<CelestialBodyDto> findById(@PathVariable Long id) {
-    var celestialBody = modelMapper.map(celestialBodyService.findById(id), CelestialBodyDto.class);
+    var celestialBody = celestialBodyService.findById(id);
     return ResponseEntity.ok(celestialBody);
   }
 
   @PostMapping
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<CelestialBodyDto> create(@RequestBody @Valid CreateCelestialBodyDto dto) {
-    var celestialBody = modelMapper.map(celestialBodyService.create(dto), CelestialBodyDto.class);
-    return new ResponseEntity<>(celestialBody, HttpStatus.CREATED);
+    var celestialBody = celestialBodyService.create(dto);
+    return ResponseEntity.created(URI.create("/celestial-bodies/" + celestialBody.getId()))
+        .body(celestialBody);
   }
 
   @PatchMapping("/{id}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<CelestialBodyDto> update(
       @PathVariable Long id, @RequestBody @Valid UpdateCelestialBodyDto dto) {
-    var celestialBody =
-        modelMapper.map(celestialBodyService.update(id, dto), CelestialBodyDto.class);
-    return new ResponseEntity<>(celestialBody, HttpStatus.OK);
+    var celestialBody = celestialBodyService.update(id, dto);
+    return ResponseEntity.ok(celestialBody);
   }
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     celestialBodyService.delete(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return ResponseEntity.noContent().build();
   }
 }

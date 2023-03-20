@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "\"user\"")
-public class UserEntity implements User {
+public class UserEntity {
 
   public static final String USERNAME_PATTERN = "^[A-Za-z][A-Za-z0-9_]{0,31}$";
 
@@ -26,7 +26,7 @@ public class UserEntity implements User {
   @Column(columnDefinition = "VARCHAR(60)", nullable = false)
   private String password;
 
-  @Column(columnDefinition = "BYTEA")
+  @Column(columnDefinition = "TEXT")
   private String avatar;
 
   @Column(columnDefinition = "TEXT")
@@ -61,13 +61,5 @@ public class UserEntity implements User {
   public enum Type {
     USER,
     ADMIN
-  }
-
-  public int getKarma() {
-    return 0;
-  }
-
-  public List<AchievementDto> getAchievements() {
-    return List.of();
   }
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.openobservatory.backend.configuration.jwt.CookieJwtFilter;
 import fr.openobservatory.backend.configuration.jwt.JwtConfigurer;
 import fr.openobservatory.backend.configuration.jwt.JwtService;
-import fr.openobservatory.backend.services.UserService;
+import fr.openobservatory.backend.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public class SecurityConfiguration {
   private final Environment environment;
   private final JwtService jwtService;
   private final ObjectMapper objectMapper;
-  private final UserService userService;
+  private final UserRepository userRepository;
 
   // ---
 
@@ -92,8 +92,8 @@ public class SecurityConfiguration {
   public UserDetailsService userDetailsService() {
     return username -> {
       var user =
-          userService
-              .findByUsername(username)
+          userRepository
+              .findByUsernameIgnoreCase(username)
               .orElseThrow(() -> new UsernameNotFoundException((username)));
       var authorities = List.of(new SimpleGrantedAuthority(user.getType().name()));
       return new User(user.getUsername(), user.getPassword(), authorities);

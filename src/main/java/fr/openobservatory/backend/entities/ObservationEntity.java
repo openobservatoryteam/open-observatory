@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Data
 @Entity
 @Table(name = "observation")
-public class ObservationEntity implements Observation {
+public class ObservationEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,28 +45,6 @@ public class ObservationEntity implements Observation {
 
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
-
-  // ---
-
-  public ObservationVoteEntity.VoteType getCurrentVote() {
-    var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null) return null;
-    var vote =
-        getVotes().stream()
-            .filter(v -> v.getUser().getUsername().equalsIgnoreCase(authentication.getName()))
-            .findFirst();
-    return vote.map(ObservationVoteEntity::getVote).orElse(null);
-  }
-
-  public int getKarma() {
-    return getVotes().stream().map(vote -> vote.getVote().getWeight()).reduce(0, Integer::sum);
-  }
-
-  public boolean hasExpired() {
-    return createdAt
-        .plus(celestialBody.getValidityTime(), ChronoUnit.HOURS)
-        .isBefore(Instant.now());
-  }
 
   // ---
 

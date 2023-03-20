@@ -1,13 +1,11 @@
 package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.*;
-import fr.openobservatory.backend.services.ObservationService;
 import fr.openobservatory.backend.services.UserService;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,65 +17,47 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  private final ObservationService observationService;
-  private final ModelMapper modelMapper;
 
   // ---
 
   @PostMapping("/register")
   @PreAuthorize("isAnonymous()")
-  public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterUserDto dto) {
-    var user = modelMapper.map(userService.register(dto), UserDto.class);
-    return new ResponseEntity<>(user, HttpStatus.CREATED);
+  public ResponseEntity<UserWithProfileDto> register(@RequestBody @Valid CreateUserDto dto) {
+    var user = userService.create(dto);
+    return ResponseEntity.created(URI.create("/users/" + user.getUsername())).body(user);
   }
 
   @GetMapping("/current")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<UserDto> current(Authentication authentication) {
-    var user =
-        userService
-            .findByUsername(authentication.getName())
-            .map(u -> modelMapper.map(u, UserDto.class));
-    return ResponseEntity.of(user);
+  public ResponseEntity<UserWithProfileDto> current(Authentication authentication) {
+    var user = userService.findSelfUser(authentication.getName());
+    return ResponseEntity.ok(user);
   }
 
   @GetMapping("/{username}")
-  public ResponseEntity<UserWithProfileDto> getProfile(
+  public ResponseEntity<UserWithProfileDto> findByUsername(
       Authentication authentication, @PathVariable String username) {
-    if (!userService.isViewable(
-        username, authentication == null ? null : authentication.getName())) {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-    var profile = modelMapper.map(userService.getProfile(username), UserWithProfileDto.class);
-    return new ResponseEntity<>(profile, HttpStatus.OK);
+    var issuerUsername = authentication == null ? null : authentication.getName();
+    var user = userService.findByUsername(username, issuerUsername);
+    return ResponseEntity.ok(user);
   }
 
   @GetMapping("/{username}/observations")
-  public ResponseEntity<List<ObservationDto>> getObservations(
+  public ResponseEntity<List<ObservationDto>> findObservationsByUsername(
       Authentication authentication, @PathVariable String username) {
-    if (!userService.isViewable(
-        username, authentication == null ? null : authentication.getName())) {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-    var observations =
-        observationService.findObservationsByAuthor(username).stream()
-            .map(o -> modelMapper.map(o, ObservationDto.class))
-            .toList();
-    return new ResponseEntity<>(observations, HttpStatus.OK);
+    var issuerUsername = authentication == null ? null : authentication.getName();
+    var observations = userService.findObservationsByUsername(username, issuerUsername);
+    return ResponseEntity.ok(observations);
   }
 
   @PatchMapping("/{username}")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<UserWithProfileDto> updateProfile(
+  public ResponseEntity<UserWithProfileDto> update(
       Authentication authentication,
       @PathVariable String username,
       @RequestBody @Valid UpdateProfileDto dto) {
-    if (!userService.canEditUser(username, authentication.getName())) {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-    var profile =
-        modelMapper.map(userService.updateProfile(username, dto), UserWithProfileDto.class);
-    return new ResponseEntity<>(profile, HttpStatus.OK);
+    var user = userService.update(username, dto, authentication.getName());
+    return ResponseEntity.ok(user);
   }
 
   @PatchMapping("/{username}/password")
@@ -86,10 +66,7 @@ public class UserController {
       Authentication authentication,
       @PathVariable String username,
       @RequestBody @Valid ChangePasswordDto dto) {
-    if (!userService.canEditUser(username, authentication.getName())) {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-    userService.modifyPassword(authentication.getName(), dto);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    userService.modifyPassword(username, dto, authentication.getName());
+    return ResponseEntity.noContent().build();
   }
 }
