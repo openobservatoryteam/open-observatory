@@ -18,6 +18,7 @@ function ProfilePage() {
     queryFn: () => users.get(username),
   });
   if (!user) return null;
+  const isSelf = authentication.user?.username === user.username;
   return (
     <>
       <Header />
@@ -38,11 +39,13 @@ function ProfilePage() {
             {user.karma}
           </Text>
         </section>
-        <div className="flex items-stretch justify-center h-20 gap-x-8 mt-12 px-4">
+        <div
+          className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
+        >
           <Button as={Link} className="w-full" to="observations">
             Historique des observations
           </Button>
-          {authentication.user?.username === user.username && (
+          {isSelf && (
             <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">
               Éditer mon profil
             </Button>
