@@ -6,7 +6,7 @@ import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 
 function HomePage() {
-  const { isLoggedIn } = useAuthentication();
+  const { isLoggedIn, user } = useAuthentication();
   return (
     <>
       <DocumentTitle>Accueil – Open Observatory</DocumentTitle>
@@ -20,8 +20,13 @@ function HomePage() {
         >
           Nouvelle observation
         </Button>
-        <Button as={Link} className="h-16 w-44 md:w-96" color="darkGray" to="/login">
-          Se connecter
+        <Button
+          as={Link}
+          className="h-16 w-44 md:w-96"
+          color="darkGray"
+          to={isLoggedIn ? `/users/${user!.username}` : '/login'}
+        >
+          {isLoggedIn ? 'Mon profil' : 'Se connecter'}
         </Button>
       </div>
       <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]">
