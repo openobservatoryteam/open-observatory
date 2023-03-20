@@ -15,6 +15,7 @@ export default defineConfig({
         short_name: 'Open Observatory',
         description: "Open Observatory est une plateforme collaborative de partage d'observations d'objets célestes.",
         theme_color: '#303030',
+        display: 'standalone',
         icons: [
           {
             src: '/android-chrome-36x36.png',
