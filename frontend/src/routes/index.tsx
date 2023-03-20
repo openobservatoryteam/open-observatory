@@ -1,12 +1,29 @@
 import { Route } from '@tanstack/react-location';
 
+import { AuthenticatedGuard } from '~/guards';
+
 const HomePage = () => import('./HomePage').then((page) => <page.default />);
 const LoginPage = () => import('./LoginPage').then((page) => <page.default />);
 const RegistrationPage = () => import('./RegistrationPage').then((page) => <page.default />);
 const ObservationPage = () => import('./ObservationPage').then((page) => <page.default />);
-const CelestialBodyAdminPage = () => import('./CelestialBodyAdminPage').then((page) => <page.default />);
-const ChangePasswordPage = () => import('./ChangePasswordPage').then((page) => <page.default />);
-const ReportObservationPage = () => import('./ReportObservationPage').then((page) => <page.default />);
+const CelestialBodyAdminPage = () =>
+  import('./CelestialBodyAdminPage').then((page) => (
+    <AuthenticatedGuard>
+      <page.default />
+    </AuthenticatedGuard>
+  ));
+const ChangePasswordPage = () =>
+  import('./ChangePasswordPage').then((page) => (
+    <AuthenticatedGuard>
+      <page.default />
+    </AuthenticatedGuard>
+  ));
+const ReportObservationPage = () =>
+  import('./ReportObservationPage').then((page) => (
+    <AuthenticatedGuard>
+      <page.default />
+    </AuthenticatedGuard>
+  ));
 const ObservationHistoryPage = () => import('./ObservationHistoryPage').then((page) => <page.default />);
 const ProfilePage = () => import('./ProfilePage').then((page) => <page.default />);
 
