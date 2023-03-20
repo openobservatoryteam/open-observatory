@@ -1,5 +1,6 @@
 package fr.openobservatory.backend.controllers;
 
+import fr.openobservatory.backend.dto.CreateObservationDto;
 import fr.openobservatory.backend.dto.ObservationDetailedDto;
 import fr.openobservatory.backend.dto.ObservationDto;
 import fr.openobservatory.backend.dto.VoteDto;
@@ -37,6 +38,31 @@ public class ObservationController {
       @RequestParam Double lng, @RequestParam Double lat) {
     var observations =
         observationService.findNearbyObservations(lng, lat).stream()
+            .map(o -> modelMapper.map(o, ObservationDto.class))
+            .toList();
+    return ResponseEntity.ok(observations);
+  }
+
+  @PostMapping
+  public ResponseEntity<ObservationDto> createObservation(
+      Authentication authentication, @Valid CreateObservationDto createObservationDto) {
+    var observation =
+        observationService.createObservation(authentication.getName(), createObservationDto);
+    return ResponseEntity.ok(modelMapper.map(observation, ObservationDetailedDto.class));
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<ObservationDto> update(
+      @PathVariable Long id, @RequestBody String description) {
+    var observation =
+        modelMapper.map(observationService.update(id, description), ObservationDto.class);
+    return ResponseEntity.ok(observation);
+  }
+
+  @GetMapping
+  public ResponseEntity<List<ObservationDto>> observations(Integer limit, Integer page) {
+    var observations =
+        observationService.search(limit, page).stream()
             .map(o -> modelMapper.map(o, ObservationDto.class))
             .toList();
     return ResponseEntity.ok(observations);
