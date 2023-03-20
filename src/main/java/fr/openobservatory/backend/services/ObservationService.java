@@ -90,7 +90,7 @@ public class ObservationService {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     ObservationEntity observation = new ObservationEntity();
-    observation.setCreatedAt(dto.getTimestamp());
+    observation.setCreatedAt(dto.getTimestamp().toInstant());
     observation.setVisibility(dto.getVisibility());
     observation.setDescription(dto.getDescription());
     observation.setLongitude(dto.getLng());
