@@ -28,7 +28,7 @@ public class ObservationController {
       @RequestBody @Valid CreateObservationDto createObservationDto) {
     var observation =
         observationService.createObservation(authentication.getName(), createObservationDto);
-    return ResponseEntity.ok(modelMapper.map(observation, ObservationDetailedDto.class));
+    return ResponseEntity.ok(modelMapper.map(observation, ObservationDto.class));
   }
 
   @GetMapping
