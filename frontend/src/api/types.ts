@@ -1,3 +1,9 @@
+export type Achievement = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
 export type CelestialBody = {
   id: number;
   name: string;
@@ -52,4 +58,10 @@ export type User = {
   username: string;
   avatar?: string;
   type: 'USER' | 'ADMIN';
+};
+
+export type UserWithProfile = User & {
+  achievements: Achievement[];
+  biography: string | null;
+  karma: number;
 };
