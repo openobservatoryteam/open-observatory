@@ -27,7 +27,7 @@ import org.springframework.data.domain.PageRequest;
 @ExtendWith(MockitoExtension.class)
 class CelestialBodyServiceTest {
 
-  @Spy private ModelMapper modelMapper = new ModelMapper();
+  @Spy private ModelMapper modelMapper;
   @Mock private CelestialBodyRepository celestialBodyRepository;
 
   @InjectMocks private CelestialBodyService celestialBodyService;
@@ -123,11 +123,10 @@ class CelestialBodyServiceTest {
             });
     var celestialBody = celestialBodyService.findById(id);
     // Then
-    //    assertThat(celestialBody).isPresent();
-    //    assertThat(celestialBody.get().getId()).isEqualTo(id);
-    //    assertThat(celestialBody.get().getName()).isEqualTo(name);
-    //    assertThat(celestialBody.get().getImage()).isEqualTo(image);
-    //    assertThat(celestialBody.get().getValidityTime()).isEqualTo(validityTime);
+    assertThat(celestialBody.getId()).isEqualTo(id);
+    assertThat(celestialBody.getName()).isEqualTo(name);
+    assertThat(celestialBody.getValidityTime()).isEqualTo(validityTime);
+    assertThat(celestialBody.getImage()).isEqualTo(image);
   }
 
   @DisplayName("CelestialBodyService#findById should return nothing with unknow id")
@@ -165,13 +164,13 @@ class CelestialBodyServiceTest {
               var list = List.of(entity);
               return new PageImpl<>(list, pageable, 1);
             });
-    var returnPage = celestialBodyService.search(page, itemsPerPage);
+    var searchDto = celestialBodyService.search(page, itemsPerPage);
     // Then
-    //    assertThat(returnPage.get().findFirst()).isPresent();
-    //    assertThat(returnPage.get().findFirst().get().getId()).isEqualTo(id);
-    //    assertThat(returnPage.get().findFirst().get().getName()).isEqualTo(name);
-    //    assertThat(returnPage.get().findFirst().get().getValidityTime()).isEqualTo(validityTime);
-    //    assertThat(returnPage.get().findFirst().get().getImage()).isEqualTo(image);
+    assertThat(searchDto.getData()).isNotEmpty();
+    assertThat(searchDto.getData().get(0).getId()).isEqualTo(id);
+    assertThat(searchDto.getData().get(0).getName()).isEqualTo(name);
+    assertThat(searchDto.getData().get(0).getValidityTime()).isEqualTo(validityTime);
+    assertThat(searchDto.getData().get(0).getImage()).isEqualTo(image);
   }
 
   @DisplayName("CelestialBodyService#search should fail with to low items per page")
