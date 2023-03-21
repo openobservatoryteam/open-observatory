@@ -169,27 +169,27 @@ class UserServiceTest {
     assertThat(user.getUsername()).isEqualTo(username);
   }
 
-    @DisplayName("UserService#findByUsername should pass with private user and same issuer")
-    @Test
-    void find_by_username_should_pass_with_user_and_same_issuer() {
-        // Given
-        var username = "lima";
+  @DisplayName("UserService#findByUsername should pass with private user and same issuer")
+  @Test
+  void find_by_username_should_pass_with_user_and_same_issuer() {
+    // Given
+    var username = "lima";
 
-        // When
-        when(userRepository.findByUsernameIgnoreCase(username))
-                .then(
-                        a -> {
-                            var entity = new UserEntity();
-                            entity.setUsername(username);
-                            entity.setPublic(false);
-                            entity.setType(Type.USER);
-                            return Optional.of(entity);
-                        });
-        var user = userService.findByUsername(username, username);
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username))
+        .then(
+            a -> {
+              var entity = new UserEntity();
+              entity.setUsername(username);
+              entity.setPublic(false);
+              entity.setType(Type.USER);
+              return Optional.of(entity);
+            });
+    var user = userService.findByUsername(username, username);
 
-        // Then
-        assertThat(user.getUsername()).isEqualTo(username);
-    }
+    // Then
+    assertThat(user.getUsername()).isEqualTo(username);
+  }
 
   @DisplayName("UserService#findByUsername should pass with private user and administrator issuer")
   @Test
@@ -581,30 +581,30 @@ class UserServiceTest {
     assertThat(user.getBiography()).isEqualTo(biography);
   }
 
-    @DisplayName("UserService#update should pass with existing user and no data and same issuer")
-    @Test
-    void update_should_pass_with_existing_user_and_no_data_and_same_issuer() {
-        // Given
-        var username = "heidi";
-        var issuerUsername = "heidi";
+  @DisplayName("UserService#update should pass with existing user and no data and same issuer")
+  @Test
+  void update_should_pass_with_existing_user_and_no_data_and_same_issuer() {
+    // Given
+    var username = "heidi";
+    var issuerUsername = "heidi";
 
-        var dto = new UpdateProfileDto(JsonNullable.undefined());
+    var dto = new UpdateProfileDto(JsonNullable.undefined());
 
-        // When
-        when(userRepository.findByUsernameIgnoreCase(username))
-                .then(
-                        a -> {
-                            var entity = new UserEntity();
-                            entity.setUsername(username);
-                            entity.setType(Type.USER);
-                            return Optional.of(entity);
-                        });
-        when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
-        var user = userService.update(username, dto, issuerUsername);
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username))
+        .then(
+            a -> {
+              var entity = new UserEntity();
+              entity.setUsername(username);
+              entity.setType(Type.USER);
+              return Optional.of(entity);
+            });
+    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
+    var user = userService.update(username, dto, issuerUsername);
 
-        // Then
-        assertThat(user.getUsername()).isEqualTo(username);
-    }
+    // Then
+    assertThat(user.getUsername()).isEqualTo(username);
+  }
 
   @DisplayName(
       "UserService#update should fail with existing user and filled data and different issuer")
