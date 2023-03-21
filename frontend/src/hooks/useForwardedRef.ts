@@ -1,12 +1,12 @@
 import { ForwardedRef, useEffect, useRef } from 'react';
 
-function useForwardedRef<T>(ref: ForwardedRef<T>) {
+function useForwardedRef<T>(ref?: ForwardedRef<T>) {
   const innerRef = useRef<T>(null);
   useEffect(() => {
     if (ref === null) return;
     if (typeof ref === 'function') {
       ref(innerRef.current);
-    } else {
+    } else if (typeof ref !== 'undefined') {
       ref.current = innerRef.current;
     }
   });

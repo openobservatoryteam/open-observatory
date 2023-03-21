@@ -1,18 +1,18 @@
-import { ComponentPropsWithoutRef, ForwardedRef, forwardRef, RefObject, useRef } from 'react';
+import { ComponentPropsWithoutRef, ForwardedRef, RefObject, forwardRef, useId, useRef } from 'react';
 import {
   AriaSliderProps,
+  VisuallyHidden,
   mergeProps,
   useFocusRing,
   useNumberFormatter,
   useSlider,
   useSliderThumb,
-  VisuallyHidden,
 } from 'react-aria';
 import { SliderState, useSliderState } from 'react-stately';
 
-import { Text } from '@/components';
-import { removeKeys } from '@/utils';
-import { useForwardedRef } from '@/hooks';
+import { Text } from '~/components';
+import { useForwardedRef } from '~/hooks';
+import { removeKeys } from '~/utils';
 
 type SliderProps = AriaSliderProps<number> &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AriaSliderProps<number>> & {
@@ -20,12 +20,13 @@ type SliderProps = AriaSliderProps<number> &
     withMarks?: boolean;
   };
 
-function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, ref: ForwardedRef<HTMLInputElement>) {
-  const inputRef = ref ? useForwardedRef(ref) : useRef<HTMLInputElement>(null);
+function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, ref?: ForwardedRef<HTMLInputElement>) {
+  const inputRef = useForwardedRef(ref);
   const trackRef = useRef(null);
   const numberFormatter = useNumberFormatter(formatOptions);
   const state = useSliderState({ numberFormatter, ...props });
   const { groupProps, labelProps, outputProps, trackProps } = useSlider(props, state, trackRef);
+  const marksId = useId();
   const marksCount = withMarks ? Math.floor((state.getThumbMaxValue(0) - state.getThumbMinValue(0)) / state.step) : 0;
   return (
     <div className={className} {...groupProps}>
@@ -56,7 +57,7 @@ function Slider({ className, formatOptions, withMarks, ...props }: SliderProps, 
         ></div>
         <Thumb index={0} inputRef={inputRef} state={state} trackRef={trackRef} />
         {marksCount > 0 &&
-          [...Array(marksCount)].map((_, i) => <Mark key={`step_${i}/${marksCount}`} nth={i} total={marksCount} />)}
+          [...Array(marksCount)].map((_, i) => <Mark key={`${marksId}_${i}`} nth={i} total={marksCount} />)}
       </div>
     </div>
   );

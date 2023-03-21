@@ -1,9 +1,9 @@
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadProvider } from 'react-head';
 
-import routes from '@/routes';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthenticationProvider } from './providers';
+import { AuthenticationProvider } from '~/providers';
+import routes from '~/routes';
 
 const location = new ReactLocation();
 const queryClient = new QueryClient({

@@ -1,14 +1,16 @@
 package fr.openobservatory.backend.entities;
 
+import fr.openobservatory.backend.dto.AchievementDto;
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "\"user\"")
-public class UserEntity {
+public class UserEntity implements User {
 
   public static final String USERNAME_PATTERN = "^[A-Za-z][A-Za-z0-9_]{0,31}$";
 
@@ -59,5 +61,13 @@ public class UserEntity {
   public enum Type {
     USER,
     ADMIN
+  }
+
+  public int getKarma() {
+    return 0;
+  }
+
+  public List<AchievementDto> getAchievements() {
+    return List.of();
   }
 }

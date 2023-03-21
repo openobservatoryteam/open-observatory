@@ -25,7 +25,7 @@
     "leaflet": "^1.9.3",
     "postcss": "^8.4.21",
     "react": "^18.2.0",
-    "react-aria": "3.22.1-nightly.3711",
+    "react-aria": "^3.23.0",
     "react-dom": "^18.2.0",
     "react-head": "^3.4.2",
     "react-hook-form": "^7.43.1",
@@ -35,6 +35,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/leaflet": "^1.9.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -48,6 +49,7 @@
     "prettier": "^2.8.4",
     "typescript": "^4.9.5",
     "vite": "^4.1.3",
+    "vite-plugin-pwa": "^0.14.4",
     "vite-tsconfig-paths": "^4.0.5"
   }
 }

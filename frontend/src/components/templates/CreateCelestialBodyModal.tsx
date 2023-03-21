@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faSave } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
@@ -7,8 +7,9 @@ import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
-import { celestialBodies } from '@/api';
-import { Button, Dialog, Modal, Slider, Text, TextInput } from '@/components';
+import { celestialBodies } from '~/api';
+import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
+import { registerAdapter as r } from '~/utils';
 
 const CreateCelestialBodySchema = z.object({
   name: z
@@ -26,7 +27,7 @@ const CreateCelestialBodySchema = z.object({
 type CreateCelestialBodyModalProps = { state: OverlayTriggerState };
 export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProps) {
   const queryClient = useQueryClient();
-  const form = useForm({
+  const { formState, handleSubmit, register, setValue, watch } = useForm({
     defaultValues: {
       name: '',
       image: '',
@@ -41,21 +42,20 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
       state.close();
     },
   });
-  const { onChange: sliderChange, ...sliderProps } = form.register('validityTime');
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (evt.target.files && evt.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => e.target?.result && form.setValue('image', e.target?.result?.toString());
+      reader.onload = (e) => e.target?.result && setValue('image', e.target?.result?.toString());
       reader.readAsDataURL(evt.target.files[0]);
     }
   };
   return (
     <Modal state={state}>
       <Dialog title="Modification d'un objet céleste">
-        <form className="flex flex-col items-center" onSubmit={form.handleSubmit((data) => create.mutate(data))}>
-          {form.watch('image') ? (
+        <form className="flex flex-col items-center" onSubmit={handleSubmit((data) => create.mutate(data))}>
+          {watch('image') ? (
             <div className="flex items-center justify-center relative w-3/4">
-              <img src={form.watch('image')} className="h-60 object-cover rounded-2xl w-full" />
+              <img src={watch('image')} className="h-60 object-cover rounded-2xl w-full" />
               <label className="absolute bg-[#D9D9D9] bottom-3 cursor-pointer flex items-center justify-center p-3 right-5 rounded-full">
                 <input className="hidden" onChange={handleChange} type="file" />
                 <FontAwesomeIcon icon={faCamera} size="xl" color="black" />
@@ -74,10 +74,10 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
             <TextInput
               aria-label="Nom de l'objet céleste"
               className="w-3/4"
-              defaultValue={form.formState.defaultValues?.name}
-              errorMessage={form.getFieldState('name').error?.message}
+              defaultValue={formState.defaultValues?.name}
+              errorMessage={formState.errors.name?.message}
               placeholder="Nom de l'objet céleste"
-              {...form.register('name')}
+              {...r(register, 'name')}
             />
           </div>
           <div className="flex items-center justify-evenly mt-8 w-full">
@@ -88,16 +88,15 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
               <Slider
                 aria-label="Validité des observations"
                 className="w-full"
-                defaultValue={form.formState.defaultValues?.validityTime}
+                defaultValue={formState.defaultValues?.validityTime}
                 maxValue={10}
                 minValue={1}
-                onChange={(value) => sliderChange({ target: { name: sliderProps.name, value } })}
                 step={1}
                 withMarks
-                {...sliderProps}
+                {...r(register, 'validityTime')}
               />
               <Text as="span" className="ml-5 w-1/5">
-                {form.watch('validityTime')} {form.watch('validityTime') > 1 ? ' heures' : ' heure'}
+                {watch('validityTime')} {watch('validityTime') > 1 ? ' heures' : ' heure'}
               </Text>
             </div>
           </div>

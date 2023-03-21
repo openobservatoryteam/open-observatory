@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useOverlayTriggerState } from 'react-stately';
 
-import { celestialBodies, CelestialBody } from '@/api';
-import { Logo } from '@/assets';
-import { Button, List, Text, Title, EditCelestialBody, CreateCelestialBodyModal } from '@/components';
+import { CelestialBody, celestialBodies } from '~/api';
+import { Logo } from '~/assets';
+import { Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
 
 function CelestialBodyAdminPage() {
   const [editedBody, setEditedBody] = useState<CelestialBody | null>(null);
@@ -88,7 +88,11 @@ function CelestialBodyAdminPage() {
                   unstyled
                   onPress={() => openUpdateModal(e)}
                 >
-                  <img className="h-32 rounded-t-2xl" src={e.image} alt={`Illustration de ${e.name}`} />
+                  <img
+                    className="h-64 object-cover rounded-t-2xl w-full"
+                    src={e.image}
+                    alt={`Illustration de ${e.name}`}
+                  />
                   <Text color="black">{e.name}</Text>
                   <Text className="mb-3" color="black">
                     Validité : {e.validityTime}h

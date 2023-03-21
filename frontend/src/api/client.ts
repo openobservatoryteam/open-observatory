@@ -1,6 +1,6 @@
-import ky from 'ky';
 import { API_URL } from './constants';
 import { ProblemDetail } from './types';
+import ky from 'ky';
 
 export default ky.create({
   credentials: 'include',

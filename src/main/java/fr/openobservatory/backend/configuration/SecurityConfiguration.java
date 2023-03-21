@@ -63,17 +63,7 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.apply(new JwtConfigurer())
         .and()
-        .authorizeHttpRequests(
-            request ->
-                request
-                    .requestMatchers("/")
-                    .authenticated()
-                    .requestMatchers("/users/current")
-                    .authenticated()
-                    .requestMatchers("/users/register")
-                    .anonymous()
-                    .anyRequest()
-                    .permitAll())
+        .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
         .cors(withDefaults())
         .csrf(CsrfConfigurer::disable)
         .exceptionHandling(
@@ -116,6 +106,8 @@ public class SecurityConfiguration {
     return (request, response, authentication) -> {
       var token = jwtService.generateToken(authentication);
       var cookie = new Cookie(CookieJwtFilter.COOKIE_NAME, token);
+      cookie.setMaxAge(3600);
+      cookie.setPath("/");
       response.addCookie(cookie);
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setStatus(HttpStatus.OK.value());

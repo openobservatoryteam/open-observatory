@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import { ComponentPropsWithoutRef } from 'react';
 import { Button } from '../atoms/Button';
+import { clsx } from 'clsx';
+import { ComponentPropsWithoutRef } from 'react';
 
 type PaginationProps = ComponentPropsWithoutRef<'div'> & {
   currentPage: number;

@@ -1,3 +1,9 @@
+export type Achievement = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
 export type CelestialBody = {
   id: number;
   name: string;
@@ -21,7 +27,23 @@ export type Observation = {
   orientation: number;
   celestialBody: CelestialBody;
   author: User;
-  time: string;
+  createdAt: string;
+  hasExpired: boolean;
+};
+
+export type ObservationDetail = {
+  id: number;
+  description: string | null;
+  latitude: number;
+  longitude: number;
+  orientation: number;
+  celestialBody: CelestialBody;
+  author: User;
+  createdAt: string;
+  hasExpired: boolean;
+  karma: number;
+  currentVote: 'UPVOTE' | 'DOWNVOTE' | null;
+  visibility: 'CLEARLY_VISIBLE' | 'VISIBLE' | 'SLIGHTLY_VISIBLE' | 'BARELY_VISIBLE';
 };
 
 export type SearchResults<T> = {
@@ -36,4 +58,10 @@ export type User = {
   username: string;
   avatar?: string;
   type: 'USER' | 'ADMIN';
+};
+
+export type UserWithProfile = User & {
+  achievements: Achievement[];
+  biography: string | null;
+  karma: number;
 };

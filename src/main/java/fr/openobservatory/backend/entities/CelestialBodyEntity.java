@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "celestial_body")
-public class CelestialBodyEntity {
+public class CelestialBodyEntity implements CelestialBody {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

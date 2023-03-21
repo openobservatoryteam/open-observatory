@@ -1,0 +1,10 @@
+.github/
+.gradle/
+.idea/
+frontend/
+.dockerignore
+.gitignore
+Dockerfile
+gradlew.bat
+LICENSE
+README.md

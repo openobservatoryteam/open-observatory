@@ -4,8 +4,8 @@ import leafletStylesheet from 'leaflet/dist/leaflet.css?inline';
 import { Style } from 'react-head';
 import { MapContainer, MapContainerProps, TileLayer } from 'react-leaflet';
 
-import { CurrentPosition } from '@/components';
-import { removeKeys } from '@/utils';
+import { CurrentPosition } from '~/components';
+import { removeKeys } from '~/utils';
 
 L.Marker.prototype.setIcon(
   L.icon({

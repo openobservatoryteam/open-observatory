@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.dockerignore
+.eslintrc.json
+.gitignore
+.prettierrc
+Dockerfile
+sonar-project.properties
