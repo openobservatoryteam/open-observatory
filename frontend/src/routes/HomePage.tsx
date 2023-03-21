@@ -20,7 +20,7 @@ function HomePage() {
           color="darkGray"
           to={isLoggedIn ? '/report-observation' : '/login'}
         >
-          {t('observation.new')}
+          Nouvelle observation
         </Button>
         <Button
           as={Link}
