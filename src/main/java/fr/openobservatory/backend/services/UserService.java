@@ -60,7 +60,8 @@ public class UserService {
     return dto;
   }
 
-  public List<ObservationWithDetailsDto> findObservationsByUsername(String username, String issuerUsername) {
+  public List<ObservationWithDetailsDto> findObservationsByUsername(
+      String username, String issuerUsername) {
     var issuer =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)
@@ -69,15 +70,15 @@ public class UserService {
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
     return observationRepository.findAllByAuthor(user, Pageable.ofSize(100)).stream()
-        .map(o -> {
-          var dto = modelMapper.map(o, ObservationWithDetailsDto.class);
-          dto.setExpired(
-                  o
-                          .getCreatedAt()
-                          .plus(o.getCelestialBody().getValidityTime(), ChronoUnit.HOURS)
-                          .isBefore(Instant.now()));
-          return dto;
-        })
+        .map(
+            o -> {
+              var dto = modelMapper.map(o, ObservationWithDetailsDto.class);
+              dto.setExpired(
+                  o.getCreatedAt()
+                      .plus(o.getCelestialBody().getValidityTime(), ChronoUnit.HOURS)
+                      .isBefore(Instant.now()));
+              return dto;
+            })
         .toList();
   }
 
