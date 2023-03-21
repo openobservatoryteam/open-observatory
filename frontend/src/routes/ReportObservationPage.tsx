@@ -2,29 +2,36 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
-import { celestialBodies } from '~/api';
-import { CreateObservationData, create, visibilityOptions } from '~/api/observations';
+import { CreateObservationData, ObservationVisibility, createObservation, findAllCelestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
-import { Button, DatePicker, Map, Select, TextInput, Title } from '~/components';
-import { MarkerInput } from '~/components/molecules/MarkerInput';
+import { Button, DatePicker, Map, MarkerInput, Select, TextInput, Title } from '~/components';
 import { registerAdapter as r } from '~/utils';
+
+const visibilityLevels: { name: string; value: ObservationVisibility }[] = [
+  { name: "Observable à l'oeil nu", value: 'CLEARLY_VISIBLE' },
+  { name: 'Observable dans de bonnes conditions', value: 'VISIBLE' },
+  { name: 'Observable avec un équipement adapté', value: 'SLIGHTLY_VISIBLE' },
+  { name: 'Rarement observable', value: 'BARELY_VISIBLE' },
+];
 
 function ReportObservationPage() {
   const { data: celestialBodiesData } = useQuery({
-    queryFn: celestialBodies.getAll,
+    queryFn: findAllCelestialBodies,
     queryKey: ['celestial-bodies'],
   });
   const { handleSubmit, register, setValue, watch } = useForm<CreateObservationData>();
   const navigate = useNavigate();
   const { isLoading, mutate } = useMutation({
-    mutationFn: create,
-    onSuccess: (o) => navigate({ to: `/observations/${o.id}` }),
+    mutationFn: createObservation,
+    onSuccess: ({ id }) => navigate({ to: `/observations/${id}` }),
   });
   const selectedBody = watch('celestialBodyId') ?? -1;
   return (
     <>
+      <DocumentTitle>Création d&apos;une observation – Open Observatory</DocumentTitle>
       <Title as="h2" className="mt-4 mb-2" centered>
         Création d&apos;une observation
       </Title>
@@ -57,11 +64,11 @@ function ReportObservationPage() {
               {...r(register, 'orientation', {
                 required: true,
                 validate: (o) =>
-                  /\d+/.test(o.toString()) ? undefined : "Le degré d'orientation doit être une valeur en degrés.",
+                  /\d+/.test(String(o)) ? undefined : "Le degré d'orientation doit être une valeur en degrés.",
               })}
             />
             <Select
-              options={visibilityOptions}
+              options={visibilityLevels}
               placeholder="Visibilité de l'observation"
               {...register('visibility', { required: true })}
             />

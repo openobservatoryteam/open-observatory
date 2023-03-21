@@ -9,7 +9,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class RegisterUserDto {
+public class CreateUserDto {
 
   @NotNull
   @Pattern(regexp = UserEntity.USERNAME_PATTERN)

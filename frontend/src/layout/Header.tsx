@@ -7,28 +7,28 @@ import { Button, Text, Title } from '~/components';
 import { useAuthentication } from '~/providers';
 
 export function Header() {
-  const authentication = useAuthentication();
+  const { isLoggedIn, logout, user } = useAuthentication();
   return (
     <header className="flex items-center justify-center mx-auto my-2 px-5 md:px-10 md:justify-between">
       <Link to="/">
         <Title className="hidden">Open Observatory</Title>
         <Logo className="mx-auto sm:ml-0 w-96 sm:w-64 max-w-full" />
       </Link>
-      {authentication.isLoggedIn && (
+      {isLoggedIn && (
         <div className="flex items-center gap-4 ml-5">
           <Text as="span" className="hidden sm:inline">
-            {authentication.user?.username}
+            {user?.username}
           </Text>
           <Button
             aria-label="Se déconnecter"
             className="p-3 sm:p-3.5 justify-self-end"
-            onPress={() => authentication.logout.mutate()}
+            onPress={() => logout.mutate()}
             rounded
             title="Se déconnecter"
           >
             <FontAwesomeIcon icon={faDoorOpen} />
           </Button>
-          {authentication.user?.type === 'ADMIN' && (
+          {user?.type === 'ADMIN' && (
             <Button as={Link} to="/admin/celestial-bodies">
               ADMINISTRATION
             </Button>

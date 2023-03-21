@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { Marker, Popup } from 'react-leaflet';
 
-import { observations } from '~/api';
+import { findObservationById, putVote } from '~/api';
 import celestialBodyImage from '~/assets/png/celeste.png';
 import userIcon from '~/assets/png/icon-user.png';
 import { Button, Chip, Map, Text, UpDownVote } from '~/components';
@@ -25,12 +25,12 @@ function ObservationPage(): JSX.Element {
   } = useMatch<{ Params: { id: string } }>();
 
   const observationQuery = useQuery({
-    queryFn: () => observations.findById(id),
+    queryFn: () => findObservationById(id),
     queryKey: ['observation'],
   });
 
   const vote = useMutation({
-    mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => observations.vote({ id, vote }),
+    mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => putVote({ id, vote }),
     mutationKey: ['observation', 'vote'],
     onSuccess: () => observationQuery.refetch(),
   });
@@ -47,7 +47,7 @@ function ObservationPage(): JSX.Element {
             <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
-            {observation.hasExpired && <Chip>Expirée</Chip>}
+            {observation.isExpired && <Chip>Expirée</Chip>}
           </div>
           {isAuthor && (
             <Button

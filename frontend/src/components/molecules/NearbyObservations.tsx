@@ -3,13 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Marker, useMap } from 'react-leaflet';
 
-import { observations } from '~/api';
+import { findAllObservationsNearby } from '~/api';
 
 function NearbyObservations() {
   const map = useMap();
   const navigate = useNavigate();
   const nearbyObservations = useQuery({
-    queryFn: () => observations.findNearby(map.getCenter()),
+    queryFn: () => findAllObservationsNearby(map.getCenter()),
     queryKey: ['observations', 'nearby'],
   });
   useEffect(() => {

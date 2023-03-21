@@ -1,5 +1,4 @@
-import { API_URL } from './constants';
-import { ProblemDetail } from './types';
+import { ApplicationError } from './@types';
 import ky from 'ky';
 
 export default ky.create({
@@ -8,7 +7,7 @@ export default ky.create({
     beforeError: [
       async (r) => {
         try {
-          const json: ProblemDetail = await r.response.json();
+          const json = (await r.response.json()) as ApplicationError;
           r.cause = json;
         } catch {
           /* empty */
@@ -17,5 +16,5 @@ export default ky.create({
       },
     ],
   },
-  prefixUrl: API_URL,
+  prefixUrl: import.meta.env.VITE_API_URL ?? '/api',
 });

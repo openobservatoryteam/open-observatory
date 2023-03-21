@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
-import { CelestialBody, celestialBodies } from '~/api';
+import { CelestialBody, UpdateCelestialBodyData, deleteCelestialBody, updateCelestialBody } from '~/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
 import { registerAdapter as r } from '~/utils';
 
@@ -31,7 +31,7 @@ type EditCelestialBodyProps = {
 
 export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyProps) {
   const queryClient = useQueryClient();
-  const { formState, handleSubmit, setValue, register, watch } = useForm({
+  const { formState, handleSubmit, setValue, register, watch } = useForm<UpdateCelestialBodyData>({
     defaultValues: {
       name: celestialBody.name,
       image: celestialBody.image,
@@ -40,16 +40,14 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
     resolver: zodResolver(UpdateCelestialBodySchema),
   });
   const update = useMutation({
-    mutationFn: celestialBodies.update,
-    mutationKey: ['celestial-bodies', celestialBody.id],
+    mutationFn: updateCelestialBody,
     onSuccess: () => {
       queryClient.invalidateQueries(['celestial-bodies']);
       state.close();
     },
   });
   const remove = useMutation({
-    mutationFn: celestialBodies.remove,
-    mutationKey: ['celestial-bodies', celestialBody.id],
+    mutationFn: deleteCelestialBody,
     onSuccess: () => {
       queryClient.invalidateQueries(['celestial-bodies']);
       state.close();
@@ -58,7 +56,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (evt.target.files && evt.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => setValue('image', e.target?.result?.toString());
+      reader.onload = (e) => setValue('image', String(e.target?.result));
       reader.readAsDataURL(evt.target.files[0]);
     }
   };

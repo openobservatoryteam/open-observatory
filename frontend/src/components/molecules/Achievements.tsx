@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { ComponentPropsWithoutRef } from 'react';
 
 import { Achievement } from '~/api';
+import icon from '~/assets/png/icon-user.png';
 import { Text } from '~/components';
 
 type AchievementsProps = ComponentPropsWithoutRef<'section'> & {
@@ -17,7 +18,7 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
       <div className="flex justify-around">
         {data.map((d) => (
           <article className="flex flex-col gap-y-2 px-3 py-2 rounded-lg" key={d.id}>
-            <img className="h-20" src={d.icon} alt="Récompense" />
+            <img className="h-20" src={icon} alt="Récompense" />
             <Text centered>{d.name}</Text>
           </article>
         ))}

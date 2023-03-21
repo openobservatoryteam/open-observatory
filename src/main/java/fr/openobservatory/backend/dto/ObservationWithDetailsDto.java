@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ObservationDetailedDto extends ObservationDto {
+public class ObservationWithDetailsDto extends ObservationDto {
+
   private ObservationVoteEntity.VoteType currentVote;
-  private boolean hasExpired;
+  private boolean isExpired;
   private int karma;
 }

@@ -5,14 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useOverlayTriggerState } from 'react-stately';
 
-import { CelestialBody, celestialBodies } from '~/api';
+import { CelestialBody, findAllCelestialBodies } from '~/api';
 import { Logo } from '~/assets';
 import { Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
 
 function CelestialBodyAdminPage() {
   const [editedBody, setEditedBody] = useState<CelestialBody | null>(null);
   const bodies = useQuery({
-    queryFn: celestialBodies.getAll,
+    queryFn: findAllCelestialBodies,
     queryKey: ['celestial-bodies'],
   });
 

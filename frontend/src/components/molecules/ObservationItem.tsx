@@ -20,7 +20,11 @@ function ObservationItem<C extends ElementType = 'div'>({
   const Component = as ?? 'div';
   return (
     <Component className={clsx('flex items-center bg-white rounded-full w-3/4 h-24 px-5', className)} {...props}>
-      <img src={observation.celestialBody.image} className="object-contain h-20 w-20 rounded-full" />
+      <img
+        src={observation.celestialBody.image}
+        alt="Image de l'objet céleste"
+        className="object-contain h-20 w-20 rounded-full"
+      />
       <div className="flex flex-col w-full h-full md:mr-20 mr-14 pt-4">
         <Text as="h1" bold centered color="black">
           {observation.celestialBody.name}
@@ -28,7 +32,7 @@ function ObservationItem<C extends ElementType = 'div'>({
         <Text as="p" centered color="black" className="text-sm">
           {dayjs(observation.createdAt).format('le DD/MM/YYYY')}
         </Text>
-        {observation.hasExpired && (
+        {observation.isExpired && (
           <Text as="p" centered color="black" className="text-[0.8em]">
             Expiré
           </Text>

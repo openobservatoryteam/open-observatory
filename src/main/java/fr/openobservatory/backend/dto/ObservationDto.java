@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 public class ObservationDto {
+
   private Long id;
+  private UserDto author;
+  private CelestialBodyDto celestialBody;
   private String description;
   private double latitude;
   private double longitude;
-  private Integer orientation;
-  private CelestialBodyDto celestialBody;
-  private UserDto author;
-  private OffsetDateTime createdAt;
+  private int orientation;
   private ObservationEntity.Visibility visibility;
-  private boolean hasExpired;
+  private OffsetDateTime createdAt;
 }

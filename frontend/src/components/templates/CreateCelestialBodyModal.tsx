@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
-import { celestialBodies } from '~/api';
+import { CreateCelestialBodyData, createCelestialBody } from '~/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
 import { registerAdapter as r } from '~/utils';
 
@@ -27,7 +27,7 @@ const CreateCelestialBodySchema = z.object({
 type CreateCelestialBodyModalProps = { state: OverlayTriggerState };
 export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProps) {
   const queryClient = useQueryClient();
-  const { formState, handleSubmit, register, setValue, watch } = useForm({
+  const { formState, handleSubmit, register, setValue, watch } = useForm<CreateCelestialBodyData>({
     defaultValues: {
       name: '',
       image: '',
@@ -36,7 +36,7 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
     resolver: zodResolver(CreateCelestialBodySchema),
   });
   const create = useMutation({
-    mutationFn: celestialBodies.create,
+    mutationFn: createCelestialBody,
     onSuccess: () => {
       queryClient.invalidateQueries(['celestial-bodies']);
       state.close();

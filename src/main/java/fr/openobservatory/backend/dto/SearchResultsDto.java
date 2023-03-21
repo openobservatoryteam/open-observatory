@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 @AllArgsConstructor
 @Data
 public class SearchResultsDto<T> {
+
   private List<T> data;
   private int count;
   private long totalCount;
@@ -15,7 +16,7 @@ public class SearchResultsDto<T> {
   private int pageCount;
 
   public static <E> SearchResultsDto<E> from(Page<E> page) {
-    return new SearchResultsDto<E>(
+    return new SearchResultsDto<>(
         page.toList(),
         page.getNumberOfElements(),
         page.getTotalElements(),
