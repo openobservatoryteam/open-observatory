@@ -23,12 +23,12 @@ export type Observation = {
   longitude: number;
   orientation: number;
   visibility: ObservationVisibility;
+  isExpired: boolean;
   createdAt: string;
 };
 
 export type ObservationWithDetails = Observation & {
   currentVote: ObservationVote;
-  isExpired: boolean;
   karma: number;
 };
 

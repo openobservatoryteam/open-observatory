@@ -43,7 +43,7 @@ public class UserController {
   }
 
   @GetMapping("/{username}/observations")
-  public ResponseEntity<List<ObservationDto>> findObservationsByUsername(
+  public ResponseEntity<List<ObservationWithDetailsDto>> findObservationsByUsername(
       Authentication authentication, @PathVariable String username) {
     var issuerUsername = authentication == null ? null : authentication.getName();
     var observations = userService.findObservationsByUsername(username, issuerUsername);
