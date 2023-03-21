@@ -23,7 +23,7 @@ export type Observation = {
   longitude: number;
   orientation: number;
   visibility: ObservationVisibility;
-  isExpired: boolean;
+  expired: boolean;
   createdAt: string;
 };
 

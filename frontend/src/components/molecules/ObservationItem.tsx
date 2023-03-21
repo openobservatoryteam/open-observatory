@@ -32,9 +32,9 @@ function ObservationItem<C extends ElementType = 'div'>({
         <Text as="p" centered color="black" className="text-sm">
           {dayjs(observation.createdAt).format('le DD/MM/YYYY')}
         </Text>
-        {observation.isExpired && (
+        {observation.expired && (
           <Text as="p" centered color="black" className="text-[0.8em]">
-            Expiré
+            Expirée
           </Text>
         )}
       </div>

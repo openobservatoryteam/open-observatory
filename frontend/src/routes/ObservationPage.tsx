@@ -48,7 +48,7 @@ function ObservationPage(): JSX.Element {
             <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
-            {observation.isExpired && <Chip>Expirée</Chip>}
+            {observation.expired && <Chip>Expirée</Chip>}
           </div>
           {isAuthor && (
             <Button
