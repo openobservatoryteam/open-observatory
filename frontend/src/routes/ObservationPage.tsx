@@ -38,6 +38,7 @@ function ObservationPage(): JSX.Element {
   if (!observationQuery.data) return <Text as="h2">Observation introuvable</Text>;
 
   const observation = observationQuery.data;
+  console.log(observation);
   const isAuthor = observation.author.username === 'EikjosTV';
   return (
     <div className="md:flex">
@@ -60,7 +61,11 @@ function ObservationPage(): JSX.Element {
               <FontAwesomeIcon icon={faPen} size="xl" />
             </Button>
           )}
-          <img src={celestialBodyImage} alt="Objet céleste de l'observation" className="h-full object-cover w-full" />
+          <img
+            src={observation.celestialBody.image ?? celestialBodyImage}
+            alt="Objet céleste de l'observation"
+            className="h-full object-cover w-full"
+          />
           <UpDownVote
             className="absolute bottom-1 right-2"
             currentVotes={observation.karma}
