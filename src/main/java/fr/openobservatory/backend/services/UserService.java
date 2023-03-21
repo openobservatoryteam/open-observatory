@@ -62,10 +62,12 @@ public class UserService {
 
   public List<ObservationWithDetailsDto> findObservationsByUsername(
       String username, String issuerUsername) {
-    var issuer = issuerUsername != null ?
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new) : null;
+    var issuer =
+        issuerUsername != null
+            ? userRepository
+                .findByUsernameIgnoreCase(issuerUsername)
+                .orElseThrow(UnavailableUserException::new)
+            : null;
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
