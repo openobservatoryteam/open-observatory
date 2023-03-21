@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
-import { useTranslation } from 'react-i18next';
 
 import { Button, Map, NearbyObservations } from '~/components';
 import { Header } from '~/layout';
@@ -8,7 +7,6 @@ import { useAuthentication } from '~/providers';
 
 function HomePage() {
   const { isLoggedIn, user } = useAuthentication();
-  const { t } = useTranslation();
   return (
     <>
       <DocumentTitle>Accueil – Open Observatory</DocumentTitle>
