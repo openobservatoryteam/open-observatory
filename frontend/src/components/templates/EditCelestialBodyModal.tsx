@@ -62,7 +62,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
   };
   return (
     <Modal isDismissable state={state}>
-      <Dialog title="Modification d'un objet céleste">
+      <Dialog onClose={() => state.close()} title="Modification d'un objet céleste">
         <form
           className="flex flex-col items-center"
           onSubmit={handleSubmit((data) => update.mutate({ id: celestialBody.id, ...data }))}
@@ -114,18 +114,18 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
             </div>
           </div>
           <div className="flex items-center justify-center mt-10 w-full">
-            <Button className="flex justify-between px-4 py-2 w-1/4" rounded type="submit">
+            <Button className="flex justify-between px-4 py-2" rounded type="submit">
               Enregistrer
-              <FontAwesomeIcon color="black" icon={faSave} size="1x" />
+              <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
             </Button>
             <Button
-              className="flex justify-between ml-5 px-4 py-2 w-1/4"
+              className="flex justify-between ml-5 px-4 py-2"
               color="red"
               onPress={() => remove.mutate({ id: celestialBody.id })}
               rounded
             >
               Supprimer
-              <FontAwesomeIcon color="white" icon={faTrash} size="1x" />
+              <FontAwesomeIcon className="ml-3" color="white" icon={faTrash} size="1x" />
             </Button>
           </div>
         </form>

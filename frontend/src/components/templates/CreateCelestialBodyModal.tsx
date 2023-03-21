@@ -50,8 +50,8 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
     }
   };
   return (
-    <Modal state={state}>
-      <Dialog title="Modification d'un objet céleste">
+    <Modal isDismissable state={state}>
+      <Dialog onClose={() => state.close()} title="Création d'un objet céleste">
         <form className="flex flex-col items-center" onSubmit={handleSubmit((data) => create.mutate(data))}>
           {watch('image') ? (
             <div className="flex items-center justify-center relative w-3/4">
@@ -100,9 +100,9 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
               </Text>
             </div>
           </div>
-          <Button className="px-4 py-2 mt-10 flex justify-between w-1/4" rounded type="submit">
+          <Button className="px-4 py-2 mt-10 flex justify-between" rounded type="submit">
             Enregistrer
-            <FontAwesomeIcon color="black" icon={faSave} size="1x" />
+            <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
           </Button>
         </form>
       </Dialog>
