@@ -30,7 +30,8 @@ public class ObservationService {
   // ---
 
   public ObservationWithDetailsDto create(String issuerUsername, CreateObservationDto dto) {
-    if (dto.getDescription() != null && dto.getDescription().length() > 2048) throw new InvalidObservationDescriptionException();
+    if (dto.getDescription() != null && dto.getDescription().length() > 2048)
+      throw new InvalidObservationDescriptionException();
     var issuer =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)

@@ -2,11 +2,9 @@ package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Set;
 import lombok.Data;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Data
 @Entity

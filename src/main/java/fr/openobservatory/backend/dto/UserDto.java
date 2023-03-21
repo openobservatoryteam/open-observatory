@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class UserDto {
 
-
   private String username;
   private String avatar;
   private UserEntity.Type type;

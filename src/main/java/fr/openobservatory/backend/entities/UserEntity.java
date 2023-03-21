@@ -1,10 +1,7 @@
 package fr.openobservatory.backend.entities;
 
-import fr.openobservatory.backend.dto.AchievementDto;
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
 import lombok.Data;
 
 @Data
@@ -48,12 +45,12 @@ public class UserEntity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UserEntity that = (UserEntity) o;
-    return Objects.equals(id, that.id);
+    return username.equalsIgnoreCase(that.username);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return username.hashCode();
   }
 
   // ---
