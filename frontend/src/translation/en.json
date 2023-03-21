@@ -1,7 +1,54 @@
 {
   "translation": {
     "observation" : {
-      "new" : "New Observation"
+      "new" : "New observation",
+      "expired" : "Expired"
+    },
+    "document" : {
+      "title" : {
+        "home" : "Home – Open Observatory",
+        "sigin" : "Sigin - Open Observatory",
+        "registration": "Registration – Open Observatory"
+      }
+    },
+    "users": {
+      "profil" : "My profile",
+      "login" : "Sign in",
+      "here": "You are here",
+      "username": "Username",
+      "password": "Password",
+      "notAccount": "No account yet? Sign up now.",
+      "confirmPassword": "Confirm password",
+      "biography": "Biography",
+      "register": "Sign up"
+    },
+     "errors": {
+      "credentials" : "The credentials are incorrect, check your input.",
+      "unknowConnection": "An unknown error occurred during the connection, please try again later.",
+      "unknowRegister": "An unknown error occurred during your registration.",
+      "required": "This field is required.",
+       "username": {
+        "beginLetter": "The username must begin with a letter.",
+        "contain": "The username may only contain letters, numbers and underscores.",
+        "max": "The username must not exceed 32 characters",
+        "exist": "This username is already use."
+      },
+      "password": {
+        "upper" : "The password must contain at least one capital letter.",
+        "lower" : "The password must contain at least one lower case letter.",
+        "number": "The password must contain at least one digit.",
+        "specialCharacter": "The password must contain at least one special character.",
+        "min": "The password must be at least 8 characters long.",
+        "max": "The password must not exceed 32 characters.",
+        "notMatch": "The passwords don't match."
+      },
+        "biography": {
+        "max": "The biography must not exceed 2018 characters."
+      }
+    },
+     "title" : {
+      "connection" : "Connection",
+      "registration": "Registration"
     }
   }
 }

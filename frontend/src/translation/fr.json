@@ -1,7 +1,54 @@
 {
   "translation": {
     "observation" : {
-      "new" : "Nouvelle observation"
+      "new" : "Nouvelle observation",
+      "expired" : "Expirée"
+    },
+    "document" : {
+      "title" : {
+        "home" : "Accueil – Open Observatory",
+        "sigin": "Connexion - Open Observatory",
+        "registration": "Inscription – Open Observatory"
+      }
+    },
+    "users": {
+      "profil" : "Mon profil",
+      "login" : "Se connecter",
+      "here": "Vous êtes ici",
+      "username": "Pseudonyme",
+      "password": "Mot de passe",
+      "notAccount" : "Pas encore de compte ? Inscrivez-vous.",
+      "confirmPassword": "Confirmation du mot de passe",
+      "biography": "Biographie",
+      "register": "S'inscrire"
+    },
+    "errors": {
+      "credentials" : "Les identifiants sont incorrects, vérifiez votre saisie.",
+      "unknowConnection": "Une erreur inconnue est survenue lors de la connexion, veuillez réessayer plus tard.",
+      "unknowRegister": "Une erreur inconnue est survenue lors de votre inscription.",
+      "required": "Ce champs est obligatoire.",
+      "username": {
+        "beginLetter": "Le pseudonyme doit commencer par une lettre.",
+        "contain": "Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.",
+        "max": "Le pseudonyme ne doit pas dépasser 32 caractères",
+        "exist": "Ce pseudonyme est déjà utilisé."
+      },
+      "password": {
+        "upper" : "Le mot de passe doit contenir au moins une majuscule.",
+        "lower" : "Le mot de passe doit contenur au moins une minuscule.",
+        "number": "Le mot de passe doit contenir au moins un chiffre.",
+        "specialCharacter": "Le mot de passe doit contenir au moins un caractère spécial.",
+        "min": "Le mot de passe doit être composé d'au moins 8 caractères.",
+        "max": "Le mot de passe ne doit pas dépasser 32 caractères.",
+        "notMatch": "Les mots de passe ne correspondent pas."
+      },
+      "biography": {
+        "max" :"La biographie ne doit pas dépasser 2048 caractères."
+      }
+    },
+    "title" : {
+      "connection" : "Connexion",
+      "registration": "Inscription"
     }
   }
 }
