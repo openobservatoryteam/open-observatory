@@ -30,7 +30,7 @@
       "empty": "The user has not yet sent an observation.",
       "visibility": "Visibility of the observation",
       "degree": "Degree of the observation",
-      "notFound": "Observation not found"
+      "notFound": "observation"
     },
     "document" : {
       "title" : {

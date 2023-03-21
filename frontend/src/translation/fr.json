@@ -105,7 +105,8 @@
       "clearly" :"Observable à l'oeil nu",
       "visible": "Observable dans de bonnes conditions",
       "slightly": "Observable avec un équipement adapté",
-      "barely": "Rarement observable"
+      "barely": "Rarement observable",
+      "expired" : "Expirée"
     }
   }
 }
