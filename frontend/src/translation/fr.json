@@ -19,6 +19,9 @@
       "validity": "Validité",
       "illustration": "Illustration de"
     },
+    "iss": {
+      "tooltip": "Station Spatiale Internationale"
+    },
     "observation" : {
       "new" : "Nouvelle observation",
       "expired" : "Expirée",
