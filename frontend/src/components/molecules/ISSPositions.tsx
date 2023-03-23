@@ -1,9 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import bezier from '@turf/bezier-spline';
 import { lineString } from '@turf/helpers';
-import { CircleMarker, GeoJSON, Tooltip } from 'react-leaflet';
+import { icon } from 'leaflet';
+import { GeoJSON, Marker, Tooltip } from 'react-leaflet';
 
 import { findISSPositions } from '~/api';
+import satellite from '~/assets/satellite.svg';
+
+const satelliteIcon = icon({
+  iconUrl: satellite,
+
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+  popupAnchor: [16, 32],
+});
 
 function ISSPositions() {
   const { data } = useQuery({ queryFn: findISSPositions, queryKey: ['iss-positions'] });
@@ -12,18 +22,11 @@ function ISSPositions() {
   const current = data.find((d) => d.current);
   return (
     <>
-      <GeoJSON data={bezier(line)} />
+      <GeoJSON data={bezier(line)} style={{ color: 'gray' }} />
       {current && (
-        <CircleMarker
-          center={[current.latitude, current.longitude]}
-          color="#0000FF"
-          fill
-          fillColor="#0000FF"
-          fillOpacity={1}
-          radius={4}
-        >
+        <Marker icon={satelliteIcon} position={[current.latitude, current.longitude]}>
           <Tooltip>Station spatiale internationale</Tooltip>
-        </CircleMarker>
+        </Marker>
       )}
     </>
   );
