@@ -3,7 +3,6 @@ package fr.openobservatory.backend.entities;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Set;
-
 import lombok.Data;
 
 @Data
