@@ -31,7 +31,7 @@ function HomePage() {
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
-      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]">
+      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]" minZoom={3} worldCopyJump>
         <ISSPositions />
         <NearbyObservations />
       </Map>
