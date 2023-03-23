@@ -1,7 +1,9 @@
 {
   "translation": {
     "iss": {
-      "tooltip": "Station Spatiale Internationale"
+      "currentPosition": "Position actuelle de la Station Spatiale Internationale.",
+      "pastPosition": "La Station Spatiale Internationale était ici à {{time}}.",
+      "futurePosition": "La Station Spatiale Internationale sera ici à {{time}}."
     },
     "observation" : {
       "new" : "Nouvelle observation"
