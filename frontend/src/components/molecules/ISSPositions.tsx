@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import bezier from '@turf/bezier-spline';
 import { lineString } from '@turf/helpers';
 import { icon } from 'leaflet';
+import { useTranslation } from 'react-i18next';
 import { GeoJSON, Marker, Tooltip } from 'react-leaflet';
 
 import { findISSPositions } from '~/api';
@@ -16,6 +17,7 @@ const satelliteIcon = icon({
 });
 
 function ISSPositions() {
+  const { t } = useTranslation();
   const { data } = useQuery({ queryFn: findISSPositions, queryKey: ['iss-positions'] });
   if (!data) return null;
   const line = lineString(data.sort((a, b) => a.longitude - b.longitude).map((p) => [p.longitude, p.latitude]));
@@ -25,7 +27,7 @@ function ISSPositions() {
       <GeoJSON data={bezier(line)} style={{ color: 'gray' }} />
       {current && (
         <Marker icon={satelliteIcon} position={[current.latitude, current.longitude]}>
-          <Tooltip>Station spatiale internationale</Tooltip>
+          <Tooltip>{t('iss.tooltip')}</Tooltip>
         </Marker>
       )}
     </>

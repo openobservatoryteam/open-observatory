@@ -1,5 +1,8 @@
 {
   "translation": {
+    "iss": {
+      "tooltip": "International Space Station"
+    },
     "observation" : {
       "new" : "New Observation"
     }
