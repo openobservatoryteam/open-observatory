@@ -24,7 +24,7 @@ public class ISSService {
   private static final String API_URL =
       "https://api.wheretheiss.at/v1/satellites/{1}/positions?timestamps={2}&units={3}";
   private static final String CACHING_KEY = "iss-positions";
-  private static final int CACHING_TTL =  30 * 1000;
+  private static final int CACHING_TTL = 30 * 1000;
   private static final int NORAD_ISS_ID = 25544;
   private static final List<Integer> INSTANT_DELTAS =
       List.of(-40, -30, -20, -10, 0, 10, 20, 30, 40, 50);
