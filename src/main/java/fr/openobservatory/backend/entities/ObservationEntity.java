@@ -38,11 +38,13 @@ public class ObservationEntity {
   @Column(columnDefinition = "SMALLINT", nullable = false)
   private Visibility visibility;
 
-  @OneToMany(mappedBy = "observation")
-  private Set<ObservationVoteEntity> votes;
-
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
+
+  // ---
+
+  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "observation")
+  private Set<ObservationVoteEntity> votes;
 
   // ---
 
