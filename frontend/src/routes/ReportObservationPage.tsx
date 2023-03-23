@@ -75,7 +75,7 @@ function ReportObservationPage() {
             />
           </div>
         </div>
-        <Map className="h-64">
+        <Map className="h-64" worldCopyJump>
           <MarkerInput
             onMove={(p) => {
               setValue('lat', p.lat);
