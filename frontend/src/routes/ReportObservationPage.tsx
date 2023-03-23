@@ -22,7 +22,7 @@ function ReportObservationPage() {
     queryFn: findAllCelestialBodies,
     queryKey: ['celestial-bodies'],
   });
-  const { handleSubmit, register, setValue, watch } = useForm<CreateObservationData>();
+  const { formState, handleSubmit, register, setValue, watch } = useForm<CreateObservationData>();
   const navigate = useNavigate();
   const { isLoading, mutate } = useMutation({
     mutationFn: createObservation,
@@ -60,6 +60,7 @@ function ReportObservationPage() {
             <DatePicker aria-label="Date" placeholder="Date" {...register('timestamp', { required: true })} />
             <TextInput
               aria-label="Degré d'orientation"
+              errorMessage={formState.errors.orientation?.message}
               placeholder="Degré d'orientation"
               {...r(register, 'orientation', {
                 required: true,
