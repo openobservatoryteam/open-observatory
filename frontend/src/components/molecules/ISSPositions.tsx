@@ -20,11 +20,21 @@ function ISSPositions() {
   const { t } = useTranslation();
   const { data } = useQuery({ queryFn: findISSPositions, queryKey: ['iss-positions'] });
   if (!data) return null;
-  const line = lineString(data.sort((a, b) => a.longitude - b.longitude).map((p) => [p.longitude, p.latitude]));
+  const [firstItem] = data;
+  const breakpointIdx = data.findIndex((d) => d.longitude < firstItem.longitude);
+  const lines =
+    breakpointIdx !== -1
+      ? [
+          lineString(data.slice(0, breakpointIdx - 1).map((d) => [d.longitude, d.latitude])),
+          lineString(data.slice(breakpointIdx).map((d) => [d.longitude, d.latitude])),
+        ]
+      : [lineString(data.map((d) => [d.longitude, d.latitude]))];
   const current = data.find((d) => d.current);
   return (
     <>
-      <GeoJSON data={bezier(line)} style={{ color: 'gray' }} />
+      {lines.map((line) => (
+        <GeoJSON data={bezier(line)} key={line.id} style={{ color: 'gray' }} />
+      ))}
       {current && (
         <Marker icon={satelliteIcon} position={[current.latitude, current.longitude]}>
           <Tooltip>{t('iss.tooltip')}</Tooltip>
