@@ -14,6 +14,13 @@ export type CelestialBody = {
   validityTime: number;
 };
 
+export type ISSPosition = {
+  current: boolean;
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+};
+
 export type Observation = {
   id: number;
   author: User;

@@ -8,6 +8,8 @@ specifiers:
   '@tanstack/react-location': ^3.7.4
   '@tanstack/react-query': ^4.28.0
   '@trivago/prettier-plugin-sort-imports': ^4.1.1
+  '@turf/bezier-spline': ^6.5.0
+  '@turf/helpers': ^6.5.0
   '@types/leaflet': ^1.9.3
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
@@ -15,6 +17,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.56.0
   '@vitejs/plugin-react-swc': ^3.2.0
   autoprefixer: ^10.4.14
+  bezier-spline: link:@types/@turf/bezier-spline
   clsx: ^1.2.1
   dayjs: ^1.11.7
   eslint: ^8.36.0
@@ -49,6 +52,8 @@ dependencies:
   '@hookform/resolvers': 2.9.11_react-hook-form@7.43.7
   '@tanstack/react-location': 3.7.4_biqbaboplfbrettd7655fr4n2y
   '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
+  '@turf/bezier-spline': 6.5.0
+  '@turf/helpers': 6.5.0
   autoprefixer: 10.4.14_postcss@8.4.21
   clsx: 1.2.1
   dayjs: 1.11.7
@@ -76,6 +81,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.56.0_iskin7c6dxqunwflhstekcjqmq
   '@typescript-eslint/parser': 5.56.0_vgl77cfdswitgr47lm5swmv43m
   '@vitejs/plugin-react-swc': 3.2.0_vite@4.2.1
+  bezier-spline: link:@types/@turf/bezier-spline
   eslint: 8.36.0
   eslint-config-prettier: 8.8.0_eslint@8.36.0
   eslint-plugin-prettier: 4.2.1_ose2zoovovx4ulolhifz3tfzx4
@@ -3186,6 +3192,23 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@turf/bezier-spline/6.5.0:
+    resolution: {integrity: sha512-vokPaurTd4PF96rRgGVm6zYYC5r1u98ZsG+wZEv9y3kJTuJRX/O3xIY2QnTGTdbVmAJN1ouOsD0RoZYaVoXORQ==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+      '@turf/invariant': 6.5.0
+    dev: false
+
+  /@turf/helpers/6.5.0:
+    resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
+    dev: false
+
+  /@turf/invariant/6.5.0:
+    resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+    dev: false
 
   /@types/estree/0.0.39:
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}

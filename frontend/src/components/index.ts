@@ -9,6 +9,7 @@ export * from './atoms/Title';
 export * from './molecules/Achievements';
 export * from './molecules/CurrentPosition';
 export * from './molecules/Dialog';
+export * from './molecules/ISSPositions';
 export * from './molecules/List';
 export * from './molecules/MarkerInput';
 export * from './molecules/Modal';
