@@ -2,6 +2,8 @@ package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Set;
+
 import lombok.Data;
 
 @Data
@@ -37,6 +39,11 @@ public class UserEntity {
 
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
+
+  // ---
+
+  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
+  private Set<ObservationEntity> observations;
 
   // ---
 
