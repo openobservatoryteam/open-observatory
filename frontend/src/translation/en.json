@@ -20,7 +20,9 @@
       "illustration": "Illustration of"
     },
     "iss": {
-      "tooltip": "International Space Station"
+      "currentPosition": "Current position of the International Space Station.",
+      "pastPosition": "The International Space Station was here at {{time}}.",
+      "futurePosition": "The International Space Station will be here at {{time}}."
     },
     "observation" : {
       "new" : "New observation",
