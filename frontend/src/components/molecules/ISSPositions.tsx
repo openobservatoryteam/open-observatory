@@ -6,7 +6,7 @@ import { icon } from 'leaflet';
 import { useTranslation } from 'react-i18next';
 import { CircleMarker, GeoJSON, Marker, Tooltip } from 'react-leaflet';
 
-import { findISSPositions } from '~/api';
+import { ISSPosition, findISSPositions } from '~/api';
 import satellite from '~/assets/satellite.svg';
 
 const satelliteIcon = icon({
@@ -18,48 +18,55 @@ const satelliteIcon = icon({
 });
 
 function ISSPositions() {
+  const { data, dataUpdatedAt } = useQuery({
+    queryFn: findISSPositions,
+    queryKey: ['iss-positions'],
+    refetchInterval: 30e3,
+  });
   const { t } = useTranslation();
-  const { data } = useQuery({ queryFn: findISSPositions, queryKey: ['iss-positions'] });
-  if (!data) return null;
-  const [firstItem] = data;
-  const breakpointIdx = data.findIndex((d) => d.longitude < firstItem.longitude);
-  const lines =
-    breakpointIdx !== -1
-      ? [
-          lineString(data.slice(0, breakpointIdx).map((d) => [d.longitude, d.latitude])),
-          lineString(data.slice(breakpointIdx).map((d) => [d.longitude, d.latitude])),
-        ]
-      : [lineString(data.map((d) => [d.longitude, d.latitude]))];
-  const current = data.find((d) => d.current);
+  if (typeof data === 'undefined') return null;
+  const [{ longitude: fstLongitude }] = data;
+  const breakpointIdx = data.findIndex((d) => d.longitude < fstLongitude);
+  const [leftPoints, rightPoints] = [data.slice(0, breakpointIdx), data.slice(breakpointIdx)];
+  const getPoint = ({ current, latitude, longitude, timestamp }: ISSPosition) =>
+    current ? (
+      <Marker icon={satelliteIcon} position={[latitude, longitude]}>
+        <Tooltip>{t('iss.currentPosition')}</Tooltip>
+      </Marker>
+    ) : (
+      <CircleMarker
+        center={[latitude, longitude]}
+        color="#222222"
+        fill
+        fillColor="#222222"
+        fillOpacity={1}
+        key={timestamp}
+        radius={2}
+      >
+        <Tooltip direction="top">
+          {t(`iss.${dayjs().isAfter(timestamp) ? 'pastPosition' : 'futurePosition'}`, {
+            time: dayjs(timestamp).format('HH:mm:ss'),
+          })}
+        </Tooltip>
+      </CircleMarker>
+    );
+  const drawLine = (data: ISSPosition[]) =>
+    data.length > 1 ? (
+      <>
+        <GeoJSON
+          data={bezier(lineString(data.map(({ latitude, longitude }) => [longitude, latitude])))}
+          key={dataUpdatedAt}
+          style={{ color: 'gray' }}
+        />
+        {data.map((p) => getPoint(p))}
+      </>
+    ) : (
+      getPoint(data[0]!)
+    );
   return (
     <>
-      {lines.map((line) => (
-        <GeoJSON data={bezier(line)} key={line.id} style={{ color: 'gray' }} />
-      ))}
-      {data
-        .filter((d) => !d.current)
-        .map(({ latitude, longitude, timestamp }) => {
-          const time = dayjs(timestamp);
-          const key = dayjs().isAfter(time) ? 'pastPosition' : 'futurePosition';
-          return (
-            <CircleMarker
-              center={[latitude, longitude]}
-              color="#222222"
-              fill
-              fillColor="#222222"
-              fillOpacity={1}
-              key={timestamp}
-              radius={2}
-            >
-              <Tooltip direction="top">{t(`iss.${key}`, { time: time.format('HH:mm:ss') })}</Tooltip>
-            </CircleMarker>
-          );
-        })}
-      {current && (
-        <Marker icon={satelliteIcon} position={[current.latitude, current.longitude]}>
-          <Tooltip>{t('iss.currentPosition')}</Tooltip>
-        </Marker>
-      )}
+      {leftPoints.length > 0 && drawLine(leftPoints)}
+      {rightPoints.length > 0 && drawLine(rightPoints)}
     </>
   );
 }
