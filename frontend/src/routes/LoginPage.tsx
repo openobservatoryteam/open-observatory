@@ -27,7 +27,7 @@ function LoginPage() {
   return (
     <>
       <DocumentTitle>Connexion – Open Observatory</DocumentTitle>
-      <Header />
+      <Header className="h-[7vh] my-[0.5vh]" />
       <Title as="h2" className="mb-10 mt-16 text-center">
         Connexion
       </Title>

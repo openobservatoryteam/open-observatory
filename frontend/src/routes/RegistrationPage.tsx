@@ -50,7 +50,7 @@ function RegistrationPage() {
   return (
     <>
       <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
-      <Header />
+      <Header className="h-[7vh] my-[0.5vh]" />
       <Title as="h2" className="mb-10 mt-10 text-center">
         Inscription
       </Title>

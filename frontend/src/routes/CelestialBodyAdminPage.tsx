@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useOverlayTriggerState } from 'react-stately';
 
 import { CelestialBody, findAllCelestialBodies } from '~/api';
-import { Logo } from '~/assets';
+import logo from '~/assets/logo.svg';
 import { Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
 
 function CelestialBodyAdminPage() {
@@ -33,7 +33,7 @@ function CelestialBodyAdminPage() {
       <div className="flex">
         <aside className="bg-[#333C47] min-h-screen pt-4 px-3 md:px-12">
           <Link title="Accueil Open Observatory" to="/">
-            <Logo />
+            <img src={logo} alt="Logo Open Observatory" />
           </Link>
           <Text centered className="mb-20 mt-4">
             ADMINISTRATEUR
