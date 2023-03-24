@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ObservationService {
 
+  private static final double RATIO_KM_LATITUDE = 110.574;
+  private static final double RATIO_KM_LONGITUDE = 111.320;
   private static final double MAX_NEARBY_DISTANCE = 250;
 
   private final CelestialBodyRepository celestialBodyRepository;
@@ -89,8 +91,8 @@ public class ObservationService {
 
   public List<ObservationDto> findAllNearby(Double lng, Double lat, Double radius) {
     double distance = Math.max(0, Math.min(radius, MAX_NEARBY_DISTANCE));
-    double[] topLeft = getPoint(lat, lng, -distance);
-    double[] bottomRight = getPoint(lat, lng, distance);
+    double[] topLeft = getPointCorner(lat, lng, -distance);
+    double[] bottomRight = getPointCorner(lat, lng, distance);
     return observationRepository
         .findAllNearby(topLeft[0], bottomRight[0], topLeft[1], bottomRight[1])
         .stream()
@@ -154,9 +156,9 @@ public class ObservationService {
    * @return An array containing {shiftedLatitude, shiftedLongitude}.
    * @implNote Involved formulas: https://stackoverflow.com/a/1253545
    */
-  private double[] getPoint(double lat, double lng, double distance) {
-    double latShift = distance / 110.574;
-    double lngShift = distance / (111.111 * Math.cos(Math.toRadians(lat)));
+  private double[] getPointCorner(double lat, double lng, double distance) {
+    double latShift = distance / RATIO_KM_LATITUDE;
+    double lngShift = distance / (RATIO_KM_LONGITUDE * Math.cos(Math.toRadians(lat)));
     return new double[] {lat + latShift, lng + lngShift};
   }
 
