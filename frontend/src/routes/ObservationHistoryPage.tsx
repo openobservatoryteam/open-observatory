@@ -23,7 +23,7 @@ function ObservationHistoryPage() {
   return (
     <>
       <DocumentTitle>Historique des observations</DocumentTitle>
-      <Header />
+      <Header className="h-[7vh] my-[0.5vh]" />
       <div className="absolute left-4 top-30">
         <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
           <FontAwesomeIcon icon={faArrowLeft} size="xl" />

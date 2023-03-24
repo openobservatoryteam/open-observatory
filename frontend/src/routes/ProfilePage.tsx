@@ -22,7 +22,7 @@ function ProfilePage() {
   const isSelf = authentication.user?.username === user.username;
   return (
     <>
-      <Header />
+      <Header className="h-[7vh] my-[0.5vh]" />
       <div className="flex flex-col mt-6">
         <img className="h-32 w-32 mx-auto" src={user.avatar ?? iconUser} alt="Avatar de l'utilisateur" />
         <Text as="h2" centered className="mt-3">

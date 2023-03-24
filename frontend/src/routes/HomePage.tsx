@@ -12,26 +12,16 @@ function HomePage() {
   return (
     <>
       <DocumentTitle>{t('document.title.home')}</DocumentTitle>
-      <Header />
-      <div className="flex justify-around items-center my-2">
-        <Button
-          as={Link}
-          className="h-16 w-44 md:w-96"
-          color="darkGray"
-          to={isLoggedIn ? '/report-observation' : '/login'}
-        >
+      <Header className="h-[7vh] my-[1vh]" />
+      <div className="h-[10vh] gap-x-1 flex max-w-screen-lg mx-auto my-[0.5vh] px-1 md:h-[8vh] sm:gap-x-16 sm:px-16">
+        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? '/report-observation' : '/login'}>
           {t('observation.new')}
         </Button>
-        <Button
-          as={Link}
-          className="h-16 w-44 md:w-96"
-          color="darkGray"
-          to={isLoggedIn ? `/users/${user!.username}` : '/login'}
-        >
+        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? `/users/${user!.username}` : '/login'}>
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
-      <Map className="h-[calc(100vh-8.1rem)] md:h-[calc(100vh-9.7rem)]" minZoom={3} worldCopyJump>
+      <Map className="h-[80.5vh] md:h-[82.5vh]" minZoom={3} worldCopyJump>
         <ISSPositions />
         <NearbyObservations />
       </Map>

@@ -1,18 +1,22 @@
-import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@tanstack/react-location';
+import clsx from 'clsx';
+import { ComponentPropsWithoutRef } from 'react';
 
-import { Logo } from '~/assets';
+import logo from '~/assets/logo.svg';
 import { Button, Text, Title } from '~/components';
 import { useAuthentication } from '~/providers';
 
-export function Header() {
+type HeaderProps = ComponentPropsWithoutRef<'header'>;
+
+export function Header({ className, ...props }: HeaderProps) {
   const { isLoggedIn, logout, user } = useAuthentication();
   return (
-    <header className="flex items-center justify-center mx-auto my-2 px-5 md:px-10 md:justify-between">
-      <Link to="/">
+    <header className={clsx('flex items-center justify-center mx-auto px-5 sm:justify-between', className)} {...props}>
+      <Link className="h-full" title="Accueil Open Observatory" to="/">
         <Title className="hidden">Open Observatory</Title>
-        <Logo className="mx-auto sm:ml-0 w-96 sm:w-64 max-w-full" />
+        <img className="h-full" src={logo} alt="Logo Open Observatory" />
       </Link>
       {isLoggedIn && (
         <div className="flex items-center gap-4 ml-5">
@@ -26,10 +30,10 @@ export function Header() {
             rounded
             title="Se déconnecter"
           >
-            <FontAwesomeIcon icon={faDoorOpen} />
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
           </Button>
           {user?.type === 'ADMIN' && (
-            <Button as={Link} to="/admin/celestial-bodies">
+            <Button as={Link} className="hidden sm:block" to="/admin/celestial-bodies">
               ADMINISTRATION
             </Button>
           )}
