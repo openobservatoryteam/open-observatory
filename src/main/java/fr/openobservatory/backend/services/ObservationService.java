@@ -92,8 +92,7 @@ public class ObservationService {
     double[] topLeft = getPoint(lat, lng, -distance);
     double[] bottomRight = getPoint(lat, lng, distance);
     return observationRepository
-        .findAllByLatitudeBetweenAndLongitudeBetween(
-            topLeft[0], bottomRight[0], topLeft[1], bottomRight[1])
+        .findAllNearby(topLeft[0], bottomRight[0], topLeft[1], bottomRight[1])
         .stream()
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
