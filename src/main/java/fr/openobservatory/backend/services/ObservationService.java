@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ObservationService {
 
+  private static final double MAX_NEARBY_DISTANCE = 250;
+
   private final CelestialBodyRepository celestialBodyRepository;
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
@@ -85,12 +87,14 @@ public class ObservationService {
     return observationDto;
   }
 
-  public List<ObservationDto> findAllNearby(Double lng, Double lat) {
-    return observationRepository.findAll().stream()
-        .filter(
-            o ->
-                calculateDistanceBetweenTwoPoints(lng, lat, o.getLongitude(), o.getLatitude())
-                    <= 30)
+  public List<ObservationDto> findAllNearby(Double lng, Double lat, Double radius) {
+    double distance = Math.max(0, Math.min(radius, MAX_NEARBY_DISTANCE));
+    double[] topLeft = getPoint(lat, lng, -distance);
+    double[] bottomRight = getPoint(lat, lng, distance);
+    return observationRepository
+        .findAllByLatitudeBetweenAndLongitudeBetween(
+            topLeft[0], bottomRight[0], topLeft[1], bottomRight[1])
+        .stream()
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
   }
@@ -142,28 +146,19 @@ public class ObservationService {
 
   // ---
 
-  // Calculate distance between two points using the "haversine" formula
-  private double calculateDistanceBetweenTwoPoints(
-      double lon1, double lat1, double lon2, double lat2) {
-    int earthRadius = 6371;
-
-    double phi1 = lat1 * Math.PI / 180.0d;
-    double phi2 = lat2 * Math.PI / 180.0d;
-    double deltaPhi = (lat2 - lat1) * Math.PI / 180.0d;
-    double deltaLambda = (lon2 - lon1) * Math.PI / 180.0d;
-
-    // square of half the chord length between the points
-    double a =
-        Math.sin(deltaPhi / 2.0d) * Math.sin(deltaPhi / 2.0d)
-            + Math.cos(phi1)
-                * Math.cos(phi2)
-                * Math.sin(deltaLambda / 2.0d)
-                * Math.sin(deltaLambda / 2.0d);
-
-    // angular distance in radians
-    double c = 2.0d * Math.atan2(Math.sqrt(a), Math.sqrt(1.0d - a));
-
-    return earthRadius * c;
+  /**
+   * Calculates coordinates given a point and a distance.
+   *
+   * @param lat Latitude to start from.
+   * @param lng Longitude to start from.
+   * @param distance Distance (in kilometers) to shift of.
+   * @return An array containing {shiftedLatitude, shiftedLongitude}.
+   * @implNote Involved formulas: https://stackoverflow.com/a/1253545
+   */
+  private double[] getPoint(double lat, double lng, double distance) {
+    double latShift = distance / 110.574;
+    double lngShift = distance / (111.111 * Math.cos(Math.toRadians(lat)));
+    return new double[] {lat + latShift, lng + lngShift};
   }
 
   private boolean isEditableBy(ObservationEntity observation, UserEntity issuer) {
