@@ -527,8 +527,9 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
     var biography = "This is my new biography";
+    var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography));
+    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -552,6 +553,7 @@ class UserServiceTest {
     // Then
     assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(biography);
+    assertThat(user.getAvatar()).isEqualTo(avatar);
   }
 
   @DisplayName("UserService#update should pass with existing user and valid data and same issuer")
@@ -561,8 +563,9 @@ class UserServiceTest {
     var username = "heidi";
     var issuerUsername = "heidi";
     var biography = "This is my new biography";
+    var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography));
+    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -579,6 +582,7 @@ class UserServiceTest {
     // Then
     assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(biography);
+    assertThat(user.getAvatar()).isEqualTo(avatar);
   }
 
   @DisplayName("UserService#update should pass with existing user and no data and same issuer")
@@ -588,7 +592,7 @@ class UserServiceTest {
     var username = "heidi";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined());
+    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -614,8 +618,9 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
     var biography = "This is my new biography";
+    var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography));
+    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -646,7 +651,7 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined());
+    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -669,7 +674,7 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined());
+    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());

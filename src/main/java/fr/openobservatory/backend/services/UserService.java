@@ -122,6 +122,9 @@ public class UserService {
       var biography = dto.getBiography().get();
       user.setBiography(biography);
     }
+    if (dto.getAvatar().isPresent()) {
+      user.setAvatar(dto.getAvatar().get());
+    }
     var userDto = modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
     userDto.setAchievements(List.of());
     userDto.setKarma(0); // TODO: Craft the relevant SQL query.
