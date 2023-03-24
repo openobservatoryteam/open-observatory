@@ -28,20 +28,20 @@ function ObservationPage(): JSX.Element {
   };
   const observationQuery = useQuery({
     queryFn: () => findObservationById(id),
-    queryKey: ['observation'],
+    queryKey: ['observation', id],
   });
 
   const vote = useMutation({
     mutationFn: ({ id, vote }: { id: string; vote: VoteType }) => putVote({ id, vote }),
-    mutationKey: ['observation', 'vote'],
     onSuccess: () => observationQuery.refetch(),
   });
 
-  if (!observationQuery.data) return <Text as="h2">{t('observation.notFound')}</Text>;
+  if (observationQuery.isLoading) return <Text as="h2">Chargement en cours...</Text>;
+  if (observationQuery.isError) return <Text as="h2">{t('observation.notFound')}</Text>;
 
   const observation = observationQuery.data;
   console.log(observation);
-  const isAuthor = user != null && observation.author.username === user.username;
+  const isAuthor = observation.author.username === 'EikjosTV';
   return (
     <div className="md:flex">
       <div className="w-full">
