@@ -17,7 +17,7 @@ function HomePage() {
         <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? '/report-observation' : '/login'}>
           {t('observation.new')}
         </Button>
-        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? `/users/${user!.username}` : '/login'}>
+        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? `/users/${user.username}` : '/login'}>
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
