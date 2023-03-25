@@ -41,7 +41,7 @@ function ObservationPage(): JSX.Element {
 
   const observation = observationQuery.data;
   console.log(observation);
-  const isAuthor = observation.author.username === 'EikjosTV';
+  const isAuthor = user != null && observation.author.username === user.username;
   return (
     <div className="md:flex">
       <div className="w-full">
