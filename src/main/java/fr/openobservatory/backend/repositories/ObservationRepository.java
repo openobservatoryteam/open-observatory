@@ -15,8 +15,6 @@ public interface ObservationRepository extends JpaRepository<ObservationEntity, 
   Page<ObservationEntity> findAllByAuthor(UserEntity user, Pageable pageable);
 
   @Query(
-      value =
-          "SELECT * FROM observation WHERE latitude >= ?1 AND latitude <= ?2 AND longitude >= ?3 AND longitude <= ?4 AND created_at + (interval '1 hour' * (SELECT validity_time FROM celestial_body WHERE id = observation.celestial_body_id)) >= NOW()",
-      nativeQuery = true)
+      "FROM ObservationEntity o WHERE (o.latitude BETWEEN :latX AND :latY) AND (o.longitude BETWEEN :lngX AND :lngY) AND (CURRENT_TIMESTAMP - o.createdAt) < MAKE_INTERVAL(0, 0, 0, 0, o.celestialBody.validityTime)")
   Collection<ObservationEntity> findAllNearby(double latX, double latY, double lngX, double lngY);
 }
