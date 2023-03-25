@@ -49,12 +49,7 @@
       "notAccount" : "Pas encore de compte ? Inscrivez-vous.",
       "confirmPassword": "Confirmation du mot de passe",
       "biography": "Biographie",
-      "register": "S'inscrire",
-      "oldPassword": "Ancien mot de passe",
-      "newPassword": "Nouveau mot de passe",
-      "confirNewPassword": "Confiramtion du nouveau mot de passe",
-      "karma": "Karma",
-      "edit": "Éditez mon profile"
+      "register": "S'inscrire"
     },
     "errors": {
       "credentials" : "Les identifiants sont incorrects, vérifiez votre saisie.",
@@ -95,18 +90,7 @@
     },
     "title" : {
       "connection" : "Connexion",
-      "registration": "Inscription",
-      "history": "Historique des observations",
-      "changePassword": "Changement du mot de passe",
-      "observationRegister": "Création d'une observation",
-      "updateCelestialBody": "Modification d'un objet céleste"
-    },
-    "visibility" : {
-      "clearly" :"Observable à l'oeil nu",
-      "visible": "Observable dans de bonnes conditions",
-      "slightly": "Observable avec un équipement adapté",
-      "barely": "Rarement observable",
-      "expired" : "Expirée"
+      "registration": "Inscription"
     }
   }
 }
