@@ -90,7 +90,17 @@
     },
     "title" : {
       "connection" : "Connexion",
-      "registration": "Inscription"
+      "registration": "Inscription",
+      "history": "Historique des observations",
+      "changePassword": "Changement du mot de passe",
+      "observationRegister": "Création d'une observation",
+      "updateCelestialBody": "Modification d'un objet céleste"
+    },
+    "visibility" : {
+      "clearly" :"Observable à l'oeil nu",
+      "visible": "Observable dans de bonnes conditions",
+      "slightly": "Observable avec un équipement adapté",
+      "barely": "Rarement observable"
     }
   }
 }
