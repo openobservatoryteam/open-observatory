@@ -1,5 +1,10 @@
 {
   "translation": {
+    "iss": {
+      "currentPosition": "Position actuelle de la Station Spatiale Internationale.",
+      "pastPosition": "La Station Spatiale Internationale était ici à {{time}}.",
+      "futurePosition": "La Station Spatiale Internationale sera ici à {{time}}."
+    },
     "common": {
       "save": "Enregistrer",
       "orientation": "Orientation",
@@ -18,11 +23,6 @@
       "observed": "Objet céleste observé",
       "validity": "Validité",
       "illustration": "Illustration de"
-    },
-    "iss": {
-      "currentPosition": "Position actuelle de la Station Spatiale Internationale.",
-      "pastPosition": "La Station Spatiale Internationale était ici à {{time}}.",
-      "futurePosition": "La Station Spatiale Internationale sera ici à {{time}}."
     },
     "observation" : {
       "new" : "Nouvelle observation",

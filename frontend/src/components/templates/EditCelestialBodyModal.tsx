@@ -112,9 +112,9 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
             </div>
           </div>
           <div className="flex items-center justify-center mt-10 w-full">
-            <Button className="flex justify-between px-4 py-2 w-1/4" rounded type="submit">
+            <Button className="flex justify-between px-4 py-2" rounded type="submit">
               Enregistrer
-              <FontAwesomeIcon color="black" icon={faSave} size="1x" />
+              <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
             </Button>
             <Button
               className="flex justify-between ml-5 px-4 py-2"
@@ -123,7 +123,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
               rounded
             >
               Supprimer
-              <FontAwesomeIcon color="white" icon={faTrash} size="1x" />
+              <FontAwesomeIcon className="ml-3" color="white" icon={faTrash} size="1x" />
             </Button>
           </div>
         </form>
