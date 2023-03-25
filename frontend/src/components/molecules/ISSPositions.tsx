@@ -30,7 +30,7 @@ function ISSPositions() {
   const [leftPoints, rightPoints] = [data.slice(0, breakpointIdx), data.slice(breakpointIdx)];
   const getPoint = ({ current, latitude, longitude, timestamp }: ISSPosition) =>
     current ? (
-      <Marker icon={satelliteIcon} position={[latitude, longitude]}>
+      <Marker icon={satelliteIcon} key={timestamp} position={[latitude, longitude]}>
         <Tooltip>{t('iss.currentPosition')}</Tooltip>
       </Marker>
     ) : (
