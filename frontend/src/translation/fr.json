@@ -4,10 +4,19 @@
       "save": "Enregistrer",
       "orientation": "Orientation",
       "description": "Description",
-      "visibility": "Visibilité"
+      "visibility": "Visibilité",
+      "administrator": "ADMINISTRATEUR",
+      "observations": "Observations",
+      "users": "Utilisateurs",
+      "celestialBody": "Objets célestes",
+      "validity": "Validité",
+      "delete": "Supprimer",
+      "name": "Nom"
     },
     "celestialBody": {
-      "observed": "Objet céleste observé"
+      "observed": "Objet céleste observé",
+      "validity": "Validité",
+      "illustration": "Illustration de"
     },
     "observation" : {
       "new" : "Nouvelle observation",
@@ -65,14 +74,26 @@
       "biography": {
         "max" :"La biographie ne doit pas dépasser 2048 caractères."
       },
-      "degree": "Le degré d'orientation doit être une valeur en degrés."
+      "degree": "Le degré d'orientation doit être une valeur en degrés.",
+      "celestialBody": {
+        "name" : {
+          "min": "Le nom de l'objet céleste doit être composé d'au moins 4 caractères.",
+          "max": "Le nom de l'objet céleste ne doit pas dépasser 64 caractères."
+        },
+        "validity": {
+          "type": "La validité de l'objet céleste doit s'exprimer avec un nombre entier (heures).",
+          "min": "La validité de l'objet céleste doit être d'au moins 1 heure.",
+          "max": "La validité de l'objet céleste ne peut dépasser 12 heures."
+        }
+      }
     },
     "title" : {
       "connection" : "Connexion",
       "registration": "Inscription",
       "history": "Historique des observations",
       "changePassword": "Changement du mot de passe",
-      "observationRegister": "Création d'une observation"
+      "observationRegister": "Création d'une observation",
+      "updateCelestialBody": "Modification d'un objet céleste"
     },
     "visibility" : {
       "clearly" :"Observable à l'oeil nu",

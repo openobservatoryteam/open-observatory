@@ -4,10 +4,19 @@
       "save": "Save",
       "orientation": "Orientation",
       "description": "Description",
-      "visibility": "Visibility"
+      "visibility": "Visibility",
+      "administrator": "ADMINISTRATOR",
+      "observations": "Observations",
+      "users": "Users",
+      "celestialBody": "Celestial objects",
+      "validity": "Validity",
+      "delete": "Delete",
+      "name": "Name"
     },
     "celestialBody": {
-      "observed": "Observed celestial object"
+      "observed": "Observed celestial object",
+      "validity": "Validity",
+      "illustration": "Illustration of"
     },
     "observation" : {
       "new" : "New observation",
@@ -65,14 +74,26 @@
         "biography": {
         "max": "The biography must not exceed 2018 characters."
       },
-      "degree": "The degree of orientation should be a value in degrees."
+      "degree": "The degree of orientation should be a value in degrees.",
+      "celestialBody": {
+        "name" : {
+          "min": "The name of the celestial object must be at least 4 characters long.",
+          "max": "The name of the celestial object must not exceed 64 characters."
+        },
+        "validity": {
+          "type": "The validity of the celestial object must be expressed with a whole number (hours).",
+          "min": "The validity of the celestial object must be at least 1 hour.",
+          "max": "The validity of the celestial object cannot exceed 12 hours."
+        }
+      }
     },
      "title" : {
       "connection" : "Connection",
       "registration": "Registration",
       "history": "History of observations",
       "changePassword": "Change password",
-      "observationRegister": "Creating an observation"
+      "observationRegister": "Creating an observation",
+      "updateCelestialBody": "Modification of a celestial object"
     },
     "visibility" : {
       "clearly" :"Observable with the naked eye",

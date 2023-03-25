@@ -4,25 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
 import { CelestialBody, UpdateCelestialBodyData, deleteCelestialBody, updateCelestialBody } from '~/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
 import { registerAdapter as r } from '~/utils';
-
-const UpdateCelestialBodySchema = z.object({
-  name: z
-    .string()
-    .min(4, "Le nom de l'objet céleste doit être composé d'au moins 4 caractères.")
-    .max(64, "Le nom de l'objet céleste ne doit pas dépasser 64 caractères."),
-  validityTime: z
-    .number()
-    .int("La validité de l'objet céleste doit s'exprimer avec un nombre entier (heures).")
-    .min(1, "La validité de l'objet céleste doit être d'au moins 1 heure.")
-    .max(12, "La validité de l'objet céleste ne peut dépasser 12 heures."),
-  image: z.string().optional(),
-});
 
 type EditCelestialBodyProps = {
   celestialBody: CelestialBody;
@@ -31,6 +19,16 @@ type EditCelestialBodyProps = {
 
 export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyProps) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const UpdateCelestialBodySchema = z.object({
+    name: z.string().min(4, t('errors.celestialBody.name.min')!).max(64, t('errors.celestialBody.name.max')!),
+    validityTime: z
+      .number()
+      .int(t('errors.celestialBody.validity.type')!)
+      .min(1, t('errors.celestialBody.validity.min')!)
+      .max(12, t('errors.celestialBody.validity.max')!),
+    image: z.string().optional(),
+  });
   const { formState, handleSubmit, setValue, register, watch } = useForm<UpdateCelestialBodyData>({
     defaultValues: {
       name: celestialBody.name,
@@ -62,7 +60,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
   };
   return (
     <Modal isDismissable state={state}>
-      <Dialog title="Modification d'un objet céleste">
+      <Dialog title={t('title.updateCelestialBody')}>
         <form
           className="flex flex-col items-center"
           onSubmit={handleSubmit((data) => update.mutate({ id: celestialBody.id, ...data }))}
@@ -83,7 +81,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
           )}
           <div className="flex items-center justify-evenly mt-8 w-full">
             <Text as="span" className="mr-5">
-              Nom
+              {t('common.name')}
             </Text>
             <TextInput
               aria-label="Nom de l'objet céleste"
@@ -95,7 +93,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
           </div>
           <div className="flex items-center justify-evenly mt-8 w-full">
             <Text as="span" className="mr-5">
-              Validité
+              {t('common.validity')}
             </Text>
             <div className="flex items-center w-3/4">
               <Slider
@@ -115,7 +113,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
           </div>
           <div className="flex items-center justify-center mt-10 w-full">
             <Button className="flex justify-between px-4 py-2 w-1/4" rounded type="submit">
-              Enregistrer
+              {t('common.save')}
               <FontAwesomeIcon color="black" icon={faSave} size="1x" />
             </Button>
             <Button
@@ -124,7 +122,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
               onPress={() => remove.mutate({ id: celestialBody.id })}
               rounded
             >
-              Supprimer
+              {t('common.delete')}
               <FontAwesomeIcon color="white" icon={faTrash} size="1x" />
             </Button>
           </div>
