@@ -55,7 +55,7 @@ function ReportObservationPage() {
           <div className="flex flex-col gap-y-4 max-w-screen-sm mx-auto py-4 w-3/4">
             <Select
               options={celestialBodiesData?.data.map((c) => ({ name: c.name, value: `${c.id}` })) ?? []}
-              placeholder={t('celestialbody.observed')!}
+              placeholder={t('celestialBody.observed')!}
               {...register('celestialBodyId', { required: true })}
             />
             <DatePicker aria-label="Date" placeholder="Date" {...register('timestamp', { required: true })} />

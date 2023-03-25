@@ -83,7 +83,10 @@ function ObservationPage(): JSX.Element {
                 {observation.celestialBody.name}
               </Text>
               <Text as="p" className="text-xs md:text-base">
-                {dayjs(observation.createdAt).format('le DD/MM/YYYY à HH:mm')}
+                {t('common.on-at', {
+                  date: dayjs(observation.createdAt).format('DD/MM/YYYY'),
+                  heure: dayjs(observation.createdAt).format('HH:mm'),
+                })}
               </Text>
             </div>
             <Button

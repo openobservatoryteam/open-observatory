@@ -11,7 +11,8 @@
       "celestialBody": "Celestial objects",
       "validity": "Validity",
       "delete": "Delete",
-      "name": "Name"
+      "name": "Name",
+      "on-at": "On {{- date}} at {{heure}}"
     },
     "celestialBody": {
       "observed": "Observed celestial object",

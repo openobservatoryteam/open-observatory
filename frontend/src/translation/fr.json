@@ -11,7 +11,8 @@
       "celestialBody": "Objets célestes",
       "validity": "Validité",
       "delete": "Supprimer",
-      "name": "Nom"
+      "name": "Nom",
+      "on-at": "Le {{date}} à {{heure}}"
     },
     "celestialBody": {
       "observed": "Objet céleste observé",
