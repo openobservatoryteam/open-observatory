@@ -1,14 +1,28 @@
 {
   "translation": {
+    "common": {
+      "save": "Enregistrer",
+      "orientation": "Orientation",
+      "description": "Description",
+      "visibility": "Visibilité"
+    },
+    "celestialBody": {
+      "observed": "Objet céleste observé"
+    },
     "observation" : {
       "new" : "Nouvelle observation",
-      "expired" : "Expirée"
+      "expired" : "Expirée",
+      "empty": "L'utilisateur n'a pas encore envoyé d'observation.",
+      "visibility": "Visibilité de l'observation",
+      "degree": "Degré de l'observation",
+      "notFound": "Observation introuvable"
     },
     "document" : {
       "title" : {
         "home" : "Accueil – Open Observatory",
         "sigin": "Connexion - Open Observatory",
-        "registration": "Inscription – Open Observatory"
+        "registration": "Inscription – Open Observatory",
+        "observationRegister": "Création d'une observation – Open Observatory"
       }
     },
     "users": {
@@ -20,7 +34,12 @@
       "notAccount" : "Pas encore de compte ? Inscrivez-vous.",
       "confirmPassword": "Confirmation du mot de passe",
       "biography": "Biographie",
-      "register": "S'inscrire"
+      "register": "S'inscrire",
+      "oldPassword": "Ancien mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirNewPassword": "Confiramtion du nouveau mot de passe",
+      "karma": "Karma",
+      "edit": "Éditez mon profile"
     },
     "errors": {
       "credentials" : "Les identifiants sont incorrects, vérifiez votre saisie.",
@@ -40,15 +59,26 @@
         "specialCharacter": "Le mot de passe doit contenir au moins un caractère spécial.",
         "min": "Le mot de passe doit être composé d'au moins 8 caractères.",
         "max": "Le mot de passe ne doit pas dépasser 32 caractères.",
-        "notMatch": "Les mots de passe ne correspondent pas."
+        "notMatch": "Les mots de passe ne correspondent pas.",
+        "incorrect": "Le mot de passe est incorrect."
       },
       "biography": {
         "max" :"La biographie ne doit pas dépasser 2048 caractères."
-      }
+      },
+      "degree": "Le degré d'orientation doit être une valeur en degrés."
     },
     "title" : {
       "connection" : "Connexion",
-      "registration": "Inscription"
+      "registration": "Inscription",
+      "history": "Historique des observations",
+      "changePassword": "Changement du mot de passe",
+      "observationRegister": "Création d'une observation"
+    },
+    "visibility" : {
+      "clearly" :"Observable à l'oeil nu",
+      "visible": "Observable dans de bonnes conditions",
+      "slightly": "Observable avec un équipement adapté",
+      "barely": "Rarement observable"
     }
   }
 }

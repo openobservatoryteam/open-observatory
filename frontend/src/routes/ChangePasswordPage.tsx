@@ -5,34 +5,35 @@ import { useNavigate } from '@tanstack/react-location';
 import { useMutation } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { ApplicationError, ChangeUserPasswordData, changeUserPassword } from '~/api';
-import { Button, Text, TextInput } from '~/components';
+import { Button, Text, TextInput, Title } from '~/components';
 import { Footer, Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 import { registerAdapter as r } from '~/utils';
 
-const changePasswordSchema = z
-  .object({
-    oldPassword: z.string(),
-    newPassword: z
-      .string()
-      .regex(/.*[A-Z].*/, 'Le mot de passe doit contenir au moins une majuscule.')
-      .regex(/.*[a-z].*/, 'Le mot de passe doit contenir au moins une minuscule.')
-      .regex(/.*\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
-      .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, 'Le mot de passe doit contenir au moins un caractère spécial.')
-      .min(8, "Le mot de passe doit être composé d'au moins 8 caractères.")
-      .max(32, 'Le mot de passe ne doit pas dépasser 32 caractères.'),
-    newPasswordConfirmation: z.string(),
-  })
-  .refine((data) => data.newPassword === data.newPasswordConfirmation, {
-    message: 'Les mots de passe ne correspondent pas.',
-    path: ['newPasswordConfirmation'],
-  });
-
 function ChangePasswordPage() {
   const { user } = useAuthentication();
+  const { t } = useTranslation();
+  const changePasswordSchema = z
+    .object({
+      oldPassword: z.string(),
+      newPassword: z
+        .string()
+        .regex(/.*[A-Z].*/, t('errors.password.upper')!)
+        .regex(/.*[a-z].*/, t('errors.password.lower')!)
+        .regex(/.*\d.*/, t('errors.password.number')!)
+        .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, t('errors.password.specialCharacter')!)
+        .min(8, t('errors.password.min')!)
+        .max(32, t('errors.password.max')!),
+      newPasswordConfirmation: z.string(),
+    })
+    .refine((data) => data.newPassword === data.newPasswordConfirmation, {
+      message: t('errors.password.notMatch')!,
+      path: ['newPasswordConfirmation'],
+    });
   const { formState, handleSubmit, register, setError } = useForm<ChangeUserPasswordData>({
     resolver: zodResolver(changePasswordSchema),
   });
@@ -42,7 +43,7 @@ function ChangePasswordPage() {
     onSuccess: () => navigate({ to: `/users/${user!.username}` }),
     onError: ({ cause }: { cause?: ApplicationError }) => {
       if (cause?.message === 'PASSWORD_MISMATCH') {
-        setError('oldPassword', { message: 'Le mot de passe est incorrect' });
+        setError('oldPassword', { message: t('errors.password.incorrect')! });
       }
     },
   });
@@ -50,9 +51,9 @@ function ChangePasswordPage() {
     <>
       <DocumentTitle>Changement du mot de passe – Open Observatory</DocumentTitle>
       <Header />
-      <Text as="h1" centered className="mt-10">
-        Changement du mot de passe
-      </Text>
+      <Title as="h1" centered className="mt-10">
+        {t('title.changePassword')}
+      </Title>
       <form
         className="flex flex-col mt-5 mx-auto w-72 md:w-[50%]"
         onSubmit={handleSubmit((d) => changePassword.mutate({ username: user!.username, ...d }))}
@@ -61,7 +62,7 @@ function ChangePasswordPage() {
           aria-label="Ancien mot de passe"
           className="mt-7"
           errorMessage={formState.errors.oldPassword?.message}
-          placeholder="Ancien mot de passe"
+          placeholder={t('users.oldPassword')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'oldPassword')}
@@ -70,7 +71,7 @@ function ChangePasswordPage() {
           aria-label="Nouveau mot de passe"
           className="mt-7"
           errorMessage={formState.errors.newPassword?.message}
-          placeholder="Nouveau mot de passe"
+          placeholder={t('users.newPassword')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'newPassword')}
@@ -79,13 +80,13 @@ function ChangePasswordPage() {
           aria-label="Confirmation du nouveau mot de passe"
           className="mt-7"
           errorMessage={formState.errors.newPasswordConfirmation?.message}
-          placeholder="Confirmation du nouveau mot de passe"
+          placeholder={t('users.confirmNewPassword')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'newPasswordConfirmation')}
         />
         <Button className="flex justify-between mt-10" type="submit">
-          Enregistrer
+          {t('common.save')}
           <FontAwesomeIcon icon={faSave} />
         </Button>
         {formState.errors.root && (

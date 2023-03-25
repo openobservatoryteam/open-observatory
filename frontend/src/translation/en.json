@@ -1,14 +1,28 @@
 {
   "translation": {
+    "common": {
+      "save": "Save",
+      "orientation": "Orientation",
+      "description": "Description",
+      "visibility": "Visibility"
+    },
+    "celestialBody": {
+      "observed": "Observed celestial object"
+    },
     "observation" : {
       "new" : "New observation",
-      "expired" : "Expired"
+      "expired" : "Expired",
+      "empty": "The user has not yet sent an observation.",
+      "visibility": "Visibility of the observation",
+      "degree": "Degree of the observation",
+      "notFound": "Observation not found"
     },
     "document" : {
       "title" : {
         "home" : "Home – Open Observatory",
         "sigin" : "Sigin - Open Observatory",
-        "registration": "Registration – Open Observatory"
+        "registration": "Registration – Open Observatory",
+        "observationRegister": "Creating an observation– Open Observatory"
       }
     },
     "users": {
@@ -20,7 +34,12 @@
       "notAccount": "No account yet? Sign up now.",
       "confirmPassword": "Confirm password",
       "biography": "Biography",
-      "register": "Sign up"
+      "register": "Sign up",
+      "oldPassword": "Old password",
+      "newPassword": "New password",
+      "confirNewPassword": "Confirm new password",
+      "karma": "Karma",
+      "edit": "Edit my profile"
     },
      "errors": {
       "credentials" : "The credentials are incorrect, check your input.",
@@ -40,15 +59,26 @@
         "specialCharacter": "The password must contain at least one special character.",
         "min": "The password must be at least 8 characters long.",
         "max": "The password must not exceed 32 characters.",
-        "notMatch": "The passwords don't match."
+        "notMatch": "The passwords don't match.",
+        "incorrect": "The password is incorrect."
       },
         "biography": {
         "max": "The biography must not exceed 2018 characters."
-      }
+      },
+      "degree": "The degree of orientation should be a value in degrees."
     },
      "title" : {
       "connection" : "Connection",
-      "registration": "Registration"
+      "registration": "Registration",
+      "history": "History of observations",
+      "changePassword": "Change password",
+      "observationRegister": "Creating an observation"
+    },
+    "visibility" : {
+      "clearly" :"Observable with the naked eye",
+      "visible": "Observable in good conditions",
+      "slightly": "Observable with adapted equipment",
+      "barely": "Rarely observable"
     }
   }
 }

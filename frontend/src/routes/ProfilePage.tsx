@@ -1,5 +1,6 @@
 import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { findUserByUsername } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
@@ -8,6 +9,7 @@ import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const authentication = useAuthentication();
   const {
     params: { username },
@@ -32,7 +34,7 @@ function ProfilePage() {
         {user.achievements.length > 0 && <Achievements className="mt-12" data={user.achievements} />}
         <section className="flex flex-col gap-y-4 mt-12">
           <Text as="h3" centered>
-            Karma
+            {t('users.karma')}
           </Text>
           <Text centered className="text-8xl">
             {user.karma}
@@ -42,11 +44,11 @@ function ProfilePage() {
           className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
         >
           <Button as={Link} className="w-full" to="observations">
-            Historique des observations
+            {t('title.history')}
           </Button>
           {isSelf && (
             <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">
-              Éditer mon profil
+              {t('users.edit')}
             </Button>
           )}
         </div>
