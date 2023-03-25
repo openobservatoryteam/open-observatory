@@ -51,6 +51,10 @@ jacocoTestReport {
             fileTree(dir: it, includes: ["fr/openobservatory/backend/services/*"])
         }))
     }
+    reports {
+        xml.enabled true
+        csv.enabled true
+    }
 }
 
 spotless {
