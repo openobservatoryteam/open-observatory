@@ -6,11 +6,9 @@ import { LoginData, UserWithProfile, getSelfUser, postLogin, postLogout } from '
 
 type AuthenticationContextProps = {
   isLoading: boolean;
-  isLoggedIn: boolean;
   login: UseMutationResult<undefined, HTTPError, LoginData, unknown>;
   logout: UseMutationResult<null, HTTPError, void, unknown>;
-  user: UserWithProfile | null;
-};
+} & ({ isLoggedIn: true; user: UserWithProfile } | { isLoggedIn: false; user: null });
 
 const AuthenticationContext = createContext<AuthenticationContextProps>(null!);
 
@@ -32,13 +30,12 @@ function AuthenticationProvider({ children }: UserProviderProps) {
       if (e.response.status === 503) logout.mutate();
     },
   });
-  const value = useMemo(
+  const value = useMemo<AuthenticationContextProps>(
     () => ({
       isLoading: currentUser.isInitialLoading,
-      isLoggedIn: !!currentUser.data,
       login,
       logout,
-      user: currentUser.data ?? null,
+      ...(currentUser.data ? { isLoggedIn: true, user: currentUser.data } : { isLoggedIn: false, user: null }),
     }),
     [currentUser],
   );

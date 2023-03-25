@@ -15,7 +15,7 @@ function HomePage() {
         <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? '/report-observation' : '/login'}>
           Nouvelle observation
         </Button>
-        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? `/users/${user!.username}` : '/login'}>
+        <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? `/users/${user.username}` : '/login'}>
           {isLoggedIn ? 'Mon profil' : 'Se connecter'}
         </Button>
       </div>
