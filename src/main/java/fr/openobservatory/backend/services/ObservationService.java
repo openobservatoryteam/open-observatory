@@ -11,6 +11,7 @@ import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,8 @@ public class ObservationService {
   public ObservationWithDetailsDto create(String issuerUsername, CreateObservationDto dto) {
     if (dto.getDescription() != null && dto.getDescription().length() > 2048)
       throw new InvalidObservationDescriptionException();
+    if (dto.getTimestamp().isAfter(OffsetDateTime.now()))
+      throw new InvalidObservationCreationTimeException();
     var issuer =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)
