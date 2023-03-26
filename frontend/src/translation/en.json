@@ -37,7 +37,7 @@
         "home" : "Home – Open Observatory",
         "sigin" : "Sigin - Open Observatory",
         "registration": "Registration – Open Observatory",
-        "observationRegister": "Creating an observation– Open Observatory"
+        "observationRegister": "Creation of an observation– Open Observatory"
       }
     },
     "users": {
@@ -58,8 +58,8 @@
     },
      "errors": {
       "credentials" : "The credentials are incorrect, check your input.",
-      "unknowConnection": "An unknown error occurred during the connection, please try again later.",
-      "unknowRegister": "An unknown error occurred during your registration.",
+      "unknownConnection": "An unknown error occurred during the connection, please try again later.",
+      "unknownRegister": "An unknown error occurred during your registration.",
       "required": "This field is required.",
        "username": {
         "beginLetter": "The username must begin with a letter.",
@@ -94,12 +94,12 @@
       }
     },
      "title" : {
-      "connection" : "Connection",
+      "connection" : "Sign in",
       "registration": "Registration",
       "history": "History of observations",
       "changePassword": "Change password",
-      "observationRegister": "Creating an observation",
-      "updateCelestialBody": "Modification of a celestial object"
+      "observationRegister": "Creation of an observation",
+      "updateCelestialBody": "Modification of a celestial body"
     },
     "visibility" : {
       "clearly" :"Observable with the naked eye",
