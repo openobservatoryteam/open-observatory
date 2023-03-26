@@ -1,9 +1,11 @@
 import { Observation, ObservationVisibility, ObservationVote, ObservationWithDetails } from './@types';
 import client from './client';
 
-type FindAllObservationsNearbyData = { lng: number; lat: number };
-export const findAllObservationsNearby = ({ lng, lat }: FindAllObservationsNearbyData) =>
-  client.get('observations/nearby', { searchParams: { lng, lat } }).then((r) => r.json<Observation[]>());
+type FindAllObservationsNearbyData = { lng: number; lat: number; radius: number };
+export const findAllObservationsNearby = ({ lng, lat, radius }: FindAllObservationsNearbyData) =>
+  client
+    .get('observations/nearby', { searchParams: { lng, lat, radius: radius.toFixed(2) } })
+    .then((r) => r.json<Observation[]>());
 
 export const findObservationById = (id: string) =>
   client.get('observations/' + id).then((r) => r.json<ObservationWithDetails>());
