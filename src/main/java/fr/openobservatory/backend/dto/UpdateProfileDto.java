@@ -10,4 +10,5 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class UpdateProfileDto {
 
   private JsonNullable<@Size(max = 2048) String> biography;
+  private JsonNullable<String> avatar;
 }
