@@ -10,6 +10,7 @@ import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.InvalidCelestialBodyIdException;
 import fr.openobservatory.backend.exceptions.InvalidObservationDescriptionException;
 import fr.openobservatory.backend.exceptions.UnavailableUserException;
+import fr.openobservatory.backend.exceptions.UnknownObservationException;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
@@ -236,4 +237,113 @@ public class ObservationServiceTest {
         assertThat(observationWithDetails.isExpired()).isTrue();
         assertThat(observationWithDetails.getKarma()).isEqualTo(1);
     }
+
+    @DisplayName("ObservationService#findById hould fail with unknow user")
+    @Test
+    void findById_should_fail_with_unknow_user() {
+        //Given
+        var observationId = 2L;
+        var issuer = "Keke27210";
+        //When
+        Mockito.when(userRepository.findByUsernameIgnoreCase(issuer)).thenThrow(UnavailableUserException.class);
+        ThrowableAssert.ThrowingCallable action = () -> observationService.findById(observationId, issuer);
+        //Then
+        assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
+    }
+
+    @DisplayName("ObservationService#findById should fail with unknow observation")
+    @Test
+    void findById_should_fail_with_unknow_observation() {
+        //Given
+        var observationId = 3L;
+        var issuer = "EikjosTv";
+        //
+        Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
+                .thenAnswer(answer -> {
+                    var user = new UserEntity();
+                    user.setUsername(issuer);
+                    return Optional.of(user);
+                });
+        Mockito.when(observationRepository.findById(observationId)).thenThrow(UnknownObservationException.class);
+        ThrowableAssert.ThrowingCallable action = () -> observationService.findById(observationId, issuer);
+        //Then
+        assertThatThrownBy(action).isInstanceOf(UnknownObservationException.class);
+    }
+
+    @DisplayName("ObservationService#findById should return observation with null current vote when issuer is null")
+    @Test
+    void findById_should_return_observation_with_null_current_vote_with_null_issuer() {
+        //Given
+        var observationId = 2L;
+        String issuer = null;
+        var celestialBodyId = 2L;
+        var desc = "La lune";
+        var lng = 49.3;
+        var lat = 12.5;
+        var orientation = 30;
+        var visibility = ObservationEntity.Visibility.VISIBLE;
+        var timestamp = OffsetDateTime.of(2023, 3,21,18,12,30,0, ZoneOffset.UTC);
+        var createdAt = Instant.from(timestamp);
+        var celestialBodyName = "Lune";
+        var celestialBodyImage = "celestialBodyImage";
+        var celestialBodyValidityTime = 5;
+        var celestialBody = new CelestialBodyEntity();
+        celestialBody.setId(celestialBodyId);
+        celestialBody.setName(celestialBodyName);
+        celestialBody.setImage(celestialBodyImage);
+        celestialBody.setValidityTime(celestialBodyValidityTime);
+        //When
+        Mockito.when(observationRepository.findById(observationId))
+                .thenAnswer(answer -> {
+                    var observation = new ObservationEntity();
+                    observation.setId(observationId);
+                    observation.setDescription(desc);
+                    observation.setLatitude(lat);
+                    observation.setLongitude(lng);
+                    observation.setOrientation(orientation);
+                    observation.setVisibility(visibility);
+                    observation.setCreatedAt(createdAt);
+                    observation.setCelestialBody(celestialBody);
+                    return Optional.of(observation);
+                });
+        Mockito.when(observationVoteRepository.findAllByObservation(Mockito.isA(ObservationEntity.class)))
+                .thenAnswer(answer -> {
+                    var voteEntity = new ObservationVoteEntity();
+                    voteEntity.setObservation(answer.getArgument(0));
+                    voteEntity.setVote(ObservationVoteEntity.VoteType.UPVOTE);
+                    return Set.of(voteEntity);
+                });
+        var observationWithDetails = observationService.findById(observationId, issuer);
+        //Then
+        assertThat(observationWithDetails.getId()).isEqualTo(observationId);
+        assertThat(observationWithDetails.getDescription()).isEqualTo(desc);
+        assertThat(observationWithDetails.getLatitude()).isEqualTo(lat);
+        assertThat(observationWithDetails.getLongitude()).isEqualTo(lng);
+        assertThat(observationWithDetails.getVisibility()).isEqualTo(visibility);
+        assertThat(observationWithDetails.getCreatedAt()).isEqualTo(timestamp);
+        assertThat(observationWithDetails.getCelestialBody().getId()).isEqualTo(celestialBodyId);
+        assertThat(observationWithDetails.getCelestialBody().getName()).isEqualTo(celestialBodyName);
+        assertThat(observationWithDetails.getCelestialBody().getImage()).isEqualTo(celestialBodyImage);
+        assertThat(observationWithDetails.getCelestialBody().getValidityTime()).isEqualTo(celestialBodyValidityTime);
+        assertThat(observationWithDetails.getCurrentVote()).isNull();
+        assertThat(observationWithDetails.isExpired()).isTrue();
+        assertThat(observationWithDetails.getKarma()).isEqualTo(1);
+    }
+
+    @DisplayName("ObservationService#findAllNearby")
+    @Test
+    void findAllNearby_should_return_observations_near_to_given_point() {
+        //Given
+        var lng = 42.12;
+        var lat = 30.2;
+        var raduis = 30.0;
+        //When
+        Mockito.when(observationRepository.findAllNearby(Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class)))
+                .thenAnswer(answer -> {
+                    return null;
+                });
+    }
+
+
+
 }
