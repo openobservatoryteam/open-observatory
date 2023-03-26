@@ -1,13 +1,7 @@
 name: Frontend - Continuous Integration
 
 on:
-  pull_request:
-    paths:
-      - frontend/**
-    types: [opened, synchronize, reopened]
   push:
-    branches:
-      - develop
     paths:
       - frontend/**
 
@@ -33,6 +27,7 @@ jobs:
         working-directory: frontend
 
   build:
+    needs: lint
     name: Frontend - Build phase
     runs-on: ubuntu-latest
     steps:
@@ -51,17 +46,3 @@ jobs:
         working-directory: frontend
       - run: pnpm build
         working-directory: frontend
-
-  frontend:
-    name: Frontend - Sonar analysis
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-      - uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: ./frontend
