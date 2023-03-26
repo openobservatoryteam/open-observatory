@@ -44,7 +44,7 @@ function RegistrationPage() {
     onSuccess: () => navigate({ to: '/login' }),
     onError: ({ cause }: { cause?: ApplicationError }) => {
       if (cause?.message === 'USERNAME_ALREADY_USED') setError('username', { message: t('errors.username.exist')! });
-      else setError('root', { message: t('errors.unknowRegister')! });
+      else setError('root', { message: t('errors.unknownRegister')! });
     },
   });
   return (

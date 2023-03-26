@@ -21,7 +21,7 @@ function LoginPage() {
         if (e.response.status === 401) setError('root', { message: t('errors.credentials')! });
         else
           setError('root', {
-            message: t('errors.unknowConnection')!,
+            message: t('errors.unknownConnection')!,
           });
       },
     });
