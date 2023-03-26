@@ -37,8 +37,8 @@ public class ObservationController {
 
   @GetMapping("/nearby")
   public ResponseEntity<List<ObservationDto>> findAllNearby(
-      @RequestParam Double lng, @RequestParam Double lat) {
-    var observations = observationService.findAllNearby(lng, lat);
+      @RequestParam Double lng, @RequestParam Double lat, @RequestParam Double radius) {
+    var observations = observationService.findAllNearby(lng, lat, radius);
     return ResponseEntity.ok(observations);
   }
 

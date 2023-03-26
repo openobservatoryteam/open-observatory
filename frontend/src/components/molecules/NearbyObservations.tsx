@@ -5,11 +5,21 @@ import { Marker, useMap } from 'react-leaflet';
 
 import { findAllObservationsNearby } from '~/api';
 
+const EARTH_CIRCUMFERENCE = 40075;
+
+const getRadius = (latitude: number, zoom: number) =>
+  (Math.max(window.innerWidth, window.innerHeight) * (EARTH_CIRCUMFERENCE * Math.cos(latitude))) /
+  Math.pow(2, zoom + 8);
+
 function NearbyObservations() {
   const map = useMap();
   const navigate = useNavigate();
   const nearbyObservations = useQuery({
-    queryFn: () => findAllObservationsNearby(map.getCenter()),
+    queryFn: () =>
+      findAllObservationsNearby({
+        radius: getRadius(map.getCenter().lat, map.getZoom()) / 2,
+        ...map.getCenter(),
+      }),
     queryKey: ['observations', 'nearby'],
   });
   useEffect(() => {
