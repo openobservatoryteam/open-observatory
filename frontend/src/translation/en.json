@@ -8,16 +8,16 @@
       "administrator": "ADMINISTRATOR",
       "observations": "Observations",
       "users": "Users",
-      "celestialBody": "Celestial objects",
+      "celestialBody": "Celestial bodies",
       "validity": "Validity",
       "delete": "Delete",
       "name": "Name",
       "on-at": "On {{- date}} at {{heure}}"
     },
     "celestialBody": {
-      "observed": "Observed celestial object",
+      "observed": "Observed celestial body",
       "validity": "Validity",
-      "illustration": "Illustration of"
+      "illustration": "Illustration of {{name}}"
     },
     "iss": {
       "currentPosition": "Current position of the International Space Station.",
@@ -27,11 +27,7 @@
     "observation" : {
       "new" : "New observation",
       "expired" : "Expired",
-      "empty": "The user has not yet sent an observation.",
-      "visibility": "Visibility of the observation",
-      "degree": "Degree of the observation",
-      "notFound": "observation",
-      "empty": "The user has not yet sent an observation.",
+      "empty": "The user has not sent observations yet.",
       "visibility": "Visibility of the observation",
       "degree": "Degree of the observation",
       "notFound": "Observation not found"
@@ -87,13 +83,13 @@
       "degree": "The degree of orientation should be a value in degrees.",
       "celestialBody": {
         "name" : {
-          "min": "The name of the celestial object must be at least 4 characters long.",
-          "max": "The name of the celestial object must not exceed 64 characters."
+          "min": "The name of the celestial body must be at least 4 characters long.",
+          "max": "The name of the celestial body must not exceed 64 characters."
         },
         "validity": {
-          "type": "The validity of the celestial object must be expressed with a whole number (hours).",
-          "min": "The validity of the celestial object must be at least 1 hour.",
-          "max": "The validity of the celestial object cannot exceed 12 hours."
+          "type": "The validity of the celestial body must be expressed with a whole number (hours).",
+          "min": "The validity of the celestial body must be at least 1 hour.",
+          "max": "The validity of the celestial body cannot exceed 12 hours."
         }
       }
     },

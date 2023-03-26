@@ -22,7 +22,7 @@
     "celestialBody": {
       "observed": "Objet céleste observé",
       "validity": "Validité",
-      "illustration": "Illustration de"
+      "illustration": "Illustration de {{name}}"
     },
     "observation" : {
       "new" : "Nouvelle observation",

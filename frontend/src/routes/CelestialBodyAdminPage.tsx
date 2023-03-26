@@ -93,7 +93,7 @@ function CelestialBodyAdminPage() {
                   <img
                     className="h-64 object-cover rounded-t-2xl w-full"
                     src={e.image}
-                    alt={t('celestialBody.illustration') + ' ' + e.name}
+                    alt={t('celestialBody.illustration', { name: e.name })!}
                   />
                   <Text color="black">{e.name}</Text>
                   <Text className="mb-3" color="black">
