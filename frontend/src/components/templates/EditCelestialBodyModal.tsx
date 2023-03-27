@@ -107,13 +107,13 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
                 {...r(register, 'validityTime')}
               />
               <Text as="span" className="ml-5 w-1/5">
-                {watch('validityTime')} {watch('validityTime') > 1 ? ' heures' : ' heure'}
+                {watch('validityTime')} {watch('validityTime') > 1 ? ' ' + t('common.hour') : ' ' + t('common.hours')}
               </Text>
             </div>
           </div>
           <div className="flex items-center justify-center mt-10 w-full">
             <Button className="flex justify-between px-4 py-2" rounded type="submit">
-              Enregistrer
+              {t('common.save')}
               <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
             </Button>
             <Button
@@ -122,7 +122,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
               onPress={() => remove.mutate({ id: celestialBody.id })}
               rounded
             >
-              Supprimer
+              {t('common.delete')}
               <FontAwesomeIcon className="ml-3" color="white" icon={faTrash} size="1x" />
             </Button>
           </div>

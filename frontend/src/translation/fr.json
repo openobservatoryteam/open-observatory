@@ -17,12 +17,15 @@
       "validity": "Validité",
       "delete": "Supprimer",
       "name": "Nom",
-      "on-at": "Le {{date}} à {{heure}}"
+      "on-at": "Le {{date}} à {{heure}}",
+      "hour": "heure",
+      "hours": "heures"
     },
     "celestialBody": {
       "observed": "Objet céleste observé",
       "validity": "Validité",
-      "illustration": "Illustration de {{name}}"
+      "illustration": "Illustration de {{name}}",
+      "name": "Nom de l'objet céleste"
     },
     "observation" : {
       "new" : "Nouvelle observation",

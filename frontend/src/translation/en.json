@@ -12,12 +12,15 @@
       "validity": "Validity",
       "delete": "Delete",
       "name": "Name",
-      "on-at": "On {{- date}} at {{heure}}"
+      "on-at": "On {{- date}} at {{heure}}",
+      "hour": "hour",
+      "hours": "hours"
     },
     "celestialBody": {
       "observed": "Observed celestial body",
       "validity": "Validity",
-      "illustration": "Illustration of {{name}}"
+      "illustration": "Illustration of {{name}}",
+      "name": "Name of celestial body"
     },
     "iss": {
       "currentPosition": "Current position of the International Space Station.",
@@ -96,10 +99,10 @@
      "title" : {
       "sigin" : "Sign in",
       "registration": "Registration",
-      "userObservationsHistory": "History of observations",
+      "userObservationsHistory": "Observations history",
       "changePassword": "Change password",
       "newObservation": "Creation of an observation",
-      "updateCelestialBody": "Modification of a celestial body"
+      "updateCelestialBody": "Update of a celestial body"
     },
     "visibility" : {
       "clearly" :"Observable with the naked eye",
