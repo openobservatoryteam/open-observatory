@@ -44,7 +44,7 @@ function ProfilePage() {
           className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
         >
           <Button as={Link} className="w-full" to="observations">
-            {t('title.history')}
+            {t('title.userObservationsHistory')}
           </Button>
           {isSelf && (
             <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">

@@ -30,7 +30,7 @@ function LoginPage() {
       <DocumentTitle>{t('document.title.signin')}</DocumentTitle>
       <Header className="h-[7vh] my-[1vh]" />
       <Title as="h2" className="mb-10 mt-16 text-center">
-        {t('title.connection')}
+        {t('title.signin')}
       </Title>
       <form className="flex flex-col mb-4 mx-auto px-2 w-72 sm:w-96" onSubmit={handleSubmit(onSubmit)}>
         <TextInput
@@ -60,7 +60,7 @@ function LoginPage() {
         )}
       </form>
       <Text centered>
-        <Link to="/register">{t('users.notAccount')}.</Link>
+        <Link to="/register">{t('users.notAccountYet')}.</Link>
       </Text>
       <Footer />
     </>

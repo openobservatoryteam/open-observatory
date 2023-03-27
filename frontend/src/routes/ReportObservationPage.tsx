@@ -32,9 +32,9 @@ function ReportObservationPage() {
   const selectedBody = watch('celestialBodyId') ?? -1;
   return (
     <>
-      <DocumentTitle>{t('document.title.observationRegister')}</DocumentTitle>
+      <DocumentTitle>{t('document.title.newObservation')}</DocumentTitle>
       <Title as="h2" className="mt-4 mb-2" centered>
-        {t('title.observationRegister')}
+        {t('title.newObservation')}
       </Title>
       <img
         className="object-cover h-64 w-full"
@@ -62,10 +62,10 @@ function ReportObservationPage() {
             <TextInput
               aria-label="Degré d'orientation"
               errorMessage={formState.errors.orientation?.message}
-              placeholder={t('observation.degree')!}
+              placeholder={t('observation.angle')!}
               {...r(register, 'orientation', {
                 required: true,
-                validate: (o) => (/\d+/.test(String(o)) ? undefined : t('errors.degree')!),
+                validate: (o) => (/\d+/.test(String(o)) ? undefined : t('errors.angle')!),
               })}
             />
             <Select

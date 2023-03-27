@@ -27,9 +27,9 @@
     "observation" : {
       "new" : "New observation",
       "expired" : "Expired",
-      "empty": "The user has not sent observations yet.",
+      "noObservationsYet": "The user has not sent observations yet.",
       "visibility": "Visibility of the observation",
-      "degree": "Degree of the observation",
+      "angle": "Degree of the observation",
       "notFound": "Observation not found"
     },
     "document" : {
@@ -46,13 +46,13 @@
       "here": "You are here",
       "username": "Username",
       "password": "Password",
-      "notAccount": "No account yet? Sign up now.",
-      "confirmPassword": "Confirm password",
+      "notAccountYet": "No account yet? Sign up now.",
+      "passwordConfirmation": "Confirm password",
       "biography": "Biography",
       "register": "Sign up",
       "oldPassword": "Old password",
       "newPassword": "New password",
-      "confirNewPassword": "Confirm new password",
+      "newPasswordConfirmation": "Confirm new password",
       "karma": "Karma",
       "edit": "Edit my profile"
     },
@@ -80,7 +80,7 @@
         "biography": {
         "max": "The biography must not exceed 2018 characters."
       },
-      "degree": "The degree of orientation should be a value in degrees.",
+      "angle": "The angle of orientation should be a value in degrees.",
       "celestialBody": {
         "name" : {
           "min": "The name of the celestial body must be at least 4 characters long.",
@@ -94,11 +94,11 @@
       }
     },
      "title" : {
-      "connection" : "Sign in",
+      "sigin" : "Sign in",
       "registration": "Registration",
-      "history": "History of observations",
+      "userObservationsHistory": "History of observations",
       "changePassword": "Change password",
-      "observationRegister": "Creation of an observation",
+      "newObservation": "Creation of an observation",
       "updateCelestialBody": "Modification of a celestial body"
     },
     "visibility" : {

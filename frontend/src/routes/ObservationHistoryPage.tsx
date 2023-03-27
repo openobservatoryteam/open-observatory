@@ -22,7 +22,7 @@ function ObservationHistoryPage() {
   const { t } = useTranslation();
   return (
     <>
-      <DocumentTitle>Historique des observations</DocumentTitle>
+      <DocumentTitle>{t('title.userObservationsHistory')}</DocumentTitle>
       <Header className="h-[7vh] my-[1vh]" />
       <div className="absolute left-4 top-30">
         <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
@@ -36,7 +36,7 @@ function ObservationHistoryPage() {
         {observations == null ||
           (observations != null && observations?.length === 0 && (
             <Text as="h1" centered color="white" className="mt-10">
-              {t('observation.empty')}
+              {t('observation.noObservationsYet')}
             </Text>
           ))}
         {observations != null &&

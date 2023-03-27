@@ -76,7 +76,7 @@ function RegistrationPage() {
         <TextInput
           aria-label="Confirmation du mot de passe"
           errorMessage={formState.errors.passwordConfirmation?.message}
-          placeholder={t('users.confirmPassword')!}
+          placeholder={t('users.passwordConfirmation')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'passwordConfirmation')}

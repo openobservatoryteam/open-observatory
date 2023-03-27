@@ -27,9 +27,9 @@
     "observation" : {
       "new" : "Nouvelle observation",
       "expired" : "Expirée",
-      "empty": "L'utilisateur n'a pas encore envoyé d'observation.",
+      "noObservationsYet": "L'utilisateur n'a pas encore envoyé d'observation.",
       "visibility": "Visibilité de l'observation",
-      "degree": "Degré de l'observation",
+      "angle": "Degré de l'observation",
       "notFound": "Observation introuvable"
     },
     "document" : {
@@ -37,7 +37,7 @@
         "home" : "Accueil – Open Observatory",
         "sigin": "Connexion - Open Observatory",
         "registration": "Inscription – Open Observatory",
-        "observationRegister": "Création d'une observation – Open Observatory"
+        "newObservation": "Création d'une observation – Open Observatory"
       }
     },
     "users": {
@@ -46,10 +46,15 @@
       "here": "Vous êtes ici",
       "username": "Pseudonyme",
       "password": "Mot de passe",
-      "notAccount" : "Pas encore de compte ? Inscrivez-vous.",
-      "confirmPassword": "Confirmation du mot de passe",
+      "notAccountYet" : "Pas encore de compte ? Inscrivez-vous.",
+      "passwordConfirmation": "Confirmation du mot de passe",
       "biography": "Biographie",
-      "register": "S'inscrire"
+      "register": "S'inscrire",
+      "oldPassword": "Ancien mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordConfirmation": "Confirmation du nouveau mot de passe",
+      "karma": "Karma",
+      "edit": "Édité mon profil"
     },
     "errors": {
       "credentials" : "Les identifiants sont incorrects, vérifiez votre saisie.",
@@ -75,7 +80,7 @@
       "biography": {
         "max" :"La biographie ne doit pas dépasser 2048 caractères."
       },
-      "degree": "Le degré d'orientation doit être une valeur en degrés.",
+      "angle": "Le degré d'orientation doit être une valeur en degrés.",
       "celestialBody": {
         "name" : {
           "min": "Le nom de l'objet céleste doit être composé d'au moins 4 caractères.",
@@ -89,11 +94,11 @@
       }
     },
     "title" : {
-      "connection" : "Connexion",
+      "sigin" : "Connexion",
       "registration": "Inscription",
-      "history": "Historique des observations",
+      "userObservationsHistory": "Historique des observations",
       "changePassword": "Changement du mot de passe",
-      "observationRegister": "Création d'une observation",
+      "newObservation": "Création d'une observation",
       "updateCelestialBody": "Modification d'un objet céleste"
     },
     "visibility" : {
