@@ -336,11 +336,29 @@ public class ObservationServiceTest {
         //Given
         var lng = 42.12;
         var lat = 30.2;
-        var raduis = 30.0;
+        var radius = 30.0;
+        var observationId = 2L;
+        var celestialBodyId = 2L;
+        var desc = "La lune";
+        var orientation = 30;
+        var visibility = ObservationEntity.Visibility.VISIBLE;
+        var timestamp = OffsetDateTime.of(2023, 3,21,18,12,30,0, ZoneOffset.UTC);
+        var createdAt = Instant.from(timestamp);
+        var celestialBodyName = "Lune";
+        var celestialBodyImage = "celestialBodyImage";
+        var celestialBodyValidityTime = 5;
+        var celestialBody = new CelestialBodyEntity();
+        celestialBody.setId(celestialBodyId);
+        celestialBody.setName(celestialBodyName);
+        celestialBody.setImage(celestialBodyImage);
+        celestialBody.setValidityTime(celestialBodyValidityTime);
+        var username = "EikjosTV";
+        var user = new UserEntity();
+        user.setUsername(username);
         //When
         Mockito.when(observationRepository.findAllNearby(Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class)))
                 .thenAnswer(answer -> {
-                    return null;
+
                 });
     }
 
