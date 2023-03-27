@@ -608,7 +608,7 @@ public class ObservationServiceTest {
         assertThatThrownBy(action).isInstanceOf(UnknownObservationException.class);
     }
 
-    @DisplayName("ObservationService#update should return updated observation with valid arguents when issuer is the observation author")
+    @DisplayName("ObservationService#update should return updated observation with valid arguments when issuer is the observation author")
     @Test
     void update_should_return_updated_observation_with_valid_argument_when_issuer_is_author() {
         //Given
@@ -650,6 +650,49 @@ public class ObservationServiceTest {
         assertThat(observationWithDetails.getAuthor().getUsername()).isEqualTo(issuer);
     }
 
+    @DisplayName("ObservationService#update should return updated observation with valid arguments when issuer is an admin")
+    @Test
+    void update_should_return_updated_observation_with_valid_argument_when_issuer_is_admin() {
+        //Given
+        var issuer = "Thomas";
+        var author = "Kevin";
+        var observationId = 5L;
+        var desc = "Jolie Lune";
+        var timestamp = OffsetDateTime.of(2023, 3,21,18,12,30,0, ZoneOffset.UTC);
+        var createdAt = Instant.from(timestamp);
+        var newDesc = JsonNullable.of("Beau Soleil");
+        var updateDto = new UpdateObservationDto();
+        updateDto.setDescription(newDesc);
+        //When
+        Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
+                .thenAnswer(answer -> {
+                    var user = new UserEntity();
+                    user.setUsername(issuer);
+                    user.setType(UserEntity.Type.ADMIN);
+                    return Optional.of(user);
+                });
+        Mockito.when(observationRepository.findById(observationId))
+                .thenAnswer( answer -> {
+                    var user = new UserEntity();
+                    user.setUsername(author);
+                    user.setType(UserEntity.Type.USER);
+                    var observation = new ObservationEntity();
+                    observation.setId(observationId);
+                    observation.setDescription(desc);
+                    observation.setAuthor(user);
+                    observation.setCreatedAt(createdAt);
+                    return Optional.of(observation);
+                });
+        Mockito.when(observationRepository.save(Mockito.isA(ObservationEntity.class)))
+                .thenAnswer(answer -> answer.getArgument(0));
+        var observationWithDetails = observationService.update(observationId, updateDto, issuer);
+        //Then
+        assertThat(observationWithDetails.getId()).isEqualTo(observationId);
+        assertThat(observationWithDetails.getDescription()).isEqualTo(newDesc.get());
+        assertThat(observationWithDetails.getCreatedAt()).isEqualTo(timestamp);
+        assertThat(observationWithDetails.getAuthor().getUsername()).isEqualTo(author);
+    }
+
     @DisplayName("ObservationService#update should fail with unknown user")
     @Test
     void update_should_fail_with_unknown_user() {
@@ -674,7 +717,7 @@ public class ObservationServiceTest {
         var updateDto = new UpdateObservationDto();
         //When
         Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-                .thenAnswer(answer -> new UserEntity());
+                .thenAnswer(answer -> Optional.of(new UserEntity()));
         Mockito.when(observationRepository.findById(observationId))
                 .thenThrow(UnknownObservationException.class);
         ThrowableAssert.ThrowingCallable action = () -> observationService.update(observationId, updateDto, issuer);
