@@ -86,7 +86,7 @@
     "title": {
       "signin": "Sign in",
       "registration": "Registration",
-      "userObservationsHistory": "{{name}}'s observations history – Open Observatory",
+      "userObservationsHistory": "{{name}}'s observations history",
       "changePassword": "Change password",
       "newObservation": "Observation creation",
       "createCelestialBody": "Celestial body creation",
