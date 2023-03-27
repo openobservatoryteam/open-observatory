@@ -467,7 +467,7 @@ public class ObservationServiceTest {
     void submitVote_should_not_fail_with_valid_argument() {
         //Given
         var observationId = 1L;
-        var issuer = "Eikjos TV";
+        var issuer = "EikjosTV";
         var voteDto = new VoteDto();
         voteDto.setVote(ObservationVoteEntity.VoteType.UPVOTE);
         //When
@@ -495,7 +495,7 @@ public class ObservationServiceTest {
     void submitVote_should_not_fail_with_null_vote_and_no_current_vote() {
         //Given
         var observationId = 1L;
-        var issuer = "Eikjos TV";
+        var issuer = "EikjosTV";
         var voteDto = new VoteDto();
         voteDto.setVote(null);
         //When
@@ -521,7 +521,7 @@ public class ObservationServiceTest {
     void submitVote_should_not_fail_with_null_vote_and_current_vote_set() {
         //Given
         var observationId = 1L;
-        var issuer = "Eikjos TV";
+        var issuer = "EikjosTV";
         var voteDto = new VoteDto();
         voteDto.setVote(null);
         //When
@@ -551,7 +551,7 @@ public class ObservationServiceTest {
     void submitVote_should_not_fail_with_valid_vote_and_current_vote_set() {
         //Given
         var observationId = 1L;
-        var issuer = "Eikjos TV";
+        var issuer = "EikjosTV";
         var voteDto = new VoteDto();
         voteDto.setVote(ObservationVoteEntity.VoteType.UPVOTE);
         //When
@@ -595,7 +595,7 @@ public class ObservationServiceTest {
     @Test
     void submitVote_should_fail_with_unknown_observation() {
         //Given
-        var issuer = "Kevin Biojout";
+        var issuer = "KevinBiojout";
         var observationId = 1000L;
         var voteDto = new VoteDto();
         //When
@@ -712,7 +712,7 @@ public class ObservationServiceTest {
     @Test
     void update_should_fail_with_unknown_observation() {
         //Given
-        var issuer = "Iron Man";
+        var issuer = "IronMan";
         var observationId = 479L;
         var updateDto = new UpdateObservationDto();
         //When

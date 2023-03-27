@@ -7,22 +7,36 @@ import static org.mockito.Mockito.when;
 import fr.openobservatory.backend.dto.ChangePasswordDto;
 import fr.openobservatory.backend.dto.CreateUserDto;
 import fr.openobservatory.backend.dto.UpdateProfileDto;
+import fr.openobservatory.backend.entities.CelestialBodyEntity;
+import fr.openobservatory.backend.entities.ObservationEntity;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.entities.UserEntity.Type;
 import fr.openobservatory.backend.exceptions.*;
+import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
 import fr.openobservatory.backend.services.UserService;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -35,7 +49,20 @@ class UserServiceTest {
 
   @Mock private UserRepository userRepository;
 
+  @Mock private ObservationRepository observationRepository;
+
   @InjectMocks private UserService userService;
+
+  @BeforeEach
+  void setup_modelmapper() {
+      modelMapper.addConverter(
+              new Converter<Instant, OffsetDateTime>() {
+                  @Override
+                  public OffsetDateTime convert(MappingContext<Instant, OffsetDateTime> context) {
+                      return context.getSource().atOffset(ZoneOffset.UTC);
+                  }
+              });
+  }
 
   // --- UserService#create
 
@@ -308,6 +335,62 @@ class UserServiceTest {
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
+  }
+
+  // --- UserService#findObservationByUsername
+  @DisplayName("UserService#findObservationByUsername should return user's observations when issuer is the targeted user with private profile")
+  @Test
+  void findObservationByUsername_should_return_user_observations() {
+      //Given
+      var targetedUser = "Eikjos";
+      var issuer = "Eikjos";
+      var celestialBody = new CelestialBodyEntity();
+      celestialBody.setValidityTime(5);
+      var observationId = 2L;
+      var desc = "Ceci est le soleil";
+      var timestamp = OffsetDateTime.of(2023, 3,21,18,12,30,0, ZoneOffset.UTC);
+      var createdAt = Instant.from(timestamp);
+      System.out.println(createdAt);
+      //When
+      Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
+              .thenAnswer(answer -> {
+                  var user = new UserEntity();
+                  user.setUsername(issuer);
+                  user.setType(Type.USER);
+                  return Optional.of(user);
+              });
+      Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
+              .thenAnswer(answer -> {
+                  var user = new UserEntity();
+                  user.setUsername(targetedUser);
+                  user.setType(Type.USER);
+                  user.setPublic(false);
+                  return Optional.of(user);
+              });
+      Mockito.when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class), Mockito.isA(Pageable.class)))
+              .thenAnswer(answer -> {
+                  var observation = new ObservationEntity();
+                  observation.setAuthor(answer.getArgument(0));
+                  observation.setId(observationId);
+                  observation.setDescription(desc);
+                  observation.setCelestialBody(celestialBody);
+                  observation.setCreatedAt(createdAt);
+                  System.out.println(observation.getCreatedAt());
+                  var list = List.of(observation);
+                  return new PageImpl<>(list, Pageable.ofSize(100), 1);
+              });
+      var observations = userService.findObservationsByUsername(targetedUser, issuer);
+      //Then
+      assertThat(observations.size()).isEqualTo(1);
+      var observation = observations.get(0);
+      System.out.println(observation);
+      System.out.println(observation.getCreatedAt());
+      assertThat(observation.getId()).isEqualTo(observationId);
+      assertThat(observation.getDescription()).isEqualTo(desc);
+      assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
+      assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(5);
+      assertThat(observation.getAuthor().getUsername()).isEqualTo(targetedUser);
+
   }
 
   // --- UserService#findSelf
