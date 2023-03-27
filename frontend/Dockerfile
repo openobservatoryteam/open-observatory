@@ -1,6 +1,4 @@
 FROM node:18-alpine AS builder
-ARG API_URL
-ENV VITE_API_URL=$API_URL
 WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./

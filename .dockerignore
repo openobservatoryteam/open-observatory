@@ -2,6 +2,7 @@
 .gradle/
 .idea/
 frontend/
+src/main/resources/certs/*.pem
 .dockerignore
 .gitignore
 Dockerfile
