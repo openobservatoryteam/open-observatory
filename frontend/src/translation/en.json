@@ -27,7 +27,10 @@
         "home": "Home – Open Observatory",
         "sigin": "Sigin - Open Observatory",
         "registration": "Registration – Open Observatory",
-        "observationRegister": "Creation of an observation– Open Observatory"
+        "observationRegister": "Creation of an observation – Open Observatory",
+        "selfProfile": "My profile  – Open Observatory",
+        "userProfile": "{{name}}'s profile – Open Observatory",
+        "userObservationsHistory": "{{name}}'s observations history – Open Observatory"
       }
     },
     "errors": {
@@ -83,7 +86,7 @@
     "title": {
       "signin": "Sign in",
       "registration": "Registration",
-      "userObservationsHistory": "Observations history",
+      "userObservationsHistory": "{{name}}'s observations history – Open Observatory",
       "changePassword": "Change password",
       "newObservation": "Observation creation",
       "createCelestialBody": "Celestial body creation",
@@ -103,7 +106,8 @@
       "newPassword": "New password",
       "newPasswordConfirmation": "New password confirmation",
       "karma": "Karma",
-      "edit": "Edit my profile"
+      "edit": "Edit my profile",
+      "observationsHistory": "Observations history"
     },
     "visibility": {
       "clearly": "Observable with the naked eye",

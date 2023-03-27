@@ -27,7 +27,10 @@
         "home": "Accueil – Open Observatory",
         "sigin": "Connexion - Open Observatory",
         "registration": "Inscription – Open Observatory",
-        "newObservation": "Création d'une observation – Open Observatory"
+        "newObservation": "Création d'une observation – Open Observatory",
+        "selfProfile": "Mon profil  – Open Observatory",
+        "userProfile": "Profil de {{name}} – Open Observatory",
+        "userObservationsHistory": "Historique des observations de {{name}} – Open Observatory"
       }
     },
     "errors": {
@@ -83,7 +86,7 @@
     "title": {
       "signin": "Connexion",
       "registration": "Inscription",
-      "userObservationsHistory": "Historique des observations",
+      "userObservationsHistory": "Historique des observations de {{name}}",
       "changePassword": "Changement du mot de passe",
       "newObservation": "Création d'une observation",
       "createCelestialBody": "Création d'un objet céleste",
@@ -103,7 +106,8 @@
       "newPassword": "Nouveau mot de passe",
       "newPasswordConfirmation": "Confirmation du nouveau mot de passe",
       "karma": "Karma",
-      "edit": "Éditer mon profil"
+      "edit": "Éditer mon profil",
+      "observationsHistory": "Historique des observations"
     },
     "visibility": {
       "clearly": "Observable à l'oeil nu",

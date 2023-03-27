@@ -22,7 +22,7 @@ function ObservationHistoryPage() {
   const { t } = useTranslation();
   return (
     <>
-      <DocumentTitle>{t('title.userObservationsHistory')}</DocumentTitle>
+      <DocumentTitle>{t('document.title.userObservationsHistory', { name: username })}</DocumentTitle>
       <Header className="h-16 my-1" />
       <div className="absolute left-4 top-30">
         <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
@@ -30,7 +30,7 @@ function ObservationHistoryPage() {
         </Button>
       </div>
       <Title centered className="mt-12" color="white">
-        {t('title.history')}
+        {t('title.userObservationsHistory', { name: username })}
       </Title>
       <div className="flex flex-col items-center mt-12 h-[29em] overflow-y-scroll">
         {observations == null ||
