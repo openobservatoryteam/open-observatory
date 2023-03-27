@@ -135,7 +135,7 @@ public class ObservationService {
             .findByUsernameIgnoreCase(issuerUsername)
             .orElseThrow(UnavailableUserException::new);
     var observation =
-        observationRepository.findById(id).orElseThrow(InvalidCelestialBodyIdException::new);
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
     if (!isEditableBy(observation, issuer)) throw new ObservationNotEditableException();
     if (dto.getDescription().isPresent()) {
       var description = dto.getDescription().get();
