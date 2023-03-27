@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-location';
 import { useMutation } from '@tanstack/react-query';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { ApplicationError, CreateUserData, postCreateUser } from '~/api';
@@ -10,31 +11,31 @@ import { Button, Text, TextInput, Title } from '~/components';
 import { Footer, Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
-const RegistrationSchema = z
-  .object({
-    username: z
-      .string()
-      .regex(/^[A-Za-z]/, 'Le pseudonyme doit débuter par une lettre.')
-      .regex(/^\w*$/, 'Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.')
-      .max(32, 'Le pseudonyme ne doit pas dépasser 32 caractères.'),
-    password: z
-      .string()
-      .regex(/.*[A-Z].*/, 'Le mot de passe doit contenir au moins une majuscule.')
-      .regex(/.*[a-z].*/, 'Le mot de passe doit contenir au moins une minuscule.')
-      .regex(/.*\d.*/, 'Le mot de passe doit contenir au moins un chiffre.')
-      .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, 'Le mot de passe doit contenir au moins un caractère spécial.')
-      .min(8, "Le mot de passe doit être composé d'au moins 8 caractères.")
-      .max(32, 'Le mot de passe ne doit pas dépasser 32 caractères.'),
-    passwordConfirmation: z.string(),
-    biography: z.string().max(2048, 'La biographie ne doit pas dépasser 2048 caractères.').optional(),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: 'Les mots de passe ne correspondent pas.',
-    path: ['passwordConfirmation'],
-  });
-
 function RegistrationPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const RegistrationSchema = z
+    .object({
+      username: z
+        .string()
+        .regex(/^[A-Za-z]/, t('errors.username.beginLetter')!)
+        .regex(/^\w*$/, t('errors.username.contain')!)
+        .max(32, t('errors.username.max')!),
+      password: z
+        .string()
+        .regex(/.*[A-Z].*/, t('errors.password.upper')!)
+        .regex(/.*[a-z].*/, t('errors.password.lower')!)
+        .regex(/.*\d.*/, t('errors.password.number')!)
+        .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, t('errors.password.specialCharacter')!)
+        .min(8, t('errors.password.min')!)
+        .max(32, t('errors.password.max')!),
+      passwordConfirmation: z.string(),
+      biography: z.string().max(2048, t('errors.biography.max')!).optional(),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: t('errors.password.notMatch')!,
+      path: ['passwordConfirmation'],
+    });
   const { formState, handleSubmit, register, setError } = useForm<CreateUserData>({
     resolver: zodResolver(RegistrationSchema),
   });
@@ -42,17 +43,16 @@ function RegistrationPage() {
     mutationFn: postCreateUser,
     onSuccess: () => navigate({ to: '/login' }),
     onError: ({ cause }: { cause?: ApplicationError }) => {
-      if (cause?.message === 'USERNAME_ALREADY_USED')
-        setError('username', { message: 'Ce pseudonyme est déjà utilisé.' });
-      else setError('root', { message: 'Une erreur inconnue est survenue lors de votre inscription.' });
+      if (cause?.message === 'USERNAME_ALREADY_USED') setError('username', { message: t('errors.username.exist')! });
+      else setError('root', { message: t('errors.unknownRegister')! });
     },
   });
   return (
     <>
-      <DocumentTitle>Inscription – Open Observatory</DocumentTitle>
+      <DocumentTitle>{t('document.title.registration')}</DocumentTitle>
       <Header className="h-16 my-1" />
       <Title as="h2" className="mb-10 mt-10 text-center">
-        Inscription
+        {t('title.registration')}
       </Title>
       <form
         className="flex flex-col gap-8 items-stretch mx-auto px-2 w-72 sm:w-96"
@@ -61,14 +61,14 @@ function RegistrationPage() {
         <TextInput
           aria-label="Pseudonyme"
           errorMessage={formState.errors.username?.message}
-          placeholder="Pseudonyme"
+          placeholder={t('users.username')!}
           type="text"
           {...r(register, 'username')}
         />
         <TextInput
           aria-label="Mot de passe"
           errorMessage={formState.errors.password?.message}
-          placeholder="Mot de passe"
+          placeholder={t('users.password')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'password')}
@@ -76,7 +76,7 @@ function RegistrationPage() {
         <TextInput
           aria-label="Confirmation du mot de passe"
           errorMessage={formState.errors.passwordConfirmation?.message}
-          placeholder="Confirmation du mot de passe"
+          placeholder={t('users.passwordConfirmation')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'passwordConfirmation')}
@@ -84,10 +84,10 @@ function RegistrationPage() {
         <TextInput
           aria-label="Biographie"
           errorMessage={formState.errors.biography?.message}
-          placeholder="Biographie"
+          placeholder={t('users.biography')!}
           {...r(register, 'biography')}
         />
-        <Button type="submit">S&apos;inscrire</Button>
+        <Button type="submit">{t('users.register')}</Button>
         {formState.errors.root && (
           <Text centered color="red">
             {formState.errors.root.message}

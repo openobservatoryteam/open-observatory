@@ -3,19 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useMatch } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { Marker, Popup } from 'react-leaflet';
 
 import { findObservationById, putVote } from '~/api';
 import celestialBodyImage from '~/assets/png/celeste.png';
 import userIcon from '~/assets/png/icon-user.png';
 import { Button, Chip, Map, Text, UpDownVote } from '~/components';
-
-const visibilityLevels = {
-  CLEARLY_VISIBLE: "À l'oeil nue",
-  VISIBLE: 'Visible',
-  SLIGHTLY_VISIBLE: 'Légèrement visible',
-  BARELY_VISIBLE: 'Peu visible',
-};
+import { useAuthentication } from '~/providers';
 
 type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;
 
@@ -23,7 +18,14 @@ function ObservationPage(): JSX.Element {
   const {
     params: { id },
   } = useMatch<{ Params: { id: string } }>();
-
+  const { t } = useTranslation();
+  const { user } = useAuthentication();
+  const visibilityLevels = {
+    CLEARLY_VISIBLE: t('visibility.clearly'),
+    VISIBLE: t('visibility.visible'),
+    SLIGHTLY_VISIBLE: t('visibility.slightly'),
+    BARELY_VISIBLE: t('visibility.barely'),
+  };
   const observationQuery = useQuery({
     queryFn: () => findObservationById(id),
     queryKey: ['observation', id],
@@ -35,10 +37,11 @@ function ObservationPage(): JSX.Element {
   });
 
   if (observationQuery.isLoading) return <Text as="h2">Chargement en cours...</Text>;
-  if (observationQuery.isError) return <Text as="h2">Observation introuvable</Text>;
+  if (observationQuery.isError) return <Text as="h2">{t('observation.notFound')}</Text>;
 
   const observation = observationQuery.data;
-  const isAuthor = observation.author.username === 'EikjosTV';
+  console.log(observation);
+  const isAuthor = user != null && observation.author.username === user.username;
   return (
     <div className="md:flex">
       <div className="w-full">
@@ -47,7 +50,7 @@ function ObservationPage(): JSX.Element {
             <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
-            {observation.expired && <Chip>Expirée</Chip>}
+            {observation.expired && <Chip>{t('observation.expired')}</Chip>}
           </div>
           {isAuthor && (
             <Button
@@ -80,7 +83,10 @@ function ObservationPage(): JSX.Element {
                 {observation.celestialBody.name}
               </Text>
               <Text as="p" className="text-xs md:text-base">
-                {dayjs(observation.createdAt).format('le DD/MM/YYYY à HH:mm')}
+                {t('common.on-at', {
+                  date: dayjs(observation.createdAt).format('DD/MM/YYYY'),
+                  heure: dayjs(observation.createdAt).format('HH:mm'),
+                })}
               </Text>
             </div>
             <Button
@@ -97,19 +103,19 @@ function ObservationPage(): JSX.Element {
           </div>
           <Text className="mt-3 md:mt-10 px-5">
             <Text as="span" bold>
-              Visibilité :
+              {t('common.visibility') + ' : '}
             </Text>{' '}
             {visibilityLevels[observation.visibility]}
           </Text>
           <Text className="mt-3 md:mt-10 px-5">
             <Text as="span" bold>
-              Orientation :
+              {t('common.orientation') + ' : '}
             </Text>{' '}
             {observation.orientation}°
           </Text>
           <Text className="mt-3 md:mt-10 px-5">
             <Text as="span" bold>
-              Description :
+              {t('common.description') + ' : '}
             </Text>{' '}
             {observation.description}
           </Text>

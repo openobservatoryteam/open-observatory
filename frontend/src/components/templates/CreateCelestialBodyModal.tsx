@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { OverlayTriggerState } from 'react-stately';
 import * as z from 'zod';
 
@@ -11,22 +12,19 @@ import { CreateCelestialBodyData, createCelestialBody } from '~/api';
 import { Button, Dialog, Modal, Slider, Text, TextInput } from '~/components';
 import { registerAdapter as r } from '~/utils';
 
-const CreateCelestialBodySchema = z.object({
-  name: z
-    .string()
-    .min(4, "Le nom de l'objet céleste doit être composé d'au moins 4 caractères.")
-    .max(64, "Le nom de l'objet céleste ne doit pas dépasser 64 caractères."),
-  validityTime: z
-    .number()
-    .int("La validité de l'objet céleste doit s'exprimer avec un nombre entier (heures).")
-    .min(1, "La validité de l'objet céleste doit être d'au moins 1 heure.")
-    .max(12, "La validité de l'objet céleste ne peut dépasser 12 heures."),
-  image: z.string().optional(),
-});
-
 type CreateCelestialBodyModalProps = { state: OverlayTriggerState };
 export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProps) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const CreateCelestialBodySchema = z.object({
+    name: z.string().min(4, t('errors.celestialBody.name.min')!).max(64, t('errors.celestialBody.name.max')!),
+    validityTime: z
+      .number()
+      .int(t('errors.celestialBody.validity.type')!)
+      .min(1, t('errors.celestialBody.validity.min')!)
+      .max(12, t('errors.celestialBody.validity.max')!),
+    image: z.string().optional(),
+  });
   const { formState, handleSubmit, register, setValue, watch } = useForm<CreateCelestialBodyData>({
     defaultValues: {
       name: '',
@@ -69,20 +67,20 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
           )}
           <div className="flex items-center justify-evenly mt-8 w-full">
             <Text as="span" className="mr-5">
-              Nom
+              {t('common.name')}
             </Text>
             <TextInput
               aria-label="Nom de l'objet céleste"
               className="w-3/4"
               defaultValue={formState.defaultValues?.name}
               errorMessage={formState.errors.name?.message}
-              placeholder="Nom de l'objet céleste"
+              placeholder={t('celestialBody.name')!}
               {...r(register, 'name')}
             />
           </div>
           <div className="flex items-center justify-evenly mt-8 w-full">
             <Text as="span" className="mr-5">
-              Validité
+              {t('common.validity')}
             </Text>
             <div className="flex items-center w-3/4">
               <Slider
@@ -96,12 +94,12 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
                 {...r(register, 'validityTime')}
               />
               <Text as="span" className="ml-5 w-1/5">
-                {watch('validityTime')} {watch('validityTime') > 1 ? ' heures' : ' heure'}
+                {watch('validityTime')} {watch('validityTime') > 1 ? ' ' + t('common.hours') : ' ' + t('common.hour')}
               </Text>
             </div>
           </div>
           <Button className="px-4 py-2 mt-10 flex justify-between" rounded type="submit">
-            Enregistrer
+            {t('common.save')}
             <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
           </Button>
         </form>
