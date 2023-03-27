@@ -2,6 +2,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
 
@@ -29,6 +30,7 @@ function ReportObservationPage() {
     onSuccess: ({ id }) => navigate({ to: `/observations/${id}` }),
   });
   const selectedBody = watch('celestialBodyId') ?? -1;
+  const maxDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS');
   return (
     <>
       <DocumentTitle>Création d&apos;une observation – Open Observatory</DocumentTitle>
@@ -57,7 +59,13 @@ function ReportObservationPage() {
               placeholder="Objet céleste observé"
               {...register('celestialBodyId', { required: true })}
             />
-            <DatePicker aria-label="Date" placeholder="Date" {...register('timestamp', { required: true })} />
+            <DatePicker
+              aria-label="Date"
+              errorMessage={formState.errors.timestamp?.message}
+              max={maxDate}
+              placeholder="Date"
+              {...register('timestamp', { max: maxDate, required: true })}
+            />
             <TextInput
               aria-label="Degré d'orientation"
               errorMessage={formState.errors.orientation?.message}
