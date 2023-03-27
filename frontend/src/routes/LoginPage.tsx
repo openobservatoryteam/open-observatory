@@ -28,7 +28,7 @@ function LoginPage() {
   return (
     <>
       <DocumentTitle>{t('document.title.signin')}</DocumentTitle>
-      <Header className="h-[7vh] my-[1vh]" />
+      <Header className="h-16 my-1" />
       <Title as="h2" className="mb-10 mt-16 text-center">
         {t('title.signin')}
       </Title>
