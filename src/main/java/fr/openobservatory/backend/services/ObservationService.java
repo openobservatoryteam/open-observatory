@@ -100,9 +100,10 @@ public class ObservationService {
         .toList();
   }
 
-  public List<ObservationDto> search(Integer limit, Integer page) {
+  public List<ObservationDto> search(Integer page, Integer itemsPerPage) {
+    if (itemsPerPage < 0 || itemsPerPage > 100 || page < 0) throw new InvalidPaginationException();
     return observationRepository.findAll().stream()
-        .limit(limit)
+        .limit(itemsPerPage)
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
   }

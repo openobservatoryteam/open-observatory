@@ -33,6 +33,8 @@ import org.modelmapper.spi.MappingContext;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -358,10 +360,78 @@ public class ObservationServiceTest {
         //When
         Mockito.when(observationRepository.findAllNearby(Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class), Mockito.isA(Double.class)))
                 .thenAnswer(answer -> {
-
+                    var observation = new ObservationEntity();
+                    observation.setId(observationId);
+                    observation.setDescription(desc);
+                    observation.setLatitude(lat);
+                    observation.setLongitude(lng);
+                    observation.setOrientation(orientation);
+                    observation.setCelestialBody(celestialBody);
+                    observation.setAuthor(user);
+                    observation.setVisibility(visibility);
+                    observation.setCreatedAt(createdAt);
+                    return List.of(observation);
                 });
+        var observations = observationService.findAllNearby(lng, lat, radius);
+        //Then
+        assertThat(observations.size()).isEqualTo(1);
+        var observation = observations.get(0);
+        assertThat(observation.getId()).isEqualTo(observationId);
+        assertThat(observation.getDescription()).isEqualTo(desc);
+        assertThat(observation.getLatitude()).isEqualTo(lat);
+        assertThat(observation.getLongitude()).isEqualTo(lng);
+        assertThat(observation.getOrientation()).isEqualTo(orientation);
+        assertThat(observation.getVisibility()).isEqualTo(visibility);
+        assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
+        assertThat(observation.getCelestialBody().getId()).isEqualTo(celestialBodyId);
+        assertThat(observation.getCelestialBody().getName()).isEqualTo(celestialBodyName);
+        assertThat(observation.getCelestialBody().getImage()).isEqualTo(celestialBodyImage);
+        assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(celestialBodyValidityTime);
+        assertThat(observation.getAuthor().getUsername()).isEqualTo(username);
     }
 
 
+    @DisplayName("ObservationService#search should return list of observation")
+    @Test
+    void search_should_return_list_of_observation() {
+        //Given
+        var itemsPerPage = 2;
+        var page = 1;
+        var id = 1L;
+        var desc = "Belle étoile";
+        var lat = 45.2;
+        var lng = 35.2;
+        var orientation = 200;
+        var visibility = ObservationEntity.Visibility.VISIBLE;
+        var timestamp = OffsetDateTime.of(2023, 3,21,18,12,30,0, ZoneOffset.UTC);
+        var createdAt = Instant.from(timestamp);
+        //When
+        Mockito.when(observationRepository.findAll())
+                .thenAnswer(answer -> {
+                    var observation = new ObservationEntity();
+                    observation.setId(id);
+                    observation.setDescription(desc);
+                    observation.setLatitude(lat);
+                    observation.setLongitude(lng);
+                    observation.setOrientation(orientation);
+                    observation.setVisibility(visibility);
+                    observation.setCreatedAt(createdAt);
+                    return List.of(observation);
+                });
+        var observations = observationService.search(page, itemsPerPage);
+        //Then
+        assertThat(observations.size()).isEqualTo(1);
+        var observation = observations.get(0);
+        assertThat(observation.getId()).isEqualTo(id);
+        assertThat(observation.getDescription()).isEqualTo(desc);
+        assertThat(observation.getLatitude()).isEqualTo(lat);
+        assertThat(observation.getLongitude()).isEqualTo(lng);
+        assertThat(observation.getOrientation()).isEqualTo(orientation);
+        assertThat(observation.getVisibility()).isEqualTo(visibility);
+        assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
+    }
 
+    @DisplayName("ObservationService#search should fail with below zero items per page")
+    @Test
+    void searh_should_fail_with
 }
