@@ -49,7 +49,7 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
   };
   return (
     <Modal isDismissable state={state}>
-      <Dialog onClose={() => state.close()} title="Création d'un objet céleste">
+      <Dialog onClose={() => state.close()} title={t('title.createCelestialBody')}>
         <form className="flex flex-col items-center" onSubmit={handleSubmit((data) => create.mutate(data))}>
           {watch('image') ? (
             <div className="flex items-center justify-center relative w-3/4">

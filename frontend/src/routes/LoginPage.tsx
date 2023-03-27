@@ -60,7 +60,7 @@ function LoginPage() {
         )}
       </form>
       <Text centered>
-        <Link to="/register">{t('users.notAccountYet')}.</Link>
+        <Link to="/register">{t('users.noAccountYet')}.</Link>
       </Text>
       <Footer />
     </>
