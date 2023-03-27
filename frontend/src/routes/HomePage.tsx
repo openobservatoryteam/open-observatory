@@ -10,8 +10,8 @@ function HomePage() {
   return (
     <>
       <DocumentTitle>Accueil – Open Observatory</DocumentTitle>
-      <Header className="h-[7vh] my-[1vh]" />
-      <div className="h-[10vh] gap-x-1 flex max-w-screen-lg mx-auto my-[0.5vh] px-1 md:h-[8vh] sm:gap-x-16 sm:px-16">
+      <Header className="h-16 my-1" />
+      <div className="h-16 gap-x-1 flex max-w-screen-lg mx-auto my-1 px-1 sm:gap-x-16 sm:px-16">
         <Button as={Link} color="darkGray" fullWidth to={isLoggedIn ? '/report-observation' : '/login'}>
           Nouvelle observation
         </Button>
@@ -19,7 +19,7 @@ function HomePage() {
           {isLoggedIn ? 'Mon profil' : 'Se connecter'}
         </Button>
       </div>
-      <Map className="h-[80.5vh] md:h-[82.5vh]" minZoom={3} worldCopyJump>
+      <Map className="h-[calc(100vh-8.75rem)]" minZoom={3} worldCopyJump>
         <ISSPositions />
         <NearbyObservations />
       </Map>

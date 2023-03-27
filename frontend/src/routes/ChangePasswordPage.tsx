@@ -49,7 +49,7 @@ function ChangePasswordPage() {
   return (
     <>
       <DocumentTitle>Changement du mot de passe – Open Observatory</DocumentTitle>
-      <Header className="h-[7vh] my-[1vh]" />
+      <Header className="h-16 my-1" />
       <Text as="h1" centered className="mt-10">
         Changement du mot de passe
       </Text>
