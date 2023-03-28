@@ -33,10 +33,10 @@ function HomePage() {
               <Button onPress={push.subscribe}>S&apos;inscrire aux notifications</Button>
             )
           ) : (
-            <Text>L&apos;API Notifications ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
+            <Button onPress={notifications.request}>Autoriser les notifications</Button>
           )
         ) : (
-          <Button onPress={notifications.request}>Autoriser les notifications</Button>
+          <Text>L&apos;API Notifications ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
         )}
       </div>
     <Map
