@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { CreateObservationData, ObservationVisibility, createObservation, findAllCelestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
 import { Button, DatePicker, Map, MarkerInput, Select, TextInput, Title } from '~/components';
+import { Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
 function ReportObservationPage() {
@@ -35,7 +36,8 @@ function ReportObservationPage() {
   return (
     <>
       <DocumentTitle>{t('document.title.newObservation')}</DocumentTitle>
-      <Title as="h2" className="mt-4 mb-2" centered>
+      <Header className="h-16 mt-1" />
+      <Title as="h2" className="mb-2" centered>
         {t('title.newObservation')}
       </Title>
       <img
@@ -83,7 +85,7 @@ function ReportObservationPage() {
             />
           </div>
         </div>
-        <Map className="h-64" worldCopyJump>
+        <Map className="h-60" worldCopyJump>
           <MarkerInput
             onMove={(p) => {
               setValue('lat', p.lat);
@@ -91,7 +93,7 @@ function ReportObservationPage() {
             }}
           />
         </Map>
-        <div className="bg-slate-600 flex justify-center py-8">
+        <div className="bg-slate-600 flex justify-center py-3">
           <Button isDisabled={isLoading} type="submit">
             {t('common.save')}
             <FontAwesomeIcon className="ml-20" icon={faSave} />
