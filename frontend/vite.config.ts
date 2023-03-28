@@ -9,7 +9,9 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     VitePWA({
+      filename: 'serviceWorker.ts',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tag.svg'],
+      injectRegister: false,
       manifest: {
         name: 'Open Observatory',
         short_name: 'Open Obs.',
@@ -70,7 +72,8 @@ export default defineConfig({
           },
         ],
       },
-      registerType: 'autoUpdate',
+      srcDir: 'src',
+      strategies: 'injectManifest',
     }),
   ],
   server: {
