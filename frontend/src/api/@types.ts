@@ -43,6 +43,8 @@ export type ObservationVisibility = 'CLEARLY_VISIBLE' | 'VISIBLE' | 'SLIGHTLY_VI
 
 export type ObservationVote = 'UPVOTE' | 'DOWNVOTE' | null;
 
+export type PushKey = { key: string };
+
 export type SearchResults<T> = {
   data: T[];
   count: number;

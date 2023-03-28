@@ -1,6 +1,8 @@
 package fr.openobservatory.backend.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.openobservatory.backend.configuration.PushServiceConfiguration;
+import fr.openobservatory.backend.dto.PushKeyDto;
 import fr.openobservatory.backend.dto.SendNotificationDto;
 import fr.openobservatory.backend.dto.SubscribeNotificationsDto;
 import fr.openobservatory.backend.dto.UnsubscribeNotificationsDto;
@@ -22,6 +24,13 @@ public class NotificationService {
   private final Map<String, NotificationEntity> subscriptions;
 
   // ---
+
+  /** Public key of the push service. */
+  public PushKeyDto getKey() {
+    var dto = new PushKeyDto();
+    dto.setKey(PushServiceConfiguration.PUBLIC_KEY);
+    return dto;
+  }
 
   /**
    * Sends a notification to all subscribers.

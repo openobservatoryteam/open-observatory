@@ -14,7 +14,7 @@ public class PushServiceConfiguration {
 
   // No worries, these keys will eventually be replaced
   private static final String PRIVATE_KEY = "6K7GVsJREuzN8BqVbMhWZvDLT-8HiwNbPo3kWdzZaQA";
-  private static final String PUBLIC_KEY =
+  public static final String PUBLIC_KEY =
       "BBa0zJTVfJBuHa0ud9BVgaH4bO1o2Dpe5bddHCskRG7LYRaOZdqBL7zlu_4qJashpNhrr9PrhAfYB1O1AiEW6vs";
   private static final String SUBJECT = "https://openobs-dev.kevinbioj.fr";
 
