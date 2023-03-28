@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class NotificationEntity {
 
-    private String auth;
+  private String auth;
 
-    private String endpoint;
+  private String endpoint;
 
-    private String p256dh;
+  private String p256dh;
 }

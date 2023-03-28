@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class UnsubscribeNotificationsDto {
 
-    @NotBlank  private String endpoint;
+  @NotBlank private String endpoint;
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class SubscribeNotificationsDto {
 
-    @NotNull private String auth;
-    @NotNull private String endpoint;
-    @NotNull private String p256dh;
+  @NotNull private String auth;
+  @NotNull private String endpoint;
+  @NotNull private String p256dh;
 }
