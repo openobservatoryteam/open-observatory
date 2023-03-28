@@ -51,7 +51,7 @@ function ProfilePage() {
             {t('users.observationsHistory')}
           </Button>
           {isSelf && (
-            <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">
+            <Button as={Link} className="w-full" to="edit">
               {t('users.edit')}
             </Button>
           )}

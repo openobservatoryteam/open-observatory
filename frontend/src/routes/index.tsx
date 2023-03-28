@@ -26,6 +26,12 @@ const ReportObservationPage = () =>
   ));
 const ObservationHistoryPage = () => import('./ObservationHistoryPage').then((page) => <page.default />);
 const ProfilePage = () => import('./ProfilePage').then((page) => <page.default />);
+const EditProfilPage = () =>
+  import('./EditProfilPage').then((page) => (
+    <AuthenticatedGuard>
+      <page.default />
+    </AuthenticatedGuard>
+  ));
 
 const routes: Route[] = [
   { path: '/', element: HomePage },
@@ -37,6 +43,7 @@ const routes: Route[] = [
     path: '/users/:username',
     children: [
       { path: '/', element: ProfilePage },
+      { path: '/edit', element: EditProfilPage },
       { path: '/observations', element: ObservationHistoryPage },
     ],
   },
