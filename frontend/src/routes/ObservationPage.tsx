@@ -40,14 +40,13 @@ function ObservationPage(): JSX.Element {
   if (observationQuery.isError) return <Text as="h2">{t('observation.notFound')}</Text>;
 
   const observation = observationQuery.data;
-  console.log(observation);
   const isAuthor = user != null && observation.author.username === user.username;
   return (
     <div className="md:flex">
       <div className="w-full">
         <div className="h-[50vh] relative">
           <div className="absolute left-5 top-5 flex">
-            <Button className="py-1 px-3 mr-5" color="white" onPress={() => history.go(-1)} rounded>
+            <Button as={Link} className="py-1 px-3 mr-5" color="white" rounded to="/">
               <FontAwesomeIcon icon={faArrowLeft} size="xl" />
             </Button>
             {observation.expired && <Chip>{t('observation.expired')}</Chip>}

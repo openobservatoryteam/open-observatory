@@ -18,7 +18,7 @@
       "validity": "Validité",
       "delete": "Supprimer",
       "name": "Nom",
-      "on-at": "Le {{date}} à {{heure}}",
+      "on-at": "Le {{- date}} à {{heure}}",
       "hour": "heure",
       "hours": "heures"
     },
