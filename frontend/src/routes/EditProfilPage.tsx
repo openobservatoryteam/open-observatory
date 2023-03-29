@@ -46,7 +46,7 @@ function EditProfilPage() {
       avatar: user.avatar,
       biography: user.biography,
     },
-    //resolver: zodResolver(EditProfilSchema),
+    resolver: zodResolver(EditProfilSchema),
   });
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
