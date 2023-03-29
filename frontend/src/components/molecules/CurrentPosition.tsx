@@ -17,7 +17,7 @@ export function CurrentPosition({
   const position = usePosition();
   useEffect(() => {
     if (position !== null && !hasCentered) {
-      map.flyTo(position, 12);
+      map.setView(position, 12);
       setCentered(true);
     }
   }, [position]);
