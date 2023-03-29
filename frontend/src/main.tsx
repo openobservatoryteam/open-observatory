@@ -17,11 +17,12 @@ if (import.meta.env.PROD) {
       tracesSampleRate: 2.0,
   });
   window.addEventListener('load', () => {
-    if (!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker
-      .register(import.meta.env.PROD ? '/serviceWorker.js' : '/src/serviceWorker.ts')
-      .then(() => console.log('Registered service worker'))
-      .catch(console.error);
+      if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+              .register(import.meta.env.PROD ? '/serviceWorker.js' : '/src/serviceWorker.ts')
+              .then(() => console.debug('[SW] Registered service worker'))
+              .catch((e) => console.error('[SW] Failed to register service worker: ', e));
+      }
   });
 }
 

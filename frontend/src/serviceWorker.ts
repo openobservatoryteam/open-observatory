@@ -1,12 +1,7 @@
-// eslint-disable-next-line prettier/prettier
 /// <reference lib="webworker" />
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const worker = self as unknown as ServiceWorkerGlobalScope;
-
-// eslint-disable-next-line prettier/prettier
-import { precacheAndRoute, PrecacheEntry } from 'workbox-precaching';
-precacheAndRoute((self as unknown as { __WB_MANIFEST: (string | PrecacheEntry)[] }).__WB_MANIFEST);
 
 worker.addEventListener('activate', () => worker.clients.claim());
 worker.addEventListener('install', () => worker.skipWaiting());
@@ -27,9 +22,9 @@ worker.addEventListener('push', (event) => {
   });
 });
 
-worker.addEventListener('notificationclick', (event) => {
-  const { notification } = event;
-  if ('openWindow' in worker.clients && notification.data.link) {
-    worker.clients.openWindow(notification.data.link);
-  }
-});
+if ('openWindow' in worker.clients) {
+  worker.addEventListener('notificationclick', (event) => {
+    const { notification } = event;
+    if (notification.data.link) worker.clients.openWindow(notification.data.link);
+  });
+}

@@ -27,7 +27,7 @@ type PushProps =
 function usePush(): PushProps {
   const supported = 'serviceWorker' in navigator;
   if (!supported) return { supported };
-  const { data: pushKeyData } = useQuery({ queryFn: pushKey, queryKey: ['push-key'] });
+  const { data: pushSubscriptionKeyData } = useQuery({ queryFn: pushKey, queryKey: ['push-key'] });
   const [currentSubscription, setCurrentSubscription] = useState<PushSubscription | null>(null);
   useEffect(() => {
     (async () => {
@@ -41,11 +41,11 @@ function usePush(): PushProps {
     subscribed: !!currentSubscription,
     supported,
     subscribe: async () => {
-      if (!pushKeyData) return false;
+      if (!pushSubscriptionKeyData) return false;
       const [registration] = await navigator.serviceWorker.getRegistrations();
       if (!registration) return false;
       const subscription = await registration.pushManager.subscribe({
-        applicationServerKey: arrayFromString(pushKeyData.key),
+        applicationServerKey: arrayFromString(pushSubscriptionKeyData.key),
         userVisibleOnly: true,
       });
       return subscribePush({
