@@ -36,7 +36,7 @@ public class UserEntity {
   @Column(columnDefinition = "SMALLINT")
   private Type type;
 
-  @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false)
   private Instant createdAt;
 
   // ---
