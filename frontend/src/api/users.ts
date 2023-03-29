@@ -26,5 +26,5 @@ export type EditProfileData = {
   biography: string | null;
 };
 
-export const editProfil = ({ username, ...json }: EditProfileData & { username: string }) =>
+export const editProfil = ({ username, ...json }: EditProfileData & { username: string | undefined }) =>
   client.patch(`users/${username}`, { json }).then(() => null);

@@ -1,14 +1,14 @@
 import { faCamera, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useMatch } from '@tanstack/react-location';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { Link, useMatch, useNavigate } from '@tanstack/react-location';
+import { useMutation } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { editProfil, findUserByUsername } from '~/api';
+import { editProfil } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
 import { Button, TextInput } from '~/components';
 import { Footer, Header } from '~/layout';
@@ -25,16 +25,8 @@ function EditProfilPage() {
     params: { username },
   } = useMatch<{ Params: { username: string } }>();
 
-  const getUser = useQuery({
-    queryKey: ['user', username],
-    queryFn: () => findUserByUsername(username),
-  });
-
-  const user = getUser.data;
   const { t } = useTranslation();
-  const authentication = useAuthentication();
-
-  if (!user || authentication.user?.username !== username) return null;
+  const { user } = useAuthentication();
 
   const EditProfilSchema = z.object({
     avatar: z.string().optional(),
@@ -43,8 +35,8 @@ function EditProfilPage() {
 
   const { formState, handleSubmit, setValue, register, watch } = useForm<EditProfilType>({
     defaultValues: {
-      avatar: user.avatar,
-      biography: user.biography,
+      avatar: user?.avatar,
+      biography: user?.biography,
     },
     resolver: zodResolver(EditProfilSchema),
   });
@@ -57,16 +49,18 @@ function EditProfilPage() {
     }
   };
 
+  const navigate = useNavigate();
+
   const editProfilMutation = useMutation({
     mutationFn: editProfil,
-    onSuccess: () => {
-      getUser.refetch();
-    },
+    onSuccess: () => navigate({ to: `/users/${username}`, replace: true }),
   });
 
   const onSubmit = (values: EditProfilType) => {
-    editProfilMutation.mutate({ username: user.username, ...values });
+    editProfilMutation.mutate({ username: user?.username, ...values });
   };
+
+  if (!user || user?.username !== username) return null;
 
   return (
     <>
