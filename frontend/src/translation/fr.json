@@ -22,7 +22,14 @@
       "hour": "heure",
       "hours": "heures",
       "preferences": "Préférences",
-      "about": "À propos"
+      "about": "À propos",
+      "enabled": "Activée",
+      "disabled": "Désactivée",
+      "yes": "Oui",
+      "no": "Non",
+      "publicProfile": "Profil public",
+      "changePassword": "Changer le mot de passe",
+      "notificationParameter": "Paramètre de notifications"
     },
     "document": {
       "title": {
@@ -92,7 +99,8 @@
       "changePassword": "Changement du mot de passe",
       "newObservation": "Création d'une observation",
       "createCelestialBody": "Création d'un objet céleste",
-      "updateCelestialBody": "Modification d'un objet céleste"
+      "updateCelestialBody": "Modification d'un objet céleste",
+      "radiusNotification": "Rayon de notifications"
     },
     "users": {
       "profil": "Mon profil",

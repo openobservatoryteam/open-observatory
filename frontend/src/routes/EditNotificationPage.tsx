@@ -36,16 +36,16 @@ function EditNotificationPage() {
     <>
       <Header className="h-16 my-1" />
       <form className="flex flex-col items-center mt-10" onSubmit={handleSubmit(onSubmit)}>
-        <Title as="h2">Notification</Title>
+        <Title as="h2">Notifications</Title>
         <ToggleButton
           value={true}
-          onLabel="Activée"
-          offLabel="Désactivée"
+          onLabel={t('common.enabled')}
+          offLabel={t('common.disabled')}
           handleChange={(value) => setValue('isActive', value)}
           className="mt-10"
         />
         <Title as="h2" className="mt-10">
-          Rayon de notifications
+          {t('title.radiusNotification')}
         </Title>
         <Text as="span" className="mt-10">
           {watch('distance')} KM
