@@ -29,7 +29,9 @@
       "no": "No",
       "publicProfile": "Public profile",
       "changePassword": "Change password",
-      "notificationParameter": "Notification settings"
+      "notificationParameter": "Notification settings",
+      "questions" : "If you have any questions, you can contact support at the following address",
+      "descriptionOpenObservatory": "Open Observatory is an application for sharing observations of celestial bodies"
     },
     "document": {
       "title": {
