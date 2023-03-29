@@ -65,7 +65,6 @@ function EditProfilPage() {
   });
 
   const onSubmit = (values: EditProfilType) => {
-    console.log('coucou');
     editProfilMutation.mutate({ username: user.username, ...values });
   };
 
@@ -91,11 +90,11 @@ function EditProfilPage() {
           placeholder={t('users.biography')!}
           {...r(register, 'biography')}
         />
-        <Button className="mt-10 w-1/2" as={Link} to="/">
-          Préférences
+        <Button className="mt-10 w-1/2" as={Link} to="/preferences">
+          {t('common.preferences')}
         </Button>
-        <Button as={Link} className="mt-10 w-1/2" to="/">
-          À propos
+        <Button as={Link} className="mt-10 w-1/2" to="/about-us">
+          {t('common.about')}
         </Button>
         <Button
           className="flex justify-between mt-20 px-4 py-2 w-3/4 md:w-1/2"

@@ -20,7 +20,9 @@
       "name": "Nom",
       "on-at": "Le {{- date}} à {{heure}}",
       "hour": "heure",
-      "hours": "heures"
+      "hours": "heures",
+      "preferences": "Préférences",
+      "about": "À propos"
     },
     "document": {
       "title": {
