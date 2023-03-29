@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tsconfigPaths(),
@@ -77,11 +77,21 @@ export default defineConfig({
     }),
   ],
   server: {
+    headers: {
+      'Service-Worker-Allowed': '/',
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      ...(mode !== 'production'
+        ? {
+            '/serviceWorker.js': {
+              forward: '/src/serviceWorker.ts',
+            },
+          }
+        : {}),
     },
   },
-});
+}));

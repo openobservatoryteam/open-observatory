@@ -16,15 +16,16 @@ if (import.meta.env.PROD) {
       // We recommend adjusting this value in production
       tracesSampleRate: 2.0,
   });
-  window.addEventListener('load', () => {
-      if ('serviceWorker' in navigator) {
-          navigator.serviceWorker
-              .register(import.meta.env.PROD ? '/serviceWorker.js' : '/src/serviceWorker.ts')
-              .then(() => console.debug('[SW] Registered service worker'))
-              .catch((e) => console.error('[SW] Failed to register service worker: ', e));
-      }
-  });
 }
+
+window.addEventListener('load', () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/serviceWorker.js')
+      .then(() => console.debug('[SW] Registered service worker'))
+      .catch((e) => console.error('[SW] Failed to register service worker: ', e));
+  }
+});
 
 const container = document.getElementById('root')!;
 createRoot(container).render(

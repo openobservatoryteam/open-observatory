@@ -32,8 +32,7 @@ function usePush(): PushProps {
   const [currentSubscription, setCurrentSubscription] = useState<PushSubscription | null>(null);
   useEffect(() => {
     (async () => {
-      const [registration] = await navigator.serviceWorker.getRegistrations();
-      if (!registration) return;
+      const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
       if (subscription === null) {
         setCurrentSubscription(null);
