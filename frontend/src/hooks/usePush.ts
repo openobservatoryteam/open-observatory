@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
-import { pushKey, subscribePush, unsubscribePush } from '~/api/notifications';
+import { getPushKey, getPushSubscriptions, pushSubscribe, pushUnsubscribe } from '~/api/notifications';
 
 function arrayFromString(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -27,28 +27,37 @@ type PushProps =
 function usePush(): PushProps {
   const supported = 'serviceWorker' in navigator;
   if (!supported) return { supported };
-  const { data: pushSubscriptionKeyData } = useQuery({ queryFn: pushKey, queryKey: ['push-key'] });
+  const { data: pushKey } = useQuery({ queryFn: getPushKey, queryKey: ['push-key'] });
+  const { data: pushSubscriptions } = useQuery({ queryFn: getPushSubscriptions, queryKey: ['push-subscriptions'] });
   const [currentSubscription, setCurrentSubscription] = useState<PushSubscription | null>(null);
   useEffect(() => {
     (async () => {
       const [registration] = await navigator.serviceWorker.getRegistrations();
       if (!registration) return;
       const subscription = await registration.pushManager.getSubscription();
+      if (subscription === null) {
+        setCurrentSubscription(null);
+        return;
+      }
+      if (pushSubscriptions?.findIndex((p) => p.endpoint === subscription.endpoint) === -1) {
+        subscription.unsubscribe();
+        setCurrentSubscription(null);
+        return;
+      }
       setCurrentSubscription(subscription);
     })();
-  }, []);
+  }, [pushSubscriptions]);
   return {
     subscribed: !!currentSubscription,
     supported,
     subscribe: async () => {
-      if (!pushSubscriptionKeyData) return false;
       const [registration] = await navigator.serviceWorker.getRegistrations();
-      if (!registration) return false;
+      if (!pushKey || !registration) return false;
       const subscription = await registration.pushManager.subscribe({
-        applicationServerKey: arrayFromString(pushSubscriptionKeyData.key),
+        applicationServerKey: arrayFromString(pushKey.key),
         userVisibleOnly: true,
       });
-      return subscribePush({
+      return pushSubscribe({
         auth: stringFromBuffer(subscription.getKey('auth')!),
         endpoint: subscription.endpoint,
         p256dh: stringFromBuffer(subscription.getKey('p256dh')!),
@@ -61,7 +70,7 @@ function usePush(): PushProps {
     },
     unsubscribe: async () => {
       if (currentSubscription === null) return true;
-      return unsubscribePush({ endpoint: currentSubscription.endpoint })
+      return pushUnsubscribe({ endpoint: currentSubscription.endpoint })
         .then(() => {
           currentSubscription.unsubscribe();
           setCurrentSubscription(null);

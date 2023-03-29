@@ -25,19 +25,26 @@ function HomePage() {
         </Button>
       </div>
       <div className="flex justify-center my-3">
-        {notifications.supported && push.supported ? (
-          notifications.status === 'granted' ? (
-            push.subscribed ? (
-              <Button onPress={push.unsubscribe}>Se désinscrire des notifications</Button>
+        {isLoggedIn &&
+          (notifications.supported && push.supported ? (
+            notifications.status === 'granted' ? (
+              push.subscribed ? (
+                <Button onPress={push.unsubscribe}>Se désinscrire des notifications</Button>
+              ) : (
+                <Button onPress={push.subscribe}>S&apos;inscrire aux notifications</Button>
+              )
+            ) : notifications.status === 'denied' ? (
+              <Text centered>
+                Ce site web n&apos;a pas les autorisations à vous envoyer des notifications.
+                <br />
+                Accédez au paramètres de votre plateforme pour autoriser cet accès.
+              </Text>
             ) : (
-              <Button onPress={push.subscribe}>S&apos;inscrire aux notifications</Button>
+              <Button onPress={notifications.request}>Autoriser les notifications</Button>
             )
           ) : (
-            <Button onPress={notifications.request}>Autoriser les notifications</Button>
-          )
-        ) : (
-          <Text>L&apos;API Notifications ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
-        )}
+            <Text>L&apos;API Notifications et/ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
+          ))}
       </div>
     <Map
         className="h-[calc(100vh-8.75rem)]"

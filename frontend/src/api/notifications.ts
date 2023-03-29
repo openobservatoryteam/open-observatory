@@ -1,20 +1,15 @@
-import { PushSubscriptionKey } from './@types';
-import { HTTPError } from 'ky';
+import { PushSubscription, PushSubscriptionKey } from './@types';
 
 import client from '~/api/client';
 
-export const pushKey = () => client.get('push/public-key').then((response) => response.json<PushSubscriptionKey>());
+export const getPushKey = () => client.get('push/public-key').then((response) => response.json<PushSubscriptionKey>());
 
-type PushStatusData = { endpoint: string };
-export const pushStatus = (searchParams: PushStatusData) =>
-  client
-    .get('push/status', { searchParams })
-    .then(() => 'subscribed')
-    .catch((error: HTTPError) => (error.response.status === 404 ? 'unsubscribed' : 'error'));
+export const getPushSubscriptions = () =>
+  client.get('push/subscriptions').then((response) => response.json<PushSubscription[]>());
 
-type SubscribePushData = { auth: string; endpoint: string; p256dh: string };
-export const subscribePush = (json: SubscribePushData) => client.post('push/subscribe', { json }).then(() => null);
+type PushSubscribeData = { auth: string; endpoint: string; p256dh: string };
+export const pushSubscribe = (json: PushSubscribeData) => client.post('push/subscribe', { json }).then(() => null);
 
-type UnsubscribePushData = { endpoint: string };
-export const unsubscribePush = (json: UnsubscribePushData) =>
+type PushUnsubscribeData = { endpoint: string };
+export const pushUnsubscribe = (json: PushUnsubscribeData) =>
   client.post('push/unsubscribe', { json }).then(() => null);
