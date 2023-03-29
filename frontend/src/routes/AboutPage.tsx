@@ -5,7 +5,7 @@ function AboutPage() {
   return (
     <>
       <Header className="h-16 my-1" />
-      <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col items-center">
         <Text as="p" centered className="mt-14 md:w-1/2 w-3/4">
           Open Observatory est une application permettant de partager des observations d’objets célestes
         </Text>
