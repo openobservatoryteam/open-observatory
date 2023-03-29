@@ -103,9 +103,10 @@ public class ObservationService {
         .toList();
   }
 
-  public List<ObservationDto> search(Integer limit, Integer page) {
+  public List<ObservationDto> search(Integer page, Integer itemsPerPage) {
+    if (itemsPerPage < 0 || itemsPerPage > 100 || page < 0) throw new InvalidPaginationException();
     return observationRepository.findAll().stream()
-        .limit(limit)
+        .limit(itemsPerPage)
         .map(o -> modelMapper.map(o, ObservationDto.class))
         .toList();
   }
@@ -137,7 +138,7 @@ public class ObservationService {
             .findByUsernameIgnoreCase(issuerUsername)
             .orElseThrow(UnavailableUserException::new);
     var observation =
-        observationRepository.findById(id).orElseThrow(InvalidCelestialBodyIdException::new);
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
     if (!isEditableBy(observation, issuer)) throw new ObservationNotEditableException();
     if (dto.getDescription().isPresent()) {
       var description = dto.getDescription().get();
