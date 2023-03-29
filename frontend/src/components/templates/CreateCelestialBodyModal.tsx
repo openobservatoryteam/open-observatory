@@ -87,7 +87,7 @@ export function CreateCelestialBodyModal({ state }: CreateCelestialBodyModalProp
                 aria-label="Validité des observations"
                 className="w-full"
                 defaultValue={formState.defaultValues?.validityTime}
-                maxValue={10}
+                maxValue={12}
                 minValue={1}
                 step={1}
                 withMarks

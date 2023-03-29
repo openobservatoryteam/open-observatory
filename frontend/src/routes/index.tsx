@@ -47,6 +47,13 @@ const AboutPage = () =>
     </AuthenticatedGuard>
   ));
 
+const EditNotificationPage = () =>
+  import('./EditNotificationPage').then((page) => (
+    <AuthenticatedGuard>
+      <page.default />
+    </AuthenticatedGuard>
+  ));
+
 const routes: Route[] = [
   { path: '/', element: HomePage },
   { path: '/login', element: LoginPage },
@@ -64,6 +71,7 @@ const routes: Route[] = [
   { path: '/about-us', element: AboutPage },
   { path: '/preferences', element: PreferencesPage },
   { path: '/change-password', element: ChangePasswordPage },
+  { path: '/edit-notification', element: EditNotificationPage },
   { path: '/report-observation', element: ReportObservationPage },
 ];
 

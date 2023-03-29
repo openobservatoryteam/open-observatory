@@ -41,4 +41,4 @@ function ToggleButton({ value, handleChange, onLabel, offLabel, className }: Tog
   );
 }
 
-export default ToggleButton;
+export { ToggleButton };

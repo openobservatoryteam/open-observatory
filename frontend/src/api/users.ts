@@ -22,8 +22,9 @@ export const changeUserPassword = ({ username, ...json }: ChangeUserPasswordData
   client.patch(`users/${username}/password`, { json }).then(() => null);
 
 export type EditProfileData = {
-  avatar: string | null;
-  biography: string | null;
+  avatar?: string | null;
+  biography?: string | null;
+  isPublic?: boolean | null;
 };
 
 export const editProfil = ({ username, ...json }: EditProfileData & { username: string | undefined }) =>
