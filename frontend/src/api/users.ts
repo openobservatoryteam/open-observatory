@@ -24,7 +24,7 @@ export const changeUserPassword = ({ username, ...json }: ChangeUserPasswordData
 export type UpdateUserData = {
   avatar?: string | null;
   biography?: string | null;
-  isPublic?: boolean | null;
+  isPublic?: boolean;
 };
 
 export const updateUser = ({ username, ...json }: UpdateUserData & { username: string | undefined }) =>
