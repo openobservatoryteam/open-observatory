@@ -91,8 +91,9 @@ public class PushSubscriptionService {
    *
    * @param issuerUsername User that issued the action.
    * @param dto Payload containing the desired subscription.
+   * @param userAgent User agent extracted from the subscription request.
    */
-  public void subscribe(String issuerUsername, SubscribeNotificationsDto dto) {
+  public void subscribe(String issuerUsername, SubscribeNotificationsDto dto, String userAgent) {
     var issuer =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)
@@ -103,6 +104,7 @@ public class PushSubscriptionService {
             .setEndpoint(dto.getEndpoint())
             .setP256dh(dto.getP256dh())
             .setUser(issuer)
+            .setUserAgent(userAgent)
             .setCreatedAt(Instant.now());
     pushSubscriptionRepository.save(entity);
   }

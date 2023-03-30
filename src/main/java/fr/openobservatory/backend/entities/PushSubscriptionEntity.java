@@ -22,6 +22,9 @@ public class PushSubscriptionEntity {
   @Column(columnDefinition = "CHAR(88)", nullable = false)
   private String p256dh;
 
+  @Column(columnDefinition = "VARCHAR(255)")
+  private String userAgent;
+
   @ManyToOne(optional = false)
   private UserEntity user;
 

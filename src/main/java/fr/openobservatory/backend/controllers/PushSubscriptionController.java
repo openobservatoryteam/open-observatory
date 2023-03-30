@@ -2,6 +2,7 @@ package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.services.PushSubscriptionService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -60,8 +61,11 @@ public class PushSubscriptionController {
   @PostMapping("/subscribe")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> subscribe(
-      Authentication authentication, @RequestBody SubscribeNotificationsDto dto) {
-    pushSubscriptionService.subscribe(authentication.getName(), dto);
+      HttpServletRequest request,
+      Authentication authentication,
+      @RequestBody SubscribeNotificationsDto dto) {
+    var userAgent = request.getHeader("User-Agent");
+    pushSubscriptionService.subscribe(authentication.getName(), dto, userAgent);
     return ResponseEntity.noContent().build();
   }
 

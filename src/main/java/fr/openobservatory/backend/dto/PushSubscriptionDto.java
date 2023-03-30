@@ -10,5 +10,6 @@ public class PushSubscriptionDto {
 
   private String endpoint;
   private String p256dh;
+  private String userAgent;
   private OffsetDateTime createdAt;
 }

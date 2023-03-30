@@ -24,9 +24,9 @@ function HomePage() {
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
-      <div className="flex justify-center my-3">
-        {isLoggedIn &&
-          (notifications.supported && push.supported ? (
+      {isLoggedIn && (
+        <div className="flex justify-center my-3">
+          {notifications.supported && push.supported ? (
             notifications.status === 'granted' ? (
               push.subscribed ? (
                 <Button onPress={push.unsubscribe}>Se désinscrire des notifications</Button>
@@ -40,19 +40,20 @@ function HomePage() {
                 Accédez au paramètres de votre plateforme pour autoriser cet accès.
               </Text>
             ) : (
-              <Button onPress={notifications.request}>Autoriser les notifications</Button>
+              <Button onPress={notifications.request}>Demander l&apos;autorisation d&apos;envoyer des notif.</Button>
             )
           ) : (
             <Text>L&apos;API Notifications et/ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
-          ))}
+          )}
       </div>
-    <Map
-        className="h-[calc(100vh-8.75rem)]"
-        minZoom={3}
-        worldCopyJump
-        radius={user != null ? user!.radius : 0}
-        withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
-    >
+      )}
+        <Map
+            className="h-[calc(100vh-8.75rem)]"
+            minZoom={3}
+            worldCopyJump
+            radius={user != null ? user!.radius : 0}
+            withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
+        >
         <ISSPositions />
         <NearbyObservations />
       </Map>
