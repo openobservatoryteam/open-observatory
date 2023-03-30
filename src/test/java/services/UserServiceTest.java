@@ -125,7 +125,9 @@ class UserServiceTest {
     // Given
     var username = "lima";
     var issuerUsername = "heidi";
-    var achievement = new AchievementDto("Judge", "Voter sur des observation", "image", UserAchievementEntity.Level.NEW);
+    var achievement =
+        new AchievementDto(
+            "Judge", "Voter sur des observation", "image", UserAchievementEntity.Level.NEW);
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
         .then(
