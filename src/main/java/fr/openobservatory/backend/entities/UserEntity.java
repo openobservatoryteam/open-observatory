@@ -39,6 +39,14 @@ public class UserEntity {
   @Column(nullable = false, updatable = false)
   private Instant createdAt;
 
+  @Column(nullable = false)
+  private Integer radius;
+
+  @Column(nullable = false)
+  private boolean notificationsEnabled;
+
+
+
   // ---
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
