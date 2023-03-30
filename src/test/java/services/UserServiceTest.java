@@ -872,10 +872,15 @@ class UserServiceTest {
     var issuerUsername = "heidi";
     var biography = "This is my new biography";
     var avatar = "avatar";
+    var radius = 20;
 
     var dto =
         new UpdateProfileDto(
-            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
+            JsonNullable.of(biography),
+            JsonNullable.of(avatar),
+            JsonNullable.undefined(),
+            JsonNullable.of(radius),
+            JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -900,6 +905,7 @@ class UserServiceTest {
     assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(biography);
     assertThat(user.getAvatar()).isEqualTo(avatar);
+    assertThat(user.getRadius()).isEqualTo(radius);
   }
 
   @DisplayName("UserService#update should pass with existing user and valid data and same issuer")
@@ -910,10 +916,15 @@ class UserServiceTest {
     var issuerUsername = "heidi";
     var biography = "This is my new biography";
     var avatar = "avatar";
-
+    var radius = 30;
+    var notificationEnabled = true;
     var dto =
         new UpdateProfileDto(
-            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
+            JsonNullable.of(biography),
+            JsonNullable.of(avatar),
+            JsonNullable.undefined(),
+            JsonNullable.of(radius),
+            JsonNullable.of(notificationEnabled));
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -931,6 +942,8 @@ class UserServiceTest {
     assertThat(user.getUsername()).isEqualTo(username);
     assertThat(user.getBiography()).isEqualTo(biography);
     assertThat(user.getAvatar()).isEqualTo(avatar);
+    assertThat(user.getRadius()).isEqualTo(radius);
+    assertThat(user.isNotificationsEnabled()).isEqualTo(notificationEnabled);
   }
 
   @DisplayName("UserService#update should pass with existing user and no data and same issuer")
@@ -942,7 +955,11 @@ class UserServiceTest {
 
     var dto =
         new UpdateProfileDto(
-            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -972,7 +989,11 @@ class UserServiceTest {
 
     var dto =
         new UpdateProfileDto(
-            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
+            JsonNullable.of(biography),
+            JsonNullable.of(avatar),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -1005,7 +1026,11 @@ class UserServiceTest {
 
     var dto =
         new UpdateProfileDto(
-            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -1030,7 +1055,11 @@ class UserServiceTest {
 
     var dto =
         new UpdateProfileDto(
-            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());

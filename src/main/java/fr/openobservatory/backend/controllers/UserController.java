@@ -29,7 +29,7 @@ public class UserController {
 
   @GetMapping("/@me")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<UserWithProfileDto> current(Authentication authentication) {
+  public ResponseEntity<SelfUserDto> current(Authentication authentication) {
     var user = userService.findSelf(authentication.getName());
     return ResponseEntity.ok(user);
   }
