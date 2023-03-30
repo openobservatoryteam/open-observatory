@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
+import fr.openobservatory.backend.dto.AchievementDto;
 import fr.openobservatory.backend.dto.ChangePasswordDto;
 import fr.openobservatory.backend.dto.CreateUserDto;
 import fr.openobservatory.backend.dto.UpdateProfileDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.entities.ObservationEntity;
+import fr.openobservatory.backend.entities.UserAchievementEntity;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.entities.UserEntity.Type;
 import fr.openobservatory.backend.exceptions.*;
@@ -123,7 +125,7 @@ class UserServiceTest {
     // Given
     var username = "lima";
     var issuerUsername = "heidi";
-
+    var achievement = new AchievementDto("Judge", "Voter sur des observation", "image", UserAchievementEntity.Level.NEW);
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
         .then(
@@ -141,10 +143,13 @@ class UserServiceTest {
               entity.setPublic(true);
               return Optional.of(entity);
             });
+    when(achievementService.findByUser(username)).thenReturn(List.of(achievement));
     var user = userService.findByUsername(username, issuerUsername);
 
     // Then
     assertThat(user.getUsername()).isEqualTo(username);
+    assertThat(user.getAchievements()).hasSize(1);
+    assertThat(user.getAchievements().get(0)).isEqualTo(achievement);
   }
 
   @DisplayName("UserService#findByUsername should pass with public user and regular issuer")
@@ -353,7 +358,6 @@ class UserServiceTest {
     var desc = "Ceci est le soleil";
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
-    System.out.println(createdAt);
     // When
     Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
         .thenAnswer(
@@ -383,7 +387,6 @@ class UserServiceTest {
               observation.setDescription(desc);
               observation.setCelestialBody(celestialBody);
               observation.setCreatedAt(createdAt);
-              System.out.println(observation.getCreatedAt());
               var list = List.of(observation);
               return new PageImpl<>(list, Pageable.ofSize(100), 1);
             });
@@ -391,8 +394,6 @@ class UserServiceTest {
     // Then
     assertThat(observations).hasSize(1);
     var observation = observations.get(0);
-    System.out.println(observation);
-    System.out.println(observation.getCreatedAt());
     assertThat(observation.getId()).isEqualTo(observationId);
     assertThat(observation.getDescription()).isEqualTo(desc);
     assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
@@ -414,7 +415,6 @@ class UserServiceTest {
     var desc = "Ceci est le soleil";
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
-    System.out.println(createdAt);
     // When
     Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
         .thenAnswer(
@@ -444,7 +444,6 @@ class UserServiceTest {
               observation.setDescription(desc);
               observation.setCelestialBody(celestialBody);
               observation.setCreatedAt(createdAt);
-              System.out.println(observation.getCreatedAt());
               var list = List.of(observation);
               return new PageImpl<>(list, Pageable.ofSize(100), 1);
             });
@@ -452,8 +451,6 @@ class UserServiceTest {
     // Then
     assertThat(observations).hasSize(1);
     var observation = observations.get(0);
-    System.out.println(observation);
-    System.out.println(observation.getCreatedAt());
     assertThat(observation.getId()).isEqualTo(observationId);
     assertThat(observation.getDescription()).isEqualTo(desc);
     assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
@@ -475,7 +472,6 @@ class UserServiceTest {
     var desc = "Ceci est le soleil";
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
-    System.out.println(createdAt);
     // When
     Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
         .thenAnswer(
@@ -497,7 +493,6 @@ class UserServiceTest {
               observation.setDescription(desc);
               observation.setCelestialBody(celestialBody);
               observation.setCreatedAt(createdAt);
-              System.out.println(observation.getCreatedAt());
               var list = List.of(observation);
               return new PageImpl<>(list, Pageable.ofSize(100), 1);
             });
@@ -505,8 +500,6 @@ class UserServiceTest {
     // Then
     assertThat(observations).hasSize(1);
     var observation = observations.get(0);
-    System.out.println(observation);
-    System.out.println(observation.getCreatedAt());
     assertThat(observation.getId()).isEqualTo(observationId);
     assertThat(observation.getDescription()).isEqualTo(desc);
     assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
@@ -528,7 +521,6 @@ class UserServiceTest {
     var desc = "Ceci est le soleil";
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
-    System.out.println(createdAt);
     // When
     Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
         .thenAnswer(
@@ -558,7 +550,6 @@ class UserServiceTest {
               observation.setDescription(desc);
               observation.setCelestialBody(celestialBody);
               observation.setCreatedAt(createdAt);
-              System.out.println(observation.getCreatedAt());
               var list = List.of(observation);
               return new PageImpl<>(list, Pageable.ofSize(100), 1);
             });
@@ -566,8 +557,6 @@ class UserServiceTest {
     // Then
     assertThat(observations).hasSize(1);
     var observation = observations.get(0);
-    System.out.println(observation);
-    System.out.println(observation.getCreatedAt());
     assertThat(observation.getId()).isEqualTo(observationId);
     assertThat(observation.getDescription()).isEqualTo(desc);
     assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
