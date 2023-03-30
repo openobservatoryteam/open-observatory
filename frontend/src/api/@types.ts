@@ -54,6 +54,7 @@ export type SearchResults<T> = {
 export type User = {
   username: string;
   avatar?: string;
+  public: boolean;
   type: UserType;
 };
 

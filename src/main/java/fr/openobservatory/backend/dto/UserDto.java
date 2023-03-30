@@ -8,5 +8,6 @@ public class UserDto {
 
   private String username;
   private String avatar;
+  private boolean isPublic;
   private UserEntity.Type type;
 }

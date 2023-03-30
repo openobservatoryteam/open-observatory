@@ -11,4 +11,5 @@ public class UpdateProfileDto {
 
   private JsonNullable<@Size(max = 2048) String> biography;
   private JsonNullable<String> avatar;
+  private JsonNullable<Boolean> isPublic;
 }

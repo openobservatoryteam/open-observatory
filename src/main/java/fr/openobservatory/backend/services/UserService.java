@@ -125,6 +125,9 @@ public class UserService {
     if (dto.getAvatar().isPresent()) {
       user.setAvatar(dto.getAvatar().get());
     }
+    if (dto.getIsPublic().isPresent()) {
+      user.setPublic(dto.getIsPublic().get());
+    }
     var userDto = modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
     userDto.setAchievements(List.of());
     userDto.setKarma(0); // TODO: Craft the relevant SQL query.

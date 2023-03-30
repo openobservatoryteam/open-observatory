@@ -20,7 +20,18 @@
       "name": "Nom",
       "on-at": "Le {{- date}} à {{heure}}",
       "hour": "heure",
-      "hours": "heures"
+      "hours": "heures",
+      "preferences": "Préférences",
+      "about": "À propos",
+      "enabled": "Activée",
+      "disabled": "Désactivée",
+      "yes": "Oui",
+      "no": "Non",
+      "publicProfile": "Profil public",
+      "changePassword": "Changer le mot de passe",
+      "notificationParameter": "Paramètres de notifications",
+      "questions" : "Si vous avez des questions, vous pouvez contacter le support à l’adresse suivante",
+      "descriptionOpenObservatory": "Open Observatory est une application permettant de partager des observations d’objets célestes"
     },
     "document": {
       "title": {
@@ -90,7 +101,8 @@
       "changePassword": "Changement du mot de passe",
       "newObservation": "Création d'une observation",
       "createCelestialBody": "Création d'un objet céleste",
-      "updateCelestialBody": "Modification d'un objet céleste"
+      "updateCelestialBody": "Modification d'un objet céleste",
+      "radiusNotification": "Rayon de notifications"
     },
     "users": {
       "profil": "Mon profil",

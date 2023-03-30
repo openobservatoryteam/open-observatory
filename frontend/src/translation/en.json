@@ -20,7 +20,18 @@
       "name": "Name",
       "on-at": "On {{- date}} at {{heure}}",
       "hour": "hour",
-      "hours": "hours"
+      "hours": "hours",
+      "preferences": "Settings",
+      "about": "About us",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "yes": "Yes",
+      "no": "No",
+      "publicProfile": "Public profile",
+      "changePassword": "Change password",
+      "notificationParameter": "Notification settings",
+      "questions" : "If you have any questions, you can contact support at the following address",
+      "descriptionOpenObservatory": "Open Observatory is an application for sharing observations of celestial bodies"
     },
     "document": {
       "title": {
@@ -90,7 +101,8 @@
       "changePassword": "Change password",
       "newObservation": "Observation creation",
       "createCelestialBody": "Celestial body creation",
-      "updateCelestialBody": "Celestial body update"
+      "updateCelestialBody": "Celestial body update",
+      "radiusNotification": "Notification range"
     },
     "users": {
       "profil": "My profile",

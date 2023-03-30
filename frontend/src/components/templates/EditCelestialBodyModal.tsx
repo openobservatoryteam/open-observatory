@@ -100,7 +100,7 @@ export function EditCelestialBody({ celestialBody, state }: EditCelestialBodyPro
                 aria-label="Validité de l'objet céleste"
                 className="w-full"
                 defaultValue={celestialBody.validityTime}
-                maxValue={10}
+                maxValue={12}
                 minValue={1}
                 step={1}
                 withMarks

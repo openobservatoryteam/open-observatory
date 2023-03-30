@@ -28,7 +28,7 @@ function ProfilePage() {
       </DocumentTitle>
       <Header className="h-16 my-1" />
       <div className="flex flex-col mt-6">
-        <img className="h-32 w-32 mx-auto" src={user.avatar ?? iconUser} alt="Avatar de l'utilisateur" />
+        <img className="h-32 w-32 mx-auto rounded-full" src={user.avatar ?? iconUser} alt="Avatar de l'utilisateur" />
         <Text as="h2" centered className="mt-3">
           {user.username}
         </Text>
@@ -51,7 +51,7 @@ function ProfilePage() {
             {t('users.observationsHistory')}
           </Button>
           {isSelf && (
-            <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">
+            <Button as={Link} className="w-full" to="edit">
               {t('users.edit')}
             </Button>
           )}

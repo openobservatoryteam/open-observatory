@@ -50,7 +50,7 @@ function ReportObservationPage() {
           mutate({
             celestialBodyId: +celestialBodyId,
             orientation: +orientation,
-            timestamp: new Date(timestamp).toISOString(),
+            timestamp: dayjs(timestamp).toISOString(),
             ...data,
           }),
         )}

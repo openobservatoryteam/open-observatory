@@ -20,3 +20,12 @@ export type ChangeUserPasswordData = {
 };
 export const changeUserPassword = ({ username, ...json }: ChangeUserPasswordData & { username: string }) =>
   client.patch(`users/${username}/password`, { json }).then(() => null);
+
+export type UpdateUserData = {
+  avatar?: string | null;
+  biography?: string | null;
+  isPublic?: boolean;
+};
+
+export const updateUser = ({ username, ...json }: UpdateUserData & { username: string | undefined }) =>
+  client.patch(`users/${username}`, { json }).then(() => null);

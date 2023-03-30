@@ -873,7 +873,9 @@ class UserServiceTest {
     var biography = "This is my new biography";
     var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -909,7 +911,9 @@ class UserServiceTest {
     var biography = "This is my new biography";
     var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -936,7 +940,9 @@ class UserServiceTest {
     var username = "heidi";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
@@ -964,7 +970,9 @@ class UserServiceTest {
     var biography = "This is my new biography";
     var avatar = "avatar";
 
-    var dto = new UpdateProfileDto(JsonNullable.of(biography), JsonNullable.of(avatar));
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.of(biography), JsonNullable.of(avatar), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -995,7 +1003,9 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername))
@@ -1018,7 +1028,9 @@ class UserServiceTest {
     var username = "lima";
     var issuerUsername = "heidi";
 
-    var dto = new UpdateProfileDto(JsonNullable.undefined(), JsonNullable.undefined());
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());
