@@ -37,7 +37,7 @@ import org.modelmapper.spi.MappingContext;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 @ExtendWith(MockitoExtension.class)
-public class ObservationServiceTest {
+class ObservationServiceTest {
   @Mock private CelestialBodyRepository celestialBodyRepository;
   @Spy private ModelMapper modelMapper = new ModelMapper();
   @Mock private ObservationRepository observationRepository;
@@ -454,7 +454,7 @@ public class ObservationServiceTest {
             });
     var observations = observationService.findAllNearby(lng, lat, radius);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     assertThat(observation.getId()).isEqualTo(observationId);
     assertThat(observation.getDescription()).isEqualTo(desc);
@@ -501,7 +501,7 @@ public class ObservationServiceTest {
             });
     var observations = observationService.search(page, itemsPerPage);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     assertThat(observation.getId()).isEqualTo(id);
     assertThat(observation.getDescription()).isEqualTo(desc);

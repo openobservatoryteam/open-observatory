@@ -386,7 +386,7 @@ class UserServiceTest {
             });
     var observations = userService.findObservationsByUsername(targetedUser, issuer);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     System.out.println(observation);
     System.out.println(observation.getCreatedAt());
@@ -447,7 +447,7 @@ class UserServiceTest {
             });
     var observations = userService.findObservationsByUsername(targetedUser, issuer);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     System.out.println(observation);
     System.out.println(observation.getCreatedAt());
@@ -500,7 +500,7 @@ class UserServiceTest {
             });
     var observations = userService.findObservationsByUsername(targetedUser, issuer);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     System.out.println(observation);
     System.out.println(observation.getCreatedAt());
@@ -561,7 +561,7 @@ class UserServiceTest {
             });
     var observations = userService.findObservationsByUsername(targetedUser, issuer);
     // Then
-    assertThat(observations.size()).isEqualTo(1);
+    assertThat(observations).hasSize(1);
     var observation = observations.get(0);
     System.out.println(observation);
     System.out.println(observation.getCreatedAt());
