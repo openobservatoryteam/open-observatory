@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
         name: 'Open Observatory',
         short_name: 'Open Obs.',
         description: "Open Observatory est une plateforme collaborative de partage d'observations d'objets célestes.",
-        theme_color: '#303030',
+        theme_color: '#101010',
         display: 'standalone',
         icons: [
           {
