@@ -2,7 +2,7 @@ import { faCamera, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useMatch, useNavigate } from '@tanstack/react-location';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -24,12 +24,13 @@ function UpdateUserPage() {
   const {
     params: { username },
   } = useMatch<{ Params: { username: string } }>();
+  const queryClient = useQueryClient();
 
   const { t } = useTranslation();
   const { user } = useAuthentication();
 
   const UpdateUserSchema = z.object({
-    avatar: z.string().optional(),
+    avatar: z.string().nullable(),
     biography: z.string().max(2048, t('errors.biography.max')!).optional(),
   });
 
@@ -53,7 +54,10 @@ function UpdateUserPage() {
 
   const updateUserMutation = useMutation({
     mutationFn: updateUser,
-    onSuccess: () => navigate({ to: `/users/${username}`, replace: true }),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(['users', '@me'], updatedUser);
+      navigate({ to: `/users/${username}`, replace: true });
+    },
   });
 
   const onSubmit = (values: UpdateUserFormData) => {

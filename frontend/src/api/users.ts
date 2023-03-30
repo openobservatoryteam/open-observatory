@@ -28,4 +28,4 @@ export type UpdateUserData = {
 };
 
 export const updateUser = ({ username, ...json }: UpdateUserData & { username: string | undefined }) =>
-  client.patch(`users/${username}`, { json }).then(() => null);
+  client.patch(`users/${username}`, { json }).then((r) => r.json<UserWithProfile>());

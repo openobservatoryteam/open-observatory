@@ -80,7 +80,7 @@ function ChangePasswordPage() {
           aria-label="Confirmation du nouveau mot de passe"
           className="mt-7"
           errorMessage={formState.errors.newPasswordConfirmation?.message}
-          placeholder={t('users.confirmNewPassword')!}
+          placeholder={t('users.newPasswordConfirmation')!}
           type="password"
           withVisibilityToggle
           {...r(register, 'newPasswordConfirmation')}
