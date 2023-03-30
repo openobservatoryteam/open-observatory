@@ -45,8 +45,6 @@ public class UserEntity {
   @Column(nullable = false)
   private boolean notificationsEnabled;
 
-
-
   // ---
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")

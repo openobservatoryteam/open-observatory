@@ -1,8 +1,6 @@
 package fr.openobservatory.backend.dto;
 
 import java.util.List;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
