@@ -5,7 +5,7 @@ import { Text } from '~/components/atoms/Text';
 
 type ToggleButtonProps = {
   value: boolean;
-  handleChange: (x: boolean) => void;
+  handleChange: (x: boolean) => unknown;
   onLabel: string;
   offLabel: string;
   className?: string;

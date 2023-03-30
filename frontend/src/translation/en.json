@@ -21,7 +21,7 @@
       "on-at": "On {{- date}} at {{heure}}",
       "hour": "hour",
       "hours": "hours",
-      "preferences": "Preferences",
+      "preferences": "Settings",
       "about": "About us",
       "enabled": "Enabled",
       "disabled": "Disabled",

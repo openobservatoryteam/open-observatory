@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-location';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-import { editProfil } from '~/api';
+import { updateUser } from '~/api';
 import { Button, Text, ToggleButton } from '~/components';
 import { Footer, Header } from '~/layout';
 import { useAuthentication } from '~/providers';
@@ -11,7 +11,7 @@ function PreferencesPage() {
   const { user } = useAuthentication();
   const { t } = useTranslation();
   const publicMutation = useMutation({
-    mutationFn: editProfil,
+    mutationFn: updateUser,
   });
 
   const handleChange = (isPublic: boolean) => {
@@ -26,7 +26,7 @@ function PreferencesPage() {
           {t('common.changePassword')}
         </Button>
         <Button as={Link} className="h-16 w-3/4 md:W-1/2 mt-16 rounded-full" to="/edit-notification" color="white">
-          Paramètre de notifications
+          {t('common.notificationParameter')}
         </Button>
         <div className="flex mt-10">
           <Text as="span">{t('common.publicProfile')}</Text>

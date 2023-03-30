@@ -8,19 +8,19 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { editProfil } from '~/api';
+import { updateUser } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
 import { Button, TextInput } from '~/components';
 import { Footer, Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 import { registerAdapter as r } from '~/utils';
 
-type EditProfilType = {
+type UpdateUserFormData = {
   biography: string | null;
   avatar: string | null;
 };
 
-function EditProfilPage() {
+function UpdateUserPage() {
   const {
     params: { username },
   } = useMatch<{ Params: { username: string } }>();
@@ -28,17 +28,17 @@ function EditProfilPage() {
   const { t } = useTranslation();
   const { user } = useAuthentication();
 
-  const EditProfilSchema = z.object({
+  const UpdateUserSchema = z.object({
     avatar: z.string().optional(),
     biography: z.string().max(2048, t('errors.biography.max')!).optional(),
   });
 
-  const { formState, handleSubmit, setValue, register, watch } = useForm<EditProfilType>({
+  const { formState, handleSubmit, setValue, register, watch } = useForm<UpdateUserFormData>({
     defaultValues: {
       avatar: user?.avatar,
       biography: user?.biography,
     },
-    resolver: zodResolver(EditProfilSchema),
+    resolver: zodResolver(UpdateUserSchema),
   });
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -51,13 +51,13 @@ function EditProfilPage() {
 
   const navigate = useNavigate();
 
-  const editProfilMutation = useMutation({
-    mutationFn: editProfil,
+  const updateUserMutation = useMutation({
+    mutationFn: updateUser,
     onSuccess: () => navigate({ to: `/users/${username}`, replace: true }),
   });
 
-  const onSubmit = (values: EditProfilType) => {
-    editProfilMutation.mutate({ username: user?.username, ...values });
+  const onSubmit = (values: UpdateUserFormData) => {
+    updateUserMutation.mutate({ username: user?.username, ...values });
   };
 
   if (!user || user?.username !== username) return null;
@@ -105,4 +105,4 @@ function EditProfilPage() {
   );
 }
 
-export default EditProfilPage;
+export default UpdateUserPage;
