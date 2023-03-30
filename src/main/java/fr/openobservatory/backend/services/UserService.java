@@ -142,4 +142,17 @@ public class UserService {
         || targetedUser.isPublic()
         || targetedUser.equals(issuer);
   }
+
+  public void saveUserPosition(String username, UpdatePositionDto dto, String issuerUsername) {
+    var issuer =
+        userRepository
+            .findByUsernameIgnoreCase(issuerUsername)
+            .orElseThrow(UnavailableUserException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+
+    // TODO Set new position in entity
+    userRepository.save(user);
+  }
 }
