@@ -14,6 +14,7 @@ import fr.openobservatory.backend.entities.UserEntity.Type;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
+import fr.openobservatory.backend.services.AchievementService;
 import fr.openobservatory.backend.services.UserService;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -49,6 +50,8 @@ class UserServiceTest {
   @Mock private UserRepository userRepository;
 
   @Mock private ObservationRepository observationRepository;
+
+  @Mock private AchievementService achievementService;
 
   @InjectMocks private UserService userService;
 

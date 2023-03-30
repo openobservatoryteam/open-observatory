@@ -34,6 +34,7 @@ public class AchievementService {
       UserAchievementEntity userAchievement;
       if (candidate.isPresent()) {
         userAchievement = candidate.get();
+        if (userAchievement.getLevel().getCount() == roundLevel) return;
         userAchievement.setLevel(UserAchievementEntity.Level.getLevel(roundLevel));
       } else {
         userAchievement = new UserAchievementEntity();
