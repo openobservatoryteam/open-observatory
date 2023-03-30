@@ -25,6 +25,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final PushSubscriptionRepository pushSubscriptionRepository;
   private final UserRepository userRepository;
+  private final AchievementService achievementService;
 
   // ---
 
@@ -59,7 +60,7 @@ public class UserService {
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
     var dto = modelMapper.map(user, UserWithProfileDto.class);
-    dto.setAchievements(List.of());
+    dto.setAchievements(achievementService.findByUser(username));
     dto.setKarma(0); // TODO: Craft the relevant SQL query.
     return dto;
   }

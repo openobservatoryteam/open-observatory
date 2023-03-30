@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface ObservationVoteRepository extends JpaRepository<ObservationVoteEntity, Long> {
   Set<ObservationVoteEntity> findAllByObservation(ObservationEntity observation);
 
+  Set<ObservationVoteEntity> findAllByUser(UserEntity user);
+
   Optional<ObservationVoteEntity> findByObservationAndUser(
       ObservationEntity observation, UserEntity user);
 }

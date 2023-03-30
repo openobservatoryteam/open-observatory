@@ -32,6 +32,7 @@ public class ObservationService {
   private final ObservationVoteRepository observationVoteRepository;
   private final PushSubscriptionService pushSubscriptionService;
   private final UserRepository userRepository;
+  private final AchievementService achievementService;
 
   // ---
 
@@ -153,6 +154,8 @@ public class ObservationService {
     vote.setObservation(observation);
     vote.setVote(dto.getVote());
     observationVoteRepository.save(vote);
+    var votesSize = observationVoteRepository.findAllByUser(issuer).size();
+    achievementService.checkForAchievement("Judge", issuerUsername, votesSize);
   }
 
   public ObservationWithDetailsDto update(
