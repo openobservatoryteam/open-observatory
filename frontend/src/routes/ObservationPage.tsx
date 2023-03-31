@@ -112,12 +112,14 @@ function ObservationPage(): JSX.Element {
             </Text>{' '}
             {observation.orientation}°
           </Text>
-          <Text className="mt-3 md:mt-10 px-5">
-            <Text as="span" bold>
-              {t('common.description') + ' : '}
-            </Text>{' '}
-            {observation.description}
-          </Text>
+          {observation.description && (
+            <Text className="mt-3 md:mt-10 px-5">
+              <Text as="span" bold>
+                {t('common.description') + ' : '}
+              </Text>{' '}
+              {observation.description}
+            </Text>
+          )}
         </div>
       </div>
       <Map
