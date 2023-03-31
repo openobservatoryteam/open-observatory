@@ -55,6 +55,9 @@
         "max": "The username must not exceed 32 characters",
         "exist": "This username is already use."
       },
+      "observation": {
+        "description" : "The description must not exceed 2048 characters."
+      },
       "password": {
         "upper": "The password must contain at least one capital letter.",
         "lower": "The password must contain at least one lower case letter.",
@@ -92,6 +95,7 @@
       "noObservationsYet": "The user has not sent observations yet.",
       "visibility": "Visibility of the observation",
       "angle": "Degree of the observation",
+      "description": "Description of the observation",
       "notFound": "Observation not found"
     },
     "title": {

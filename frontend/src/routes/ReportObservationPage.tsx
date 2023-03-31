@@ -70,6 +70,16 @@ function ReportObservationPage() {
               {...register('timestamp', { max: maxDate, required: true })}
             />
             <TextInput
+              aria-label={t('observation.description')!}
+              errorMessage={formState.errors.description?.message}
+              placeholder={t('observation.description')!}
+              {...r(register, 'description', {
+                required: false,
+                validate: (o) =>
+                  o == null || String(o)?.length <= 2048 ? undefined : t('errors.observation.description')!,
+              })}
+            />
+            <TextInput
               aria-label="Degré d'orientation"
               errorMessage={formState.errors.orientation?.message}
               placeholder={t('observation.angle')!}

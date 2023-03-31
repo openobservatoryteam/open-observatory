@@ -55,6 +55,9 @@
         "max": "Le pseudonyme ne doit pas dépasser 32 caractères.",
         "exist": "Ce pseudonyme est déjà utilisé."
       },
+      "observation": {
+        "description" : "La description ne doit pas dépasser 2048 caractères."
+      },
       "password": {
         "upper": "Le mot de passe doit contenir au moins une majuscule.",
         "lower": "Le mot de passe doit contenur au moins une minuscule.",
@@ -92,6 +95,7 @@
       "noObservationsYet": "L'utilisateur n'a pas encore envoyé d'observation.",
       "visibility": "Visibilité de l'observation",
       "angle": "Degré de l'observation",
+      "description": "Description de l'observation",
       "notFound": "Observation introuvable"
     },
     "title": {
