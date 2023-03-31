@@ -70,7 +70,7 @@ function ReportObservationPage() {
               {...register('timestamp', { max: maxDate, required: true })}
             />
             <TextInput
-              aria-label="Description de l'observation"
+              aria-label={t('observation.description')!}
               errorMessage={formState.errors.description?.message}
               placeholder={t('observation.description')!}
               {...r(register, 'description', {
