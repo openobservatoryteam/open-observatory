@@ -21,7 +21,13 @@ function HomePage() {
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
-      <Map className="h-[calc(100vh-8.75rem)]" minZoom={3} worldCopyJump>
+      <Map
+        className="h-[calc(100vh-8.75rem)]"
+        minZoom={3}
+        worldCopyJump
+        radius={user != null ? user!.radius : 0}
+        withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
+      >
         <ISSPositions />
         <NearbyObservations />
       </Map>
