@@ -6,6 +6,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SelfUserDto extends UserWithProfileDto {
-  private Integer radius;
-  private boolean notificationsEnabled;
+    private Integer radius;
+    private boolean notificationsEnabled;
 }
