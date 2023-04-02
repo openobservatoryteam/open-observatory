@@ -152,7 +152,8 @@ public class UserService {
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
 
-    // TODO Set new position in entity
+    user.setLatitude(dto.getLatitude());
+    user.setLongitude(dto.getLongitude());
     userRepository.save(user);
   }
 }

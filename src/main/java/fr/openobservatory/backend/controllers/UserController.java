@@ -70,13 +70,13 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("/{username}/position")
+  @PostMapping("/{username}/position")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> updateUserPosition(
       Authentication authentication,
       @PathVariable String username,
       @RequestBody @Valid UpdatePositionDto dto) {
     userService.saveUserPosition(username, dto, authentication.getName());
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 }
