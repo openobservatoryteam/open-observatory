@@ -36,8 +36,23 @@ public class UserEntity {
   @Column(columnDefinition = "SMALLINT")
   private Type type;
 
-  @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false)
   private Instant createdAt;
+
+  @Column(columnDefinition = "FLOAT")
+  private Double latitude;
+
+  @Column(columnDefinition = "FLOAT")
+  private Double longitude;
+
+  @Column
+  private Instant lastPositionUpdate;
+
+  @Column
+  private Integer radius;
+
+  @Column(columnDefinition = "BOOLEAN")
+  private boolean notificationsEnabled;
 
   // ---
 
