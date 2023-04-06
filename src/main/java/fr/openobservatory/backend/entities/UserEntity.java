@@ -36,14 +36,8 @@ public class UserEntity {
   @Column(columnDefinition = "SMALLINT")
   private Type type;
 
-  @Column(nullable = false, updatable = false)
+  @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
-
-  @Column(nullable = false)
-  private Integer radius;
-
-  @Column(nullable = false)
-  private boolean notificationsEnabled;
 
   // ---
 

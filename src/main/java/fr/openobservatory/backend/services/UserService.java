@@ -153,4 +153,18 @@ public class UserService {
         || targetedUser.isPublic()
         || targetedUser.equals(issuer);
   }
+
+  public void saveUserPosition(String username, UpdatePositionDto dto, String issuerUsername) {
+    var issuer =
+        userRepository
+            .findByUsernameIgnoreCase(issuerUsername)
+            .orElseThrow(UnavailableUserException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+
+    user.setLatitude(dto.getLatitude());
+    user.setLongitude(dto.getLongitude());
+    userRepository.save(user);
+  }
 }
