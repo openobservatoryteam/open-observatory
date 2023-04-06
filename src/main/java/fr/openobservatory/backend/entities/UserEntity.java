@@ -45,11 +45,9 @@ public class UserEntity {
   @Column(columnDefinition = "FLOAT")
   private Double longitude;
 
-  @Column
-  private Instant lastPositionUpdate;
+  @Column private Instant lastPositionUpdate;
 
-  @Column
-  private Integer radius;
+  @Column private Integer radius;
 
   @Column(columnDefinition = "BOOLEAN")
   private boolean notificationsEnabled;
