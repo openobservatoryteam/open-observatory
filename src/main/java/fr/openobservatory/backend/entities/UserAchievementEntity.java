@@ -2,9 +2,7 @@ package fr.openobservatory.backend.entities;
 
 import fr.openobservatory.backend.repositories.Achievements;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 @Data

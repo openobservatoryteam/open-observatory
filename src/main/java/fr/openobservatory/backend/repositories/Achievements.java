@@ -30,7 +30,7 @@ public interface Achievements {
 
     @AllArgsConstructor
     @Getter
-    public enum Level {
+    enum Level {
         NEW(1),
         BEGINNER(10),
         INTERMEDIATES(25),

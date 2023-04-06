@@ -20,9 +20,6 @@ import java.util.Set;
 public class AchievementService {
 
   private final UserAchievementRepository userAchievementRepository;
-  private final UserRepository userRepository;
-  private final ObservationRepository observationRepository;
-  private final ModelMapper modelMapper;
 
   private final Set<Achievements> achievements = Set.of(new ObserverAchievement(), new JudgeAchievement(), new FamousAchievement());
 
