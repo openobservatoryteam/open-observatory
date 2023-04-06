@@ -45,15 +45,15 @@ function HomePage() {
           ) : (
             <Text>L&apos;API Notifications et/ou l&apos;API Push ne sont pas supportées sur cette plateforme.</Text>
           )}
-      </div>
+        </div>
       )}
-        <Map
-            className="h-[calc(100vh-8.75rem)]"
-            minZoom={3}
-            worldCopyJump
-            radius={user != null ? user!.radius : 0}
-            withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
-        >
+      <Map
+        className="h-[calc(100vh-8.75rem)]"
+        minZoom={3}
+        worldCopyJump
+        radius={user != null ? user!.radius : 0}
+        withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
+      >
         <ISSPositions />
         <NearbyObservations />
       </Map>
