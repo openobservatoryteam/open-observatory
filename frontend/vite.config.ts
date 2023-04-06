@@ -11,7 +11,11 @@ export default defineConfig(() => ({
     VitePWA({
       filename: 'serviceWorker.js',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tag.svg'],
-      injectRegister: false,
+      injectRegister: 'auto',
+      injectManifest: {
+        injectionPoint: undefined,
+      },
+      scope: '/',
       manifest: {
         name: 'Open Observatory',
         short_name: 'Open Obs.',
