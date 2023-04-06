@@ -63,6 +63,7 @@ public class ObservationService {
     observationDto.setCurrentVote(null);
     observationDto.setExpired(false);
     observationDto.setKarma(0);
+    achievementService.checkForAchievements(observation);
     // Quite ugly, to be optimized
     var notifiableUsers =
         userRepository
@@ -153,9 +154,8 @@ public class ObservationService {
     vote.setUser(issuer);
     vote.setObservation(observation);
     vote.setVote(dto.getVote());
-    observationVoteRepository.save(vote);
-    var votesSize = observationVoteRepository.findAllByUser(issuer).size();
-    achievementService.checkForAchievement("Judge", issuerUsername, votesSize);
+    var saveVote = observationVoteRepository.save(vote);
+    achievementService.checkForAchievements(saveVote);
   }
 
   public ObservationWithDetailsDto update(

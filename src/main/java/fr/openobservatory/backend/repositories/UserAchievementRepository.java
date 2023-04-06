@@ -1,6 +1,5 @@
 package fr.openobservatory.backend.repositories;
 
-import fr.openobservatory.backend.entities.AchievementEntity;
 import fr.openobservatory.backend.entities.UserAchievementEntity;
 import fr.openobservatory.backend.entities.UserEntity;
 import java.util.Optional;
@@ -12,6 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface UserAchievementRepository extends JpaRepository<UserAchievementEntity, Long> {
   Set<UserAchievementEntity> findAllByUser(UserEntity user);
 
-  Optional<UserAchievementEntity> findAllByUserAndAchievement(
-      UserEntity user, AchievementEntity achievement);
+  Optional<UserAchievementEntity> findByUserAndAchievement(
+      UserEntity user, Achievements.Achievement achievement);
 }

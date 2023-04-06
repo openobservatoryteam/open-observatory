@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.dto;
 
 import fr.openobservatory.backend.entities.UserAchievementEntity;
+import fr.openobservatory.backend.repositories.Achievements;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AchievementDto {
-  private String title;
-  private String description;
-  private String image;
-  private UserAchievementEntity.Level level;
+  private Achievements.Achievement achievement;
+  private Achievements.Level level;
 }
