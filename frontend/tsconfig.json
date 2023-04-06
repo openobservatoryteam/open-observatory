@@ -19,6 +19,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/serviceWorker.ts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

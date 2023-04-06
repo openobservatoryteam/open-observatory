@@ -8,6 +8,7 @@ import * as z from 'zod';
 
 import { updateUser } from '~/api';
 import { Button, Slider, Text, Title, ToggleButton } from '~/components';
+import { useNotifications, usePush } from '~/hooks';
 import { Footer, Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 import { registerAdapter as r } from '~/utils';
@@ -17,14 +18,17 @@ type EditNotificationData = {
   radius: number;
 };
 
+const EditNotificationSchema = z.object({
+  notificationsEnabled: z.boolean(),
+  radius: z.number(),
+});
+
 function EditNotificationPage() {
-  const { t } = useTranslation();
   const { user } = useAuthentication();
+  const notifications = useNotifications();
+  const push = usePush();
   const queryClient = useQueryClient();
-  const EditNotificationSchema = z.object({
-    notificationsEnabled: z.boolean(),
-    radius: z.number(),
-  });
+  const { t } = useTranslation();
   const { formState, handleSubmit, setValue, register, watch } = useForm<EditNotificationData>({
     defaultValues: {
       notificationsEnabled: user!.notificationsEnabled,
@@ -36,13 +40,13 @@ function EditNotificationPage() {
     mutationFn: updateUser,
     onSuccess: (updatedUser) => queryClient.setQueryData(['users', '@me'], updatedUser),
   });
-
-  const onSubmit = (values: EditNotificationData) => {
+  const onSubmit = async (values: EditNotificationData) => {
     notificationMutation.mutate({ username: user!.username, ...values });
+    const result = await notifications.request();
+    if (values.notificationsEnabled && result === 'granted' && push.supported) {
+      push.subscribe();
+    }
   };
-
-  console.log(user);
-
   return (
     <>
       <Header className="h-16 my-1" />
@@ -73,13 +77,23 @@ function EditNotificationPage() {
         />
         <Button
           className="flex justify-between mt-20 px-4 py-2 w-3/4 md:w-1/2"
-          disabled={formState.isSubmitting}
+          isDisabled={formState.isSubmitting || !notifications.supported || !push.supported}
           rounded
           type="submit"
         >
           {t('common.save')}
           <FontAwesomeIcon className="ml-3" color="black" icon={faSave} size="1x" />
         </Button>
+        {!(notifications.supported && push.supported) && (
+          <Text centered color="red">
+            Cet appareil ne supporte pas la réception de notifications Push.
+          </Text>
+        )}
+        {status === 'denied' && (
+          <Text centered color="red">
+            Veuillez autoriser les notifications pour ce site web.
+          </Text>
+        )}
       </form>
       <Footer />
     </>

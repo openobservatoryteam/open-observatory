@@ -4,6 +4,7 @@ import fr.openobservatory.backend.dto.*;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
+import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,6 +23,7 @@ public class UserService {
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
   private final PasswordEncoder passwordEncoder;
+  private final PushSubscriptionRepository pushSubscriptionRepository;
   private final UserRepository userRepository;
 
   // ---
@@ -135,6 +137,7 @@ public class UserService {
     }
     if (dto.getNotificationsEnabled().isPresent()) {
       user.setNotificationsEnabled(dto.getNotificationsEnabled().get());
+      if (!user.isNotificationsEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
     }
     var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
     userDto.setAchievements(List.of());
@@ -162,7 +165,7 @@ public class UserService {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
-
+    user.setLastPositionUpdate(Instant.now());
     user.setLatitude(dto.getLatitude());
     user.setLongitude(dto.getLongitude());
     userRepository.save(user);

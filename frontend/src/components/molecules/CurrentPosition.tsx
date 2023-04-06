@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Circle, CircleMarker, Tooltip, useMap } from 'react-leaflet';
 
+import { sendCurrentPosition } from '~/api';
 import { usePosition } from '~/hooks';
+import { useAuthentication } from '~/providers';
 
 type CurrentPositionProps = { noFly?: boolean; withoutNotificationCircle?: boolean; radius?: number };
 
@@ -11,6 +13,7 @@ export function CurrentPosition({
   withoutNotificationCircle = false,
   radius = 25000,
 }: CurrentPositionProps) {
+  const { user } = useAuthentication();
   const [hasCentered, setCentered] = useState(noFly);
   const { t } = useTranslation();
   const map = useMap();
@@ -19,6 +22,9 @@ export function CurrentPosition({
     if (position !== null && !hasCentered) {
       map.setView(position, 12);
       setCentered(true);
+      if (user !== null && position !== null) {
+        sendCurrentPosition({ username: user.username, latitude: position.lat, longitude: position.lng });
+      }
     }
   }, [position]);
   return position ? (

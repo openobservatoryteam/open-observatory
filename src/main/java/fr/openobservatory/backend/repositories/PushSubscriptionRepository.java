@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PushSubscriptionRepository extends JpaRepository<PushSubscriptionEntity, String> {
 
+  void deleteAllByUser(UserEntity user);
+
   Collection<PushSubscriptionEntity> findAllByUser(UserEntity user);
 }

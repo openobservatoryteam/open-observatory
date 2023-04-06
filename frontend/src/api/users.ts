@@ -29,3 +29,7 @@ export type UpdateUserData = {
 
 export const updateUser = ({ username, ...json }: UpdateUserData & { username: string | undefined }) =>
   client.patch(`users/${username}`, { json }).then((r) => r.json<UserWithProfile>());
+
+export type SendCurrentPositionData = { username: string; latitude: number; longitude: number };
+export const sendCurrentPosition = ({ username, ...json }: SendCurrentPositionData) =>
+  client.post(`users/${username}/position`, { json }).then(() => void 0);

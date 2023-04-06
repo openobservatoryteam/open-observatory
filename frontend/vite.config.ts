@@ -4,12 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   plugins: [
     react(),
     tsconfigPaths(),
     VitePWA({
-      filename: 'serviceWorker.ts',
+      filename: 'serviceWorker.js',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tag.svg'],
       injectRegister: false,
       manifest: {
@@ -85,13 +85,6 @@ export default defineConfig(({ mode }) => ({
         target: 'http://localhost:8080',
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      ...(mode !== 'production'
-        ? {
-            '/serviceWorker.js': {
-              forward: '/src/serviceWorker.ts',
-            },
-          }
-        : {}),
     },
   },
 }));
