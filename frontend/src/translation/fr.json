@@ -1,12 +1,135 @@
 {
   "translation": {
+    "celestialBody": {
+      "observed": "Objet céleste observé",
+      "validity": "Validité",
+      "illustration": "Illustration de {{name}}",
+      "name": "Nom de l'objet céleste"
+    },
+    "common": {
+      "save": "Enregistrer",
+      "orientation": "Orientation",
+      "description": "Description",
+      "visibility": "Visibilité",
+      "administrator": "ADMINISTRATEUR",
+      "observations": "Observations",
+      "users": "Utilisateurs",
+      "celestialBody": "Objets célestes",
+      "validity": "Validité",
+      "delete": "Supprimer",
+      "name": "Nom",
+      "on-at": "Le {{- date}} à {{heure}}",
+      "hour": "heure",
+      "hours": "heures",
+      "preferences": "Préférences",
+      "about": "À propos",
+      "enabled": "Activée",
+      "disabled": "Désactivée",
+      "yes": "Oui",
+      "no": "Non",
+      "publicProfile": "Profil public",
+      "changePassword": "Changer le mot de passe",
+      "notificationParameter": "Paramètres de notifications",
+      "questions" : "Si vous avez des questions, vous pouvez contacter le support à l’adresse suivante",
+      "descriptionOpenObservatory": "Open Observatory est une application permettant de partager des observations d’objets célestes"
+    },
+    "document": {
+      "title": {
+        "home": "Accueil – Open Observatory",
+        "sigin": "Connexion - Open Observatory",
+        "registration": "Inscription – Open Observatory",
+        "newObservation": "Création d'une observation – Open Observatory",
+        "selfProfile": "Mon profil  – Open Observatory",
+        "userProfile": "Profil de {{name}} – Open Observatory",
+        "userObservationsHistory": "Historique des observations de {{name}} – Open Observatory"
+      }
+    },
+    "errors": {
+      "credentials": "Les identifiants sont incorrects, vérifiez votre saisie.",
+      "unknownConnection": "Une erreur inconnue est survenue lors de la connexion, veuillez réessayer plus tard.",
+      "unknownRegister": "Une erreur inconnue est survenue lors de votre inscription.",
+      "required": "Ce champ est obligatoire.",
+      "username": {
+        "beginLetter": "Le pseudonyme doit commencer par une lettre.",
+        "contain": "Le pseudonyme ne peut contenir que des lettres, chiffres et tirets du bas.",
+        "max": "Le pseudonyme ne doit pas dépasser 32 caractères.",
+        "exist": "Ce pseudonyme est déjà utilisé."
+      },
+      "observation": {
+        "description" : "La description ne doit pas dépasser 2048 caractères."
+      },
+      "password": {
+        "upper": "Le mot de passe doit contenir au moins une majuscule.",
+        "lower": "Le mot de passe doit contenur au moins une minuscule.",
+        "number": "Le mot de passe doit contenir au moins un chiffre.",
+        "specialCharacter": "Le mot de passe doit contenir au moins un caractère spécial.",
+        "min": "Le mot de passe doit être composé d'au moins 8 caractères.",
+        "max": "Le mot de passe ne doit pas dépasser 32 caractères.",
+        "notMatch": "Les mots de passe ne correspondent pas.",
+        "incorrect": "Le mot de passe est incorrect."
+      },
+      "biography": {
+        "max": "La biographie ne doit pas dépasser 2048 caractères."
+      },
+      "angle": "Le degré d'orientation doit être une valeur en degrés.",
+      "celestialBody": {
+        "name": {
+          "min": "Le nom de l'objet céleste doit être composé d'au moins 4 caractères.",
+          "max": "Le nom de l'objet céleste ne doit pas dépasser 64 caractères."
+        },
+        "validity": {
+          "type": "La validité de l'objet céleste doit s'exprimer avec un nombre entier (heures).",
+          "min": "La validité de l'objet céleste doit être d'au moins 1 heure.",
+          "max": "La validité de l'objet céleste ne peut dépasser 12 heures."
+        }
+      }
+    },
     "iss": {
       "currentPosition": "Position actuelle de la Station Spatiale Internationale.",
       "pastPosition": "La Station Spatiale Internationale était ici à {{time}}.",
       "futurePosition": "La Station Spatiale Internationale sera ici à {{time}}."
     },
-    "observation" : {
-      "new" : "Nouvelle observation"
+    "observation": {
+      "new": "Nouvelle observation",
+      "expired": "Expirée",
+      "noObservationsYet": "L'utilisateur n'a pas encore envoyé d'observation.",
+      "visibility": "Visibilité de l'observation",
+      "angle": "Degré de l'observation",
+      "description": "Description de l'observation",
+      "notFound": "Observation introuvable"
+    },
+    "title": {
+      "signin": "Connexion",
+      "registration": "Inscription",
+      "userObservationsHistory": "Historique des observations de {{name}}",
+      "changePassword": "Changement du mot de passe",
+      "newObservation": "Création d'une observation",
+      "createCelestialBody": "Création d'un objet céleste",
+      "updateCelestialBody": "Modification d'un objet céleste",
+      "radiusNotification": "Rayon de notifications"
+    },
+    "users": {
+      "profil": "Mon profil",
+      "login": "Se connecter",
+      "here": "Vous êtes ici",
+      "username": "Pseudonyme",
+      "password": "Mot de passe",
+      "noAccountYet": "Pas encore de compte ? Inscrivez-vous.",
+      "passwordConfirmation": "Confirmation du mot de passe",
+      "biography": "Biographie",
+      "register": "S'inscrire",
+      "oldPassword": "Ancien mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordConfirmation": "Confirmation du nouveau mot de passe",
+      "karma": "Karma",
+      "edit": "Éditer mon profil",
+      "observationsHistory": "Historique des observations"
+    },
+    "visibility": {
+      "clearly": "Observable à l'oeil nu",
+      "visible": "Observable dans de bonnes conditions",
+      "slightly": "Observable avec un équipement adapté",
+      "barely": "Rarement observable"
     }
   }
 }

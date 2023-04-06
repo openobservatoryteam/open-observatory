@@ -9,7 +9,7 @@ export default i18next
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    debug: true,
+    debug: import.meta.env.MODE !== 'production',
     fallbackLng: 'fr',
     resources: {
       en,

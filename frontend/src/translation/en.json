@@ -1,12 +1,135 @@
 {
   "translation": {
+    "celestialBody": {
+      "observed": "Observed celestial body",
+      "validity": "Validity",
+      "illustration": "Illustration of {{name}}",
+      "name": "Name of celestial body"
+    },
+    "common": {
+      "save": "Save",
+      "orientation": "Orientation",
+      "description": "Description",
+      "visibility": "Visibility",
+      "administrator": "ADMINISTRATOR",
+      "observations": "Observations",
+      "users": "Users",
+      "celestialBody": "Celestial bodies",
+      "validity": "Validity",
+      "delete": "Delete",
+      "name": "Name",
+      "on-at": "On {{- date}} at {{heure}}",
+      "hour": "hour",
+      "hours": "hours",
+      "preferences": "Settings",
+      "about": "About us",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "yes": "Yes",
+      "no": "No",
+      "publicProfile": "Public profile",
+      "changePassword": "Change password",
+      "notificationParameter": "Notification settings",
+      "questions" : "If you have any questions, you can contact support at the following address",
+      "descriptionOpenObservatory": "Open Observatory is an application for sharing observations of celestial bodies"
+    },
+    "document": {
+      "title": {
+        "home": "Home – Open Observatory",
+        "sigin": "Sigin - Open Observatory",
+        "registration": "Registration – Open Observatory",
+        "observationRegister": "Creation of an observation – Open Observatory",
+        "selfProfile": "My profile  – Open Observatory",
+        "userProfile": "{{name}}'s profile – Open Observatory",
+        "userObservationsHistory": "{{name}}'s observations history – Open Observatory"
+      }
+    },
+    "errors": {
+      "credentials": "The credentials are incorrect, check your input.",
+      "unknownConnection": "An unknown error occurred during the connection, please try again later.",
+      "unknownRegister": "An unknown error occurred during your registration.",
+      "required": "This field is required.",
+      "username": {
+        "beginLetter": "The username must begin with a letter.",
+        "contain": "The username may only contain letters, numbers and underscores.",
+        "max": "The username must not exceed 32 characters",
+        "exist": "This username is already use."
+      },
+      "observation": {
+        "description" : "The description must not exceed 2048 characters."
+      },
+      "password": {
+        "upper": "The password must contain at least one capital letter.",
+        "lower": "The password must contain at least one lower case letter.",
+        "number": "The password must contain at least one digit.",
+        "specialCharacter": "The password must contain at least one special character.",
+        "min": "The password must be at least 8 characters long.",
+        "max": "The password must not exceed 32 characters.",
+        "notMatch": "The passwords don't match.",
+        "incorrect": "The password is incorrect."
+      },
+      "biography": {
+        "max": "The biography must not exceed 2018 characters."
+      },
+      "angle": "The angle of orientation should be a value in degrees.",
+      "celestialBody": {
+        "name": {
+          "min": "The name of the celestial body must be at least 4 characters long.",
+          "max": "The name of the celestial body must not exceed 64 characters."
+        },
+        "validity": {
+          "type": "The validity of the celestial body must be expressed with a whole number (hours).",
+          "min": "The validity of the celestial body must be at least 1 hour.",
+          "max": "The validity of the celestial body cannot exceed 12 hours."
+        }
+      }
+    },
     "iss": {
       "currentPosition": "Current position of the International Space Station.",
       "pastPosition": "The International Space Station was here at {{time}}.",
       "futurePosition": "The International Space Station will be here at {{time}}."
     },
-    "observation" : {
-      "new" : "New Observation"
+    "observation": {
+      "new": "New observation",
+      "expired": "Expired",
+      "noObservationsYet": "The user has not sent observations yet.",
+      "visibility": "Visibility of the observation",
+      "angle": "Degree of the observation",
+      "description": "Description of the observation",
+      "notFound": "Observation not found"
+    },
+    "title": {
+      "signin": "Sign in",
+      "registration": "Registration",
+      "userObservationsHistory": "{{name}}'s observations history",
+      "changePassword": "Change password",
+      "newObservation": "Observation creation",
+      "createCelestialBody": "Celestial body creation",
+      "updateCelestialBody": "Celestial body update",
+      "radiusNotification": "Notification range"
+    },
+    "users": {
+      "profil": "My profile",
+      "login": "Sign in",
+      "here": "You are here",
+      "username": "Username",
+      "password": "Password",
+      "noAccountYet": "No account yet? Sign up now.",
+      "passwordConfirmation": "Password confirmation",
+      "biography": "Biography",
+      "register": "Sign up",
+      "oldPassword": "Old password",
+      "newPassword": "New password",
+      "newPasswordConfirmation": "New password confirmation",
+      "karma": "Karma",
+      "edit": "Edit my profile",
+      "observationsHistory": "Observations history"
+    },
+    "visibility": {
+      "clearly": "Observable with the naked eye",
+      "visible": "Observable in good conditions",
+      "slightly": "Observable with adapted equipment",
+      "barely": "Rarely observable"
     }
   }
 }

@@ -1,14 +1,13 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.4'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'com.diffplug.spotless' version '6.17.0'
-    id "org.sonarqube" version '4.0.0.2929'
     id 'jacoco'
+    id 'java'
+    id 'com.diffplug.spotless' version '6.17.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.sonarqube' version '4.0.0.2929'
+    id 'org.springframework.boot' version '3.0.5'
 }
 
 group = 'fr.openobservatory'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
@@ -30,6 +29,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.sentry:sentry-spring-boot-starter:6.16.0'
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:6.16.0'
+    implementation 'io.sentry:sentry-logback:6.16.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
@@ -53,7 +55,6 @@ jacocoTestReport {
     }
     reports {
         xml.enabled true
-        csv.enabled true
     }
 }
 

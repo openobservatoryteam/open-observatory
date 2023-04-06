@@ -30,8 +30,8 @@ public class ObservationController {
 
   @GetMapping
   public ResponseEntity<List<ObservationDto>> findAll(
-      @RequestParam Integer limit, @RequestParam Integer page) {
-    var observations = observationService.search(limit, page);
+      @RequestParam Integer page, @RequestParam Integer itemsPerPage) {
+    var observations = observationService.search(page, itemsPerPage);
     return ResponseEntity.ok(observations);
   }
 

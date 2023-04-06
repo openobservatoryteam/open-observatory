@@ -38,6 +38,8 @@ public class UserService {
     entity.setType(UserEntity.Type.USER);
     entity.setPublic(true);
     entity.setCreatedAt(Instant.now());
+    entity.setNotificationsEnabled(false);
+    entity.setRadius(5);
     var userDto = modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
     userDto.setAchievements(List.of());
     userDto.setKarma(0); // TODO: Craft the relevant SQL query.
@@ -84,11 +86,11 @@ public class UserService {
         .toList();
   }
 
-  public UserWithProfileDto findSelf(String issuerUsername) {
+  public SelfUserDto findSelf(String issuerUsername) {
     var dto =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)
-            .map(u -> modelMapper.map(u, UserWithProfileDto.class))
+            .map(u -> modelMapper.map(u, SelfUserDto.class))
             .orElseThrow(UnavailableUserException::new);
     dto.setAchievements(List.of());
     dto.setKarma(0); // TODO: Craft the relevant SQL query.
@@ -110,7 +112,7 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public UserWithProfileDto update(String username, UpdateProfileDto dto, String issuerUsername) {
+  public SelfUserDto update(String username, UpdateProfileDto dto, String issuerUsername) {
     var issuer =
         userRepository
             .findByUsernameIgnoreCase(issuerUsername)
@@ -125,7 +127,16 @@ public class UserService {
     if (dto.getAvatar().isPresent()) {
       user.setAvatar(dto.getAvatar().get());
     }
-    var userDto = modelMapper.map(userRepository.save(user), UserWithProfileDto.class);
+    if (dto.getIsPublic().isPresent()) {
+      user.setPublic(dto.getIsPublic().get());
+    }
+    if (dto.getRadius().isPresent()) {
+      user.setRadius(dto.getRadius().get());
+    }
+    if (dto.getNotificationsEnabled().isPresent()) {
+      user.setNotificationsEnabled(dto.getNotificationsEnabled().get());
+    }
+    var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
     userDto.setAchievements(List.of());
     userDto.setKarma(0); // TODO: Craft the relevant SQL query.
     return userDto;

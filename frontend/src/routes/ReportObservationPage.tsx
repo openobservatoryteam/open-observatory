@@ -2,22 +2,25 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from '@tanstack/react-location';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { Title as DocumentTitle } from 'react-head';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { CreateObservationData, ObservationVisibility, createObservation, findAllCelestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
 import { Button, DatePicker, Map, MarkerInput, Select, TextInput, Title } from '~/components';
+import { Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
-const visibilityLevels: { name: string; value: ObservationVisibility }[] = [
-  { name: "Observable à l'oeil nu", value: 'CLEARLY_VISIBLE' },
-  { name: 'Observable dans de bonnes conditions', value: 'VISIBLE' },
-  { name: 'Observable avec un équipement adapté', value: 'SLIGHTLY_VISIBLE' },
-  { name: 'Rarement observable', value: 'BARELY_VISIBLE' },
-];
-
 function ReportObservationPage() {
+  const { t } = useTranslation();
+  const visibilityLevels: { name: string; value: ObservationVisibility }[] = [
+    { name: t('visibility.clearly'), value: 'CLEARLY_VISIBLE' },
+    { name: t('visibility.visible'), value: 'VISIBLE' },
+    { name: t('visibility.slightly'), value: 'SLIGHTLY_VISIBLE' },
+    { name: t('visibility.barely'), value: 'BARELY_VISIBLE' },
+  ];
   const { data: celestialBodiesData } = useQuery({
     queryFn: findAllCelestialBodies,
     queryKey: ['celestial-bodies'],
@@ -29,11 +32,13 @@ function ReportObservationPage() {
     onSuccess: ({ id }) => navigate({ to: `/observations/${id}` }),
   });
   const selectedBody = watch('celestialBodyId') ?? -1;
+  const maxDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS');
   return (
     <>
-      <DocumentTitle>Création d&apos;une observation – Open Observatory</DocumentTitle>
-      <Title as="h2" className="mt-4 mb-2" centered>
-        Création d&apos;une observation
+      <DocumentTitle>{t('document.title.newObservation')}</DocumentTitle>
+      <Header className="h-16 mt-1" />
+      <Title as="h2" className="mb-2" centered>
+        {t('title.newObservation')}
       </Title>
       <img
         className="object-cover h-64 w-full"
@@ -45,7 +50,7 @@ function ReportObservationPage() {
           mutate({
             celestialBodyId: +celestialBodyId,
             orientation: +orientation,
-            timestamp: new Date(timestamp).toISOString(),
+            timestamp: dayjs(timestamp).toISOString(),
             ...data,
           }),
         )}
@@ -54,28 +59,43 @@ function ReportObservationPage() {
           <div className="flex flex-col gap-y-4 max-w-screen-sm mx-auto py-4 w-3/4">
             <Select
               options={celestialBodiesData?.data.map((c) => ({ name: c.name, value: `${c.id}` })) ?? []}
-              placeholder="Objet céleste observé"
+              placeholder={t('celestialBody.observed')!}
               {...register('celestialBodyId', { required: true })}
             />
-            <DatePicker aria-label="Date" placeholder="Date" {...register('timestamp', { required: true })} />
+            <DatePicker
+              aria-label="Date"
+              errorMessage={formState.errors.timestamp?.message}
+              max={maxDate}
+              placeholder="Date"
+              {...register('timestamp', { max: maxDate, required: true })}
+            />
+            <TextInput
+              aria-label={t('observation.description')!}
+              errorMessage={formState.errors.description?.message}
+              placeholder={t('observation.description')!}
+              {...r(register, 'description', {
+                required: false,
+                validate: (o) =>
+                  o == null || String(o)?.length <= 2048 ? undefined : t('errors.observation.description')!,
+              })}
+            />
             <TextInput
               aria-label="Degré d'orientation"
               errorMessage={formState.errors.orientation?.message}
-              placeholder="Degré d'orientation"
+              placeholder={t('observation.angle')!}
               {...r(register, 'orientation', {
                 required: true,
-                validate: (o) =>
-                  /\d+/.test(String(o)) ? undefined : "Le degré d'orientation doit être une valeur en degrés.",
+                validate: (o) => (/\d+/.test(String(o)) ? undefined : t('errors.angle')!),
               })}
             />
             <Select
               options={visibilityLevels}
-              placeholder="Visibilité de l'observation"
+              placeholder={t('observation.visibility')!}
               {...register('visibility', { required: true })}
             />
           </div>
         </div>
-        <Map className="h-64" worldCopyJump>
+        <Map className="h-60" worldCopyJump>
           <MarkerInput
             onMove={(p) => {
               setValue('lat', p.lat);
@@ -83,9 +103,9 @@ function ReportObservationPage() {
             }}
           />
         </Map>
-        <div className="bg-slate-600 flex justify-center py-8">
+        <div className="bg-slate-600 flex justify-center py-3">
           <Button isDisabled={isLoading} type="submit">
-            Enregistrer
+            {t('common.save')}
             <FontAwesomeIcon className="ml-20" icon={faSave} />
           </Button>
         </div>

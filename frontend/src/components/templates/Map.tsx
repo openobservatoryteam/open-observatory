@@ -21,9 +21,10 @@ L.Marker.prototype.setIcon(
 type MapProps = {
   noFly?: boolean;
   withoutNotificationCircle?: boolean;
+  radius?: number;
 } & MapContainerProps;
 
-export function Map({ center, children, noFly, withoutNotificationCircle, ...props }: MapProps) {
+export function Map({ center, children, noFly, withoutNotificationCircle, radius, ...props }: MapProps) {
   return (
     <>
       <Style type="text/css">{leafletStylesheet}</Style>
@@ -34,7 +35,7 @@ export function Map({ center, children, noFly, withoutNotificationCircle, ...pro
         {...removeKeys(props, ['attributionControl', 'zoom'])}
       >
         <TileLayer url=" https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" />
-        <CurrentPosition noFly={noFly} withoutNotificationCircle={withoutNotificationCircle} />
+        <CurrentPosition noFly={noFly} withoutNotificationCircle={withoutNotificationCircle} radius={radius} />
         {children}
       </MapContainer>
     </>

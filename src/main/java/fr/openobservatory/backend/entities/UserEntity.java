@@ -39,15 +39,6 @@ public class UserEntity {
   @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
   private Instant createdAt;
 
-  @Column(columnDefinition = "FLOAT")
-  private Double latitude;
-
-  @Column(columnDefinition = "FLOAT")
-  private Double longitude;
-
-  @Column(columnDefinition = "TIMESTAMP")
-  private Instant lastPositionUpdate;
-
   // ---
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")

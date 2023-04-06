@@ -1,5 +1,7 @@
 import { Link, useMatch } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
+import { Title as DocumentTitle } from 'react-head';
+import { useTranslation } from 'react-i18next';
 
 import { findUserByUsername } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
@@ -8,6 +10,7 @@ import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const authentication = useAuthentication();
   const {
     params: { username },
@@ -20,9 +23,12 @@ function ProfilePage() {
   const isSelf = authentication.user?.username === user.username;
   return (
     <>
-      <Header className="h-[7vh] my-[1vh]" />
+      <DocumentTitle>
+        {t(isSelf ? 'document.title.selfProfile' : 'document.title.userProfile', { name: user.username })}
+      </DocumentTitle>
+      <Header className="h-16 my-1" />
       <div className="flex flex-col mt-6">
-        <img className="h-32 w-32 mx-auto" src={user.avatar ?? iconUser} alt="Avatar de l'utilisateur" />
+        <img className="h-32 w-32 mx-auto rounded-full" src={user.avatar ?? iconUser} alt="Avatar de l'utilisateur" />
         <Text as="h2" centered className="mt-3">
           {user.username}
         </Text>
@@ -32,7 +38,7 @@ function ProfilePage() {
         {user.achievements.length > 0 && <Achievements className="mt-12" data={user.achievements} />}
         <section className="flex flex-col gap-y-4 mt-12">
           <Text as="h3" centered>
-            Karma
+            {t('users.karma')}
           </Text>
           <Text centered className="text-8xl">
             {user.karma}
@@ -42,11 +48,11 @@ function ProfilePage() {
           className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
         >
           <Button as={Link} className="w-full" to="observations">
-            Historique des observations
+            {t('users.observationsHistory')}
           </Button>
           {isSelf && (
-            <Button as={Link} className="hover:cursor-not-allowed brightness-50 w-full" isDisabled to="edit">
-              Éditer mon profil
+            <Button as={Link} className="w-full" to="edit">
+              {t('users.edit')}
             </Button>
           )}
         </div>

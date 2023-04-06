@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { ComponentPropsWithoutRef, ElementType } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Observation } from '~/api';
 import { Text } from '~/components';
@@ -17,6 +18,7 @@ function ObservationItem<C extends ElementType = 'div'>({
   observation,
   ...props
 }: ObservationItemProps<C>): JSX.Element {
+  const { t } = useTranslation();
   const Component = as ?? 'div';
   return (
     <Component className={clsx('flex items-center bg-white rounded-full w-3/4 h-24 px-5', className)} {...props}>
@@ -34,7 +36,7 @@ function ObservationItem<C extends ElementType = 'div'>({
         </Text>
         {observation.expired && (
           <Text as="p" centered color="black" className="text-[0.8em]">
-            Expirée
+            {t('observation.expired')}
           </Text>
         )}
       </div>
