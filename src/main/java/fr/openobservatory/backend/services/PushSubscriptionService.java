@@ -11,13 +11,11 @@ import fr.openobservatory.backend.repositories.UserRepository;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Instant;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import lombok.AllArgsConstructor;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import org.jose4j.lang.JoseException;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PushSubscriptionService {
 
-  private final ModelMapper modelMapper;
   private final ObjectMapper objectMapper;
   private final PushService pushService;
   private final PushSubscriptionRepository pushSubscriptionRepository;
@@ -33,38 +30,9 @@ public class PushSubscriptionService {
 
   // ---
 
-  /**
-   * Finds all active push subscriptions for the targeted user.
-   *
-   * @param targetUsername User to retrieve subscriptions of.
-   */
-  public List<PushSubscriptionDto> findSubscriptionsByUser(String targetUsername) {
-    var target =
-        userRepository
-            .findByUsernameIgnoreCase(targetUsername)
-            .orElseThrow(UnknownUserException::new);
-    return pushSubscriptionRepository.findAllByUser(target).stream()
-        .map(p -> modelMapper.map(p, PushSubscriptionDto.class))
-        .toList();
-  }
-
   /** Retrieves the public key used to sign push notification messages. */
-  public PushSubscriptionKeyDto getSubscriptionKey() {
+  public PushSubscriptionKeyDto getPublicKey() {
     return new PushSubscriptionKeyDto().setKey(PushServiceConfiguration.PUBLIC_KEY);
-  }
-
-  /**
-   * Sends a push notification to all users.
-   *
-   * @param payload Payload to send in the push notification.
-   */
-  public void sendAll(PushNotificationDto payload)
-      throws JoseException, GeneralSecurityException, IOException, ExecutionException,
-          InterruptedException {
-    var subscriptions = pushSubscriptionRepository.findAll();
-    for (PushSubscriptionEntity s : subscriptions) {
-      send(s, payload);
-    }
   }
 
   /**
@@ -107,26 +75,6 @@ public class PushSubscriptionService {
             .setUserAgent(userAgent)
             .setCreatedAt(Instant.now());
     pushSubscriptionRepository.save(entity);
-  }
-
-  /**
-   * Cancels the given push subscription.
-   *
-   * @param issuerUsername User that issued the action.
-   * @param dto Payload containing the targeted subscription.
-   */
-  public void unsubscribe(String issuerUsername, UnsubscribeNotificationsDto dto) {
-    var issuer =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new);
-    pushSubscriptionRepository
-        .findById(dto.getEndpoint())
-        .ifPresent(
-            subscription -> {
-              if (subscription.getUser().equals(issuer))
-                pushSubscriptionRepository.delete(subscription);
-            });
   }
 
   // ---
