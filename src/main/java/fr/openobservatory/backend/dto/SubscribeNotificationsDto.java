@@ -2,7 +2,9 @@ package fr.openobservatory.backend.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
 public class SubscribeNotificationsDto {
 

@@ -19,7 +19,7 @@ public class PushSubscriptionController {
   // ---
 
   @GetMapping("/public-key")
-  public ResponseEntity<PushSubscriptionKeyDto> getPublicKey() {
+  public ResponseEntity<String> getPublicKey() {
     var dto = pushSubscriptionService.getPublicKey();
     return ResponseEntity.ok(dto);
   }
