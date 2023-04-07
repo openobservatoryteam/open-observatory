@@ -82,11 +82,7 @@ public class ObservationService {
               && observation.getLatitude() < bottomRight[0]
               && topLeft[1] < observation.getLongitude()
               && observation.getLongitude() < bottomRight[1]) {
-            try {
-              pushSubscriptionService.sendTo(user.getUsername(), notification);
-            } catch (Exception e) {
-              throw new RuntimeException(e);
-            }
+            pushSubscriptionService.sendTo(user.getUsername(), notification);
           }
         });
     return observationDto;
