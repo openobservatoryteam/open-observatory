@@ -38,7 +38,7 @@ export function Map({ center, children, noFly, withoutNotificationCircle, radius
         {...removeKeys(props, ['attributionControl', 'zoom'])}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" />
-        <CurrentPosition noFly={noFly} withoutNotificationCircle={withoutNotificationCircle} />
+        <CurrentPosition noFly={noFly} radius={radius} withoutNotificationCircle={withoutNotificationCircle} />
         {children}
       </MapContainer>
     </>
