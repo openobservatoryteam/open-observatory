@@ -7,14 +7,11 @@ import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.providers.PushProvider;
 import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
-import org.assertj.core.api.ThrowableAssert;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
