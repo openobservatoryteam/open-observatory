@@ -45,8 +45,6 @@ export type ObservationVote = 'UPVOTE' | 'DOWNVOTE' | null;
 
 export type PushSubscription = { endpoint: string; p256dh: string; userAgent: string; createdAt: string };
 
-export type PushSubscriptionKey = { algorithm: string; format: string; key: string };
-
 export type SearchResults<T> = {
   data: T[];
   count: number;

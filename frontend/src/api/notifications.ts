@@ -1,8 +1,8 @@
-import { PushSubscription, PushSubscriptionKey } from './@types';
+import { PushSubscription } from './@types';
 
 import client from '~/api/client';
 
-export const getPushKey = () => client.get('push/public-key').then((response) => response.json<PushSubscriptionKey>());
+export const getPushKey = () => client.get('push/public-key').then((response) => response.text());
 
 export const getPushSubscriptions = () =>
   client.get('push/subscriptions').then((response) => response.json<PushSubscription[]>());
