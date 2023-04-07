@@ -21,6 +21,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'nl.martijndwars:web-push:5.1.1'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
     implementation 'org.springframework.boot:spring-boot-starter-cache'

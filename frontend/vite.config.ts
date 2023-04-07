@@ -4,17 +4,23 @@ import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(() => ({
   plugins: [
     react(),
     tsconfigPaths(),
     VitePWA({
+      filename: 'serviceWorker.js',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tag.svg'],
+      injectRegister: 'auto',
+      injectManifest: {
+        injectionPoint: undefined,
+      },
+      scope: '/',
       manifest: {
         name: 'Open Observatory',
         short_name: 'Open Obs.',
         description: "Open Observatory est une plateforme collaborative de partage d'observations d'objets célestes.",
-        theme_color: '#303030',
+        theme_color: '#101010',
         display: 'standalone',
         icons: [
           {
@@ -70,10 +76,14 @@ export default defineConfig({
           },
         ],
       },
-      registerType: 'autoUpdate',
+      srcDir: 'src',
+      strategies: 'injectManifest',
     }),
   ],
   server: {
+    headers: {
+      'Service-Worker-Allowed': '/',
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
@@ -81,4 +91,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

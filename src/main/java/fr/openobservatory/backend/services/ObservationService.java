@@ -30,6 +30,7 @@ public class ObservationService {
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
   private final ObservationVoteRepository observationVoteRepository;
+  private final PushSubscriptionService pushSubscriptionService;
   private final UserRepository userRepository;
 
   // ---
@@ -61,6 +62,29 @@ public class ObservationService {
     observationDto.setCurrentVote(null);
     observationDto.setExpired(false);
     observationDto.setKarma(0);
+    // Quite ugly, to be optimized
+    var notifiableUsers =
+        userRepository
+            .findAllByNotificationsEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndLastPositionUpdateIsGreaterThanEqual(
+                Instant.now().minus(7, ChronoUnit.DAYS));
+    var notification =
+        new PushNotificationDto()
+            .setCode("OBSERVATION_NEARBY")
+            .setLink("/observations/" + observationDto.getId());
+    notifiableUsers.forEach(
+        user -> {
+          if (user.equals(issuer)) return;
+          double[] topLeft =
+              getPointCorner(user.getLatitude(), user.getLongitude(), -user.getRadius());
+          double[] bottomRight =
+              getPointCorner(user.getLatitude(), user.getLongitude(), user.getRadius());
+          if (topLeft[0] < observation.getLatitude()
+              && observation.getLatitude() < bottomRight[0]
+              && topLeft[1] < observation.getLongitude()
+              && observation.getLongitude() < bottomRight[1]) {
+            pushSubscriptionService.sendTo(user.getUsername(), notification);
+          }
+        });
     return observationDto;
   }
 

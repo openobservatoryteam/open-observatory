@@ -30,7 +30,7 @@
       "publicProfile": "Public profile",
       "changePassword": "Change password",
       "notificationParameter": "Notification settings",
-      "questions" : "If you have any questions, you can contact support at the following address",
+      "questions": "If you have any questions, you can contact support at the following address",
       "descriptionOpenObservatory": "Open Observatory is an application for sharing observations of celestial bodies"
     },
     "document": {
@@ -56,7 +56,7 @@
         "exist": "This username is already use."
       },
       "observation": {
-        "description" : "The description must not exceed 2048 characters."
+        "description": "The description must not exceed 2048 characters."
       },
       "password": {
         "upper": "The password must contain at least one capital letter.",

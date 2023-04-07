@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Set;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
 @Entity
 @Table(name = "\"user\"")

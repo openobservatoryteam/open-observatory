@@ -30,7 +30,7 @@
       "publicProfile": "Profil public",
       "changePassword": "Changer le mot de passe",
       "notificationParameter": "Paramètres de notifications",
-      "questions" : "Si vous avez des questions, vous pouvez contacter le support à l’adresse suivante",
+      "questions": "Si vous avez des questions, vous pouvez contacter le support à l’adresse suivante",
       "descriptionOpenObservatory": "Open Observatory est une application permettant de partager des observations d’objets célestes"
     },
     "document": {
@@ -56,7 +56,7 @@
         "exist": "Ce pseudonyme est déjà utilisé."
       },
       "observation": {
-        "description" : "La description ne doit pas dépasser 2048 caractères."
+        "description": "La description ne doit pas dépasser 2048 caractères."
       },
       "password": {
         "upper": "Le mot de passe doit contenir au moins une majuscule.",
