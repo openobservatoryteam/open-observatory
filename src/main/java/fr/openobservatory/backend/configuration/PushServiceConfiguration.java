@@ -2,7 +2,6 @@ package fr.openobservatory.backend.configuration;
 
 import java.security.GeneralSecurityException;
 import java.security.Security;
-
 import lombok.AllArgsConstructor;
 import nl.martijndwars.webpush.PushService;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -21,6 +20,7 @@ public class PushServiceConfiguration {
   public PushService pushService() throws GeneralSecurityException {
     if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null)
       Security.addProvider(new BouncyCastleProvider());
-    return new PushService(configuration.publicKey(), configuration.privateKey(), configuration.subject());
+    return new PushService(
+        configuration.publicKey(), configuration.privateKey(), configuration.subject());
   }
 }

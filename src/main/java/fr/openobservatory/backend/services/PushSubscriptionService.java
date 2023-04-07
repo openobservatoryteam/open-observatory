@@ -40,12 +40,8 @@ public class PushSubscriptionService {
     var subscriptions = pushSubscriptionRepository.findAllByUser(target);
     for (var s : subscriptions) {
       try {
-        pushProvider.send(new PushProvider.PushMessage(
-                s.getEndpoint(),
-                s.getAuth(),
-                s.getP256dh(),
-                payload
-        ));
+        pushProvider.send(
+            new PushProvider.PushMessage(s.getEndpoint(), s.getAuth(), s.getP256dh(), payload));
       } catch (PushProvider.PushMessageException ignored) {
         pushSubscriptionRepository.delete(s);
       }
