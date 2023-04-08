@@ -7,35 +7,35 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public interface Achievements {
-    @AllArgsConstructor
-    enum Achievement {
-        JUDGE("Judge"),
-        OBSERVER("Observer"),
-        FAMOUS("Famous"),
-        HUBBLE("Hubble"),
-        JAMES_WEB("James Web");
+  @AllArgsConstructor
+  enum Achievement {
+    JUDGE("Judge"),
+    OBSERVER("Observer"),
+    FAMOUS("Famous"),
+    HUBBLE("Hubble"),
+    JAMES_WEB("James Web");
 
-        private final String code;
-    }
+    private final String code;
+  }
 
-    default Request onObservationUpdate(ObservationEntity observation) {
-        return null;
-    }
+  default Request onObservationUpdate(ObservationEntity observation) {
+    return null;
+  }
 
-    default Request onVoteSubmit(ObservationVoteEntity vote) {
-        return null;
-    }
+  default Request onVoteSubmit(ObservationVoteEntity vote) {
+    return null;
+  }
 
-    record Request (Achievement achievement, Level level, UserEntity user) {}
+  record Request(Achievement achievement, Level level, UserEntity user) {}
 
-    @AllArgsConstructor
-    @Getter
-    enum Level {
-        NEW(1),
-        BEGINNER(10),
-        INTERMEDIATES(25),
-        EXPERT(100),
-        NONE(0);
+  @AllArgsConstructor
+  @Getter
+  enum Level {
+    NEW(1),
+    BEGINNER(10),
+    INTERMEDIATES(25),
+    EXPERT(100),
+    NONE(0);
 
     private final int count;
 
