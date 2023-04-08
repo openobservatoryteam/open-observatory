@@ -5,7 +5,7 @@ import fr.openobservatory.backend.repositories.Achievements;
 
 public class HubbleAchievement implements Achievements {
 
-  private final Achievement actual = Achievement.HUBBLE;
+  private static final Achievement actual = Achievement.HUBBLE;
 
   @Override
   public Request onVoteSubmit(ObservationVoteEntity vote) {

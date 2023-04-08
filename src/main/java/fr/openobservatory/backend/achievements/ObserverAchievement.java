@@ -5,7 +5,7 @@ import fr.openobservatory.backend.repositories.Achievements;
 
 public class ObserverAchievement implements Achievements {
 
-  private final Achievement actual = Achievement.OBSERVER;
+  private static final Achievement actual = Achievement.OBSERVER;
 
   @Override
   public Request onObservationUpdate(ObservationEntity observation) {

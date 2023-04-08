@@ -5,7 +5,7 @@ import fr.openobservatory.backend.repositories.Achievements;
 
 public class JudgeAchievement implements Achievements {
 
-  private final Achievement actual = Achievement.JUDGE;
+  private static final Achievement actual = Achievement.JUDGE;
 
   @Override
   public Request onVoteSubmit(ObservationVoteEntity vote) {
