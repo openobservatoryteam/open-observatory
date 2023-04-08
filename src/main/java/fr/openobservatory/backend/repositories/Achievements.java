@@ -34,23 +34,23 @@ public interface Achievements {
         NEW(1),
         BEGINNER(10),
         INTERMEDIATES(25),
-        EXPERT(100);
+        EXPERT(100),
+        NONE(0);
 
-        private final int count;
+    private final int count;
 
-        public static Level getLevel(Integer count) {
-            if (count == 1) {
-                return Level.NEW;
-            } else if (count == 10) {
-                return Level.BEGINNER;
-            } else if (count == 25) {
-                return Level.INTERMEDIATES;
-            } else if (count == 100){
-                return EXPERT;
-            } else {
-                return null;
-            }
-        }
+    public static Level getLevel(Integer count) {
+      if (count == 1) {
+        return Level.NEW;
+      } else if (count == 10) {
+        return Level.BEGINNER;
+      } else if (count == 25) {
+        return Level.INTERMEDIATES;
+      } else if (count == 100) {
+        return EXPERT;
+      } else {
+        return null;
+      }
     }
-
+  }
 }

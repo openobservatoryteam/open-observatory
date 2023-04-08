@@ -19,11 +19,8 @@ public class UserAchievementEntity {
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
 
-  @Column
-  private Achievements.Achievement achievement;
+  @Column private Achievements.Achievement achievement;
 
   @Column(nullable = false)
   private Achievements.Level level;
-
-
 }

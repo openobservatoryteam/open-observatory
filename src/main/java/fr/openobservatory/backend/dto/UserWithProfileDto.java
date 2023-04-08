@@ -1,7 +1,6 @@
 package fr.openobservatory.backend.dto;
 
 import java.util.Set;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

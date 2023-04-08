@@ -3,9 +3,9 @@ package fr.openobservatory.backend.achievements;
 import fr.openobservatory.backend.entities.ObservationVoteEntity;
 import fr.openobservatory.backend.repositories.Achievements;
 
-public class HubbleAchievement implements Achievements {
+public class JamesWebbAchievement implements Achievements {
 
-  private final Achievement actual = Achievement.HUBBLE;
+  private final Achievement actual = Achievement.JAMES_WEB;
 
   @Override
   public Request onVoteSubmit(ObservationVoteEntity vote) {
@@ -13,7 +13,7 @@ public class HubbleAchievement implements Achievements {
         vote.getObservation().getVotes().stream()
             .map(v -> v.getVote().getWeight())
             .reduce(0, Integer::sum);
-    if (karma >= 10) {
+    if (karma >= 100) {
       return new Request(actual, Level.NONE, vote.getObservation().getAuthor());
     }
     return new Request(actual, null, vote.getObservation().getAuthor());
