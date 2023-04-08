@@ -48,7 +48,7 @@ public class UserService {
     entity.setRadius(5);
     var userDto = modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
     userDto.setAchievements(Set.of());
-    userDto.setKarma(0); // TODO: Craft the relevant SQL query.
+    userDto.setKarma(0);
     return userDto;
   }
 
