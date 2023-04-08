@@ -194,7 +194,7 @@ public class UserService {
   }
 
   public int getKarma(UserEntity user) {
-    var observations = user.getObservations();
+    var observations = observationRepository.findAllByAuthor(user);
     return observations.stream()
         .map(o -> o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
         .reduce(0, Integer::sum);
