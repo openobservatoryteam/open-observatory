@@ -67,7 +67,7 @@ public class UserService {
         userAchievementRepository.findAllByUser(user).stream()
             .map(a -> modelMapper.map(a, AchievementDto.class))
             .collect(Collectors.toSet()));
-    dto.setKarma(getKarma(user)); // TODO: Craft the relevant SQL query.
+    dto.setKarma(getKarma(user));
     return dto;
   }
 
@@ -114,7 +114,7 @@ public class UserService {
         getKarma(
             userRepository
                 .findByUsernameIgnoreCase(issuerUsername)
-                .orElseThrow(UnknownUserException::new))); // TODO: Craft the relevant SQL query.
+                .orElseThrow(UnknownUserException::new)));
     return dto;
   }
 
@@ -163,7 +163,7 @@ public class UserService {
         userAchievementRepository.findAllByUser(user).stream()
             .map(a -> modelMapper.map(a, AchievementDto.class))
             .collect(Collectors.toSet()));
-    userDto.setKarma(getKarma(user)); // TODO: Craft the relevant SQL query.
+    userDto.setKarma(getKarma(user));
     return userDto;
   }
 
