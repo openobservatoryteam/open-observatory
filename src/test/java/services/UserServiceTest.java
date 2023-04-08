@@ -22,7 +22,6 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -143,7 +142,8 @@ class UserServiceTest {
               entity.setPublic(true);
               return Optional.of(entity);
             });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
+    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
+        .thenReturn(Set.of());
     when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
     var user = userService.findByUsername(username, issuerUsername);
 
@@ -175,7 +175,8 @@ class UserServiceTest {
               entity.setPublic(true);
               return Optional.of(entity);
             });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
+    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
+        .thenReturn(Set.of());
     when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
     var user = userService.findByUsername(username, issuerUsername);
 
@@ -198,7 +199,8 @@ class UserServiceTest {
               entity.setPublic(true);
               return Optional.of(entity);
             });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
+    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
+        .thenReturn(Set.of());
     when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
     var user = userService.findByUsername(username, null);
 
@@ -222,7 +224,8 @@ class UserServiceTest {
               entity.setType(Type.USER);
               return Optional.of(entity);
             });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
+    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
+        .thenReturn(Set.of());
     when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
     var user = userService.findByUsername(username, username);
 
@@ -254,7 +257,8 @@ class UserServiceTest {
               entity.setPublic(false);
               return Optional.of(entity);
             });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
+    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
+        .thenReturn(Set.of());
     when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
     var user = userService.findByUsername(username, issuerUsername);
 
