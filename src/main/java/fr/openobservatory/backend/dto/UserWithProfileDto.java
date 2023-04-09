@@ -1,6 +1,6 @@
 package fr.openobservatory.backend.dto;
 
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class UserWithProfileDto extends UserDto {
 
-  private List<AchievementDto> achievements;
+  private Set<AchievementDto> achievements;
   private String biography;
   private Integer karma;
 }

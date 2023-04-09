@@ -54,6 +54,12 @@ public class UserEntity {
   @Column(columnDefinition = "BOOLEAN")
   private boolean notificationsEnabled;
 
+  @OneToMany(mappedBy = "user")
+  private Set<ObservationVoteEntity> votes;
+
+  @OneToMany(mappedBy = "user")
+  private Set<UserAchievementEntity> achievements;
+
   // ---
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")

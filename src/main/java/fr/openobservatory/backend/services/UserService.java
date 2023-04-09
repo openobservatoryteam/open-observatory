@@ -5,11 +5,14 @@ import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
+import fr.openobservatory.backend.repositories.UserAchievementRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +28,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final PushSubscriptionRepository pushSubscriptionRepository;
   private final UserRepository userRepository;
+  private final UserAchievementRepository userAchievementRepository;
 
   // ---
 
@@ -43,8 +47,8 @@ public class UserService {
     entity.setNotificationsEnabled(false);
     entity.setRadius(5);
     var userDto = modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
-    userDto.setAchievements(List.of());
-    userDto.setKarma(0); // TODO: Craft the relevant SQL query.
+    userDto.setAchievements(Set.of());
+    userDto.setKarma(0);
     return userDto;
   }
 
@@ -59,8 +63,11 @@ public class UserService {
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
     var dto = modelMapper.map(user, UserWithProfileDto.class);
-    dto.setAchievements(List.of());
-    dto.setKarma(0); // TODO: Craft the relevant SQL query.
+    dto.setAchievements(
+        userAchievementRepository.findAllByUser(user).stream()
+            .map(a -> modelMapper.map(a, AchievementDto.class))
+            .collect(Collectors.toSet()));
+    dto.setKarma(getKarma(user));
     return dto;
   }
 
@@ -94,8 +101,20 @@ public class UserService {
             .findByUsernameIgnoreCase(issuerUsername)
             .map(u -> modelMapper.map(u, SelfUserDto.class))
             .orElseThrow(UnavailableUserException::new);
-    dto.setAchievements(List.of());
-    dto.setKarma(0); // TODO: Craft the relevant SQL query.
+    dto.setAchievements(
+        userAchievementRepository
+            .findAllByUser(
+                userRepository
+                    .findByUsernameIgnoreCase(issuerUsername)
+                    .orElseThrow(UnknownUserException::new))
+            .stream()
+            .map(a -> modelMapper.map(a, AchievementDto.class))
+            .collect(Collectors.toSet()));
+    dto.setKarma(
+        getKarma(
+            userRepository
+                .findByUsernameIgnoreCase(issuerUsername)
+                .orElseThrow(UnknownUserException::new)));
     return dto;
   }
 
@@ -140,8 +159,11 @@ public class UserService {
       if (!user.isNotificationsEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
     }
     var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
-    userDto.setAchievements(List.of());
-    userDto.setKarma(0); // TODO: Craft the relevant SQL query.
+    userDto.setAchievements(
+        userAchievementRepository.findAllByUser(user).stream()
+            .map(a -> modelMapper.map(a, AchievementDto.class))
+            .collect(Collectors.toSet()));
+    userDto.setKarma(getKarma(user));
     return userDto;
   }
 
@@ -169,5 +191,12 @@ public class UserService {
     user.setLatitude(dto.getLatitude());
     user.setLongitude(dto.getLongitude());
     userRepository.save(user);
+  }
+
+  public int getKarma(UserEntity user) {
+    var observations = observationRepository.findAllByAuthor(user);
+    return observations.stream()
+        .map(o -> o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
+        .reduce(0, Integer::sum);
   }
 }

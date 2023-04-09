@@ -1,12 +1,14 @@
 package fr.openobservatory.backend.dto;
 
+import fr.openobservatory.backend.repositories.Achievements;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class AchievementDto {
-
-  private Long id;
-  private String name;
+  private Achievements.Achievement achievement;
+  private Achievements.Level level;
 }

@@ -32,6 +32,7 @@ public class ObservationService {
   private final ObservationVoteRepository observationVoteRepository;
   private final PushSubscriptionService pushSubscriptionService;
   private final UserRepository userRepository;
+  private final AchievementService achievementService;
 
   // ---
 
@@ -62,6 +63,7 @@ public class ObservationService {
     observationDto.setCurrentVote(null);
     observationDto.setExpired(false);
     observationDto.setKarma(0);
+    achievementService.checkForAchievements(observation);
     // Quite ugly, to be optimized
     var notifiableUsers =
         userRepository
@@ -152,7 +154,8 @@ public class ObservationService {
     vote.setUser(issuer);
     vote.setObservation(observation);
     vote.setVote(dto.getVote());
-    observationVoteRepository.save(vote);
+    var saveVote = observationVoteRepository.save(vote);
+    achievementService.checkForAchievements(saveVote);
   }
 
   public ObservationWithDetailsDto update(
