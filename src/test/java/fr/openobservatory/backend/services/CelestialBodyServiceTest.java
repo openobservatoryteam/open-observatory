@@ -1,4 +1,4 @@
-package services;
+package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
 
