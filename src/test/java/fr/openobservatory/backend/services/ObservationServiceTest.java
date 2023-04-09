@@ -14,8 +14,6 @@ import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
-import fr.openobservatory.backend.services.AchievementService;
-import fr.openobservatory.backend.services.ObservationService;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -44,7 +42,6 @@ class ObservationServiceTest {
   @Mock private ObservationRepository observationRepository;
   @Mock private ObservationVoteRepository observationVoteRepository;
   @Mock private UserRepository userRepository;
-  @Mock private AchievementService achievementService;
 
   @InjectMocks private ObservationService observationService;
 

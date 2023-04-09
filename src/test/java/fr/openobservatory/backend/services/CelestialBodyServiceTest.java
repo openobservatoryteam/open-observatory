@@ -7,7 +7,6 @@ import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
-import fr.openobservatory.backend.services.CelestialBodyService;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert;

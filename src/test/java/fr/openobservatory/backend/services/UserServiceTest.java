@@ -15,7 +15,6 @@ import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.UserAchievementRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
-import fr.openobservatory.backend.services.UserService;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
