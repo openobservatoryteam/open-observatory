@@ -1,6 +1,6 @@
 export type Achievement = {
-  id: string;
-  name: string;
+  level: string;
+  achievement: string;
 };
 
 export type ApplicationError = {

@@ -123,7 +123,20 @@
       "newPasswordConfirmation": "New password confirmation",
       "karma": "Karma",
       "edit": "Edit my profile",
-      "observationsHistory": "Observations history"
+      "observationsHistory": "Observations history",
+      "achievement": {
+        "FAMOUS": "Famous",
+        "HUBBLE": "Hubble",
+        "OBSERVER": "Observer",
+        "JUDGE": "Judge",
+        "JAMES_WEB": "James Webb"
+      },
+      "achievementLevel": {
+        "NEW": "New",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "EXPERT": "Expert"
+      }
     },
     "visibility": {
       "clearly": "Observable with the naked eye",
