@@ -13,7 +13,7 @@ public interface Achievements {
     OBSERVER("Observer"),
     FAMOUS("Famous"),
     HUBBLE("Hubble"),
-    JAMES_WEB("James Web");
+    JAMES_WEBB("James Webb");
 
     private final String code;
   }
