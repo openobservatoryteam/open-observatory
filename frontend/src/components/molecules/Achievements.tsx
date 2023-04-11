@@ -26,9 +26,9 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
       </Text>
       <div className="grid grid-flow-col gap-x-8 overflow-x-scroll">
         {data.map((d) => (
-          <article className="bg-red-300 w-40" key={d.achievement}>
+          <article className="w-24" key={d.achievement}>
             <img
-              className="h-40 mx-auto rounded-full w-40"
+              className="h-24 mx-auto rounded-full w-24"
               src={`/achievements/${ACHIEVEMENTS[d.achievement as keyof typeof ACHIEVEMENTS]}`}
               alt="Récompense"
             />
