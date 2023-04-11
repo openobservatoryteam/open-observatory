@@ -1,5 +1,5 @@
 export type Achievement = {
-  level: string;
+  level: Level;
   achievement: string;
 };
 
@@ -19,6 +19,11 @@ export type ISSPosition = {
   latitude: number;
   longitude: number;
   timestamp: string;
+};
+
+export type Level = {
+  name: string;
+  count: number;
 };
 
 export type Observation = {

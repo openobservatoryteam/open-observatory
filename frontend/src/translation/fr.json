@@ -138,6 +138,17 @@
         "EXPERT": "Expert"
       }
     },
+    "achievement": {
+      "description" : {
+        "OBSERVER_one": "L'utilisateur a fait {{count}} observation.",
+        "JUDGE_one": "L'utilisateur a voté sur {{count}} obsdervation.",
+        "FAMOUS": "L'utilisateur a un karma supériure à {{count}}.",
+        "OBSERVER_other": "L'utilisateur a fait {{count}} observations.",
+        "JUDGE_other": "L'utilisateur a voté sur {{count}} obsdervations différentes.",
+        "JAMES_WEBB": "L'utilisateur a posté une observation ayant eu plus de 100 votes.",
+        "HUBBLE": "L'utilisateur a posté une observation ayant eu plus de 10 votes."
+      }
+    },
     "visibility": {
       "clearly": "Observable à l'oeil nu",
       "visible": "Observable dans de bonnes conditions",
