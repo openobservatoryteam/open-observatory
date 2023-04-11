@@ -11,10 +11,10 @@ type AchievementsProps = ComponentPropsWithoutRef<'section'> & {
 
 const ACHIEVEMENTS = {
   FAMOUS: 'FAMOUS.png',
-  HUBBLE: 'HUBBLE.jpg',
-  JAMES_WEBB: 'JAMES_WEBB.jpg',
-  JUDGE: 'JUDGE.jpg',
-  OBSERVER: 'OBSERVER.jpg',
+  HUBBLE: 'HUBBLE.png',
+  JAMES_WEBB: 'JAMES_WEBB.png',
+  JUDGE: 'JUDGE.png',
+  OBSERVER: 'OBSERVER.png',
 } as const;
 
 function Achievements({ className, data, ...props }: AchievementsProps) {
@@ -34,7 +34,7 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
             onClick={() => (achievement === d ? setAchievement(null) : setAchievement(d))}
           >
             <img
-              className="h-24 mx-auto rounded-full w-24"
+              className="h-24 mx-auto object-cover w-24"
               src={`/achievements/${ACHIEVEMENTS[d.achievement as keyof typeof ACHIEVEMENTS]}`}
               alt="Récompense"
             />
