@@ -3,7 +3,6 @@ import { ComponentPropsWithoutRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Achievement } from '~/api';
-import icon from '~/assets/png/icon-user.png';
 import { Text } from '~/components';
 
 type AchievementsProps = ComponentPropsWithoutRef<'section'> & {
@@ -25,16 +24,22 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
       <Text as="h3" centered>
         Récompenses
       </Text>
-      <div className="flex gap-x-8 mx-auto">
+      <div className="grid grid-flow-col gap-x-8 overflow-x-scroll">
         {data.map((d) => (
-          <article key={d.achievement}>
+          <article className="bg-red-300 w-40" key={d.achievement}>
             <img
-              className="h-20 mx-auto rounded-full"
+              className="h-40 mx-auto rounded-full w-40"
               src={`/achievements/${ACHIEVEMENTS[d.achievement as keyof typeof ACHIEVEMENTS]}`}
               alt="Récompense"
             />
             <Text centered className="mt-2">
-              {t(`users.achievement.${d.achievement}`)} ({t(`users.achievementLevel.${d.level}`)})
+              {t(`users.achievement.${d.achievement}`)}
+              {d.level !== 'NONE' && (
+                <>
+                  <br />
+                  <span className="text-sm">{t(`users.achievementLevel.${d.level}`)}</span>
+                </>
+              )}
             </Text>
           </article>
         ))}

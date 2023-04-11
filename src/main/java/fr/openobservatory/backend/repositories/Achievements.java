@@ -33,7 +33,7 @@ public interface Achievements {
   enum Level {
     NEW(1),
     BEGINNER(10),
-    INTERMEDIATES(25),
+    INTERMEDIATE(25),
     EXPERT(100),
     NONE(0);
 
@@ -45,7 +45,7 @@ public interface Achievements {
       } else if (count == 10) {
         return Level.BEGINNER;
       } else if (count == 25) {
-        return Level.INTERMEDIATES;
+        return Level.INTERMEDIATE;
       } else if (count == 100) {
         return EXPERT;
       } else {
