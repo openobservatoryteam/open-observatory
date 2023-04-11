@@ -39,6 +39,10 @@ public interface Achievements {
 
     private final int count;
 
+    public String getName() {
+      return name();
+    }
+
     public static Level getLevel(Integer count) {
       if (count == 1) {
         return Level.NEW;
@@ -51,6 +55,10 @@ public interface Achievements {
       } else {
         return null;
       }
+    }
+
+    public int getCount() {
+      return this.count;
     }
   }
 }

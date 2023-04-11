@@ -1,5 +1,6 @@
 package fr.openobservatory.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.openobservatory.backend.repositories.Achievements;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,5 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AchievementDto {
   private Achievements.Achievement achievement;
-  private Achievements.Level level;
+  private LevelDto level;
+
+  @Data
+  private static class LevelDto {
+    private String name;
+    private int count;
+  }
 }
+
