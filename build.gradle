@@ -7,6 +7,18 @@ plugins {
     id 'org.springframework.boot' version '3.0.5'
 }
 
+def coverageExclusionList = [
+        '**/achievements/**/*',
+        '**/configuration/**/*',
+        '**/controllers/**/*',
+        '**/dto/**/*',
+        '**/entities/**/*',
+        '**/exceptions/**/*',
+        '**/providers/**/*',
+        '**/repositories/**/*',
+        '**/*Application*'
+]
+
 group = 'fr.openobservatory'
 sourceCompatibility = '17'
 
@@ -52,7 +64,7 @@ jacocoTestReport {
     dependsOn test
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, includes: ["fr/openobservatory/backend/services/*"])
+            fileTree(dir: it, excludes: coverageExclusionList)
         }))
     }
     reports {
@@ -72,7 +84,6 @@ sonarqube {
         property "sonar.projectKey", "openobservatoryteam_open-observatory-backend"
         property "sonar.organization", "openobservatoryteam"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.exclusions", "!**/services/**"
+        property "sonar.coverage.exclusions", coverageExclusionList.join(', ')
     }
 }
-
