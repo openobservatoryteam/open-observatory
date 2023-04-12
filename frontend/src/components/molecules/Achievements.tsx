@@ -26,10 +26,10 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
       <Text as="h3" centered>
         Récompenses
       </Text>
-      <div className="grid grid-flow-col gap-x-8 overflow-x-scroll px-2 md:w-[40rem] w-96 mx-auto">
+      <div className="grid grid-flow-col gap-x-8 overflow-x-scroll px-2 max-w-[100vw] mx-auto">
         {data.map((d) => (
           <article
-            className="h-40 w-24"
+            className="h-48 w-40"
             key={d.achievement}
             onClick={() => (achievement === d ? setAchievement(null) : setAchievement(d))}
           >
@@ -51,7 +51,7 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
         ))}
       </div>
       {achievement && (
-        <div className="bg-white mx-auto max-h-36 rounded-xl p-4 overflow-y-scroll md:w-[500px] w-96">
+        <div className="bg-white max-h-36 rounded-xl mx-auto p-4 overflow-y-scroll max-w-[calc(100vw-4vw)] w-[30rem]">
           <Text as="h3" bold centered color="black">
             {t(`users.achievement.${achievement.achievement}`) + ' '}
             {achievement.level.name !== 'NONE' && (
