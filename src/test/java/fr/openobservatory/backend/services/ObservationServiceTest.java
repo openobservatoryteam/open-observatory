@@ -1,4 +1,4 @@
-package services;
+package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -14,8 +14,6 @@ import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
-import fr.openobservatory.backend.services.AchievementService;
-import fr.openobservatory.backend.services.ObservationService;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

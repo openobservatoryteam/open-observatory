@@ -1,4 +1,4 @@
-package services;
+package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -15,7 +15,6 @@ import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.UserAchievementRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
-import fr.openobservatory.backend.services.UserService;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -84,7 +83,7 @@ class UserServiceTest {
     assertThat(user.getAchievements()).isEmpty();
     assertThat(user.getAvatar()).isNull();
     assertThat(user.getBiography()).isEqualTo(dto.getBiography());
-    assertThat(user.getKarma()).isEqualTo(0);
+    assertThat(user.getKarma()).isZero();
     assertThat(user.getType()).isEqualTo(Type.USER);
     assertThat(user.getUsername()).isEqualTo(dto.getUsername());
     assertThat(user.getAchievements()).isEqualTo(Set.of());
