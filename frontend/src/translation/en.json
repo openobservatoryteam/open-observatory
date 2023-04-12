@@ -138,8 +138,8 @@
         "EXPERT": "Expert"
       }
     },
-     "achievement": {
-      "description" : {
+    "achievement": {
+      "description": {
         "OBSERVER_one": "Obtained for sending {{count}} observation.",
         "JUDGE_one": "Obtained for voting on {{count}} observation.",
         "FAMOUS": "Obtained for having a karma greater than {{count}}.",

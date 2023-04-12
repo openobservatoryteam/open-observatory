@@ -9,7 +9,7 @@ import { Marker, Popup } from 'react-leaflet';
 import { findObservationById, putVote } from '~/api';
 import celestialBodyImage from '~/assets/png/celeste.png';
 import userIcon from '~/assets/png/icon-user.png';
-import { Button, Chip, WorldMap, Text, UpDownVote } from '~/components';
+import { Button, Chip, Text, UpDownVote, WorldMap } from '~/components';
 import { useAuthentication } from '~/providers';
 
 type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;

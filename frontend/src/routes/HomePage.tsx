@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 import { useTranslation } from 'react-i18next';
 
-import { Button, ISSPositions, WorldMap, NearbyObservations } from '~/components';
+import { Button, ISSPositions, NearbyObservations, WorldMap } from '~/components';
 import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 

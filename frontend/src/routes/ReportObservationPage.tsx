@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CreateObservationData, ObservationVisibility, createObservation, findAllCelestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
-import { Button, DatePicker, WorldMap, MarkerInput, Select, TextInput, Title } from '~/components';
+import { Button, DatePicker, MarkerInput, Select, TextInput, Title, WorldMap } from '~/components';
 import { Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 

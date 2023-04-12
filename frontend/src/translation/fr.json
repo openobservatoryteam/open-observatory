@@ -139,7 +139,7 @@
       }
     },
     "achievement": {
-      "description" : {
+      "description": {
         "OBSERVER_one": "Obtenu pour avoir posté {{count}} observation.",
         "JUDGE_one": "Obtenu pour avoir voté sur {{count}} observation.",
         "FAMOUS": "Obtenu pour avoir eu un karma supérieur à {{count}}.",
