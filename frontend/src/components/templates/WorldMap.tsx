@@ -27,7 +27,7 @@ type MapProps = {
   radius?: number;
 } & MapContainerProps;
 
-export function Map({ center, children, noFly, withoutNotificationCircle, radius, ...props }: MapProps) {
+export function WorldMap({ center, children, noFly, withoutNotificationCircle, radius, ...props }: MapProps) {
   return (
     <>
       <Style type="text/css">{leafletStylesheet}</Style>

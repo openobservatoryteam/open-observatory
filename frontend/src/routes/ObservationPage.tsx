@@ -9,7 +9,7 @@ import { Marker, Popup } from 'react-leaflet';
 import { findObservationById, putVote } from '~/api';
 import celestialBodyImage from '~/assets/png/celeste.png';
 import userIcon from '~/assets/png/icon-user.png';
-import { Button, Chip, Map, Text, UpDownVote } from '~/components';
+import { Button, Chip, WorldMap, Text, UpDownVote } from '~/components';
 import { useAuthentication } from '~/providers';
 
 type VoteType = 'UPVOTE' | 'DOWNVOTE' | null;
@@ -122,7 +122,7 @@ function ObservationPage(): JSX.Element {
           )}
         </div>
       </div>
-      <Map
+      <WorldMap
         center={[observation.latitude, observation.longitude]}
         className="h-[calc(100vh-20rem)] md:h-[100vh] w-full"
         noFly
@@ -131,7 +131,7 @@ function ObservationPage(): JSX.Element {
         <Marker position={[observation.latitude, observation.longitude]}>
           <Popup>{observation.celestialBody.name}</Popup>
         </Marker>
-      </Map>
+      </WorldMap>
     </div>
   );
 }

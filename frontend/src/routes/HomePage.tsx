@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-location';
 import { Title as DocumentTitle } from 'react-head';
 import { useTranslation } from 'react-i18next';
 
-import { Button, ISSPositions, Map, NearbyObservations } from '~/components';
+import { Button, ISSPositions, WorldMap, NearbyObservations } from '~/components';
 import { Header } from '~/layout';
 import { useAuthentication } from '~/providers';
 
@@ -21,7 +21,7 @@ function HomePage() {
           {isLoggedIn ? t('users.profil') : t('users.login')}
         </Button>
       </div>
-      <Map
+      <WorldMap
         className="h-[calc(100vh-8.75rem)]"
         minZoom={3}
         worldCopyJump
@@ -30,7 +30,7 @@ function HomePage() {
       >
         <ISSPositions />
         <NearbyObservations />
-      </Map>
+      </WorldMap>
     </>
   );
 }

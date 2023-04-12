@@ -20,4 +20,4 @@ export * from './molecules/Pagination';
 export * from './molecules/UpDownVote';
 export * from './templates/CreateCelestialBodyModal';
 export * from './templates/EditCelestialBodyModal';
-export * from './templates/Map';
+export * from './templates/WorldMap';
