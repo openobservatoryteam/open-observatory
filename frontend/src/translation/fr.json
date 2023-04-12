@@ -140,13 +140,13 @@
     },
     "achievement": {
       "description" : {
-        "OBSERVER_one": "L'utilisateur a fait {{count}} observation.",
-        "JUDGE_one": "L'utilisateur a voté sur {{count}} obsdervation.",
-        "FAMOUS": "L'utilisateur a un karma supériure à {{count}}.",
-        "OBSERVER_other": "L'utilisateur a fait {{count}} observations.",
-        "JUDGE_other": "L'utilisateur a voté sur {{count}} obsdervations différentes.",
-        "JAMES_WEBB": "L'utilisateur a posté une observation ayant eu plus de 100 votes.",
-        "HUBBLE": "L'utilisateur a posté une observation ayant eu plus de 10 votes."
+        "OBSERVER_one": "Obtenu pour avoir posté {{count}} observation.",
+        "JUDGE_one": "Obtenu pour avoir voté sur {{count}} observation.",
+        "FAMOUS": "Obtenu pour avoir eu un karma supérieur à {{count}}.",
+        "OBSERVER_other": "Obtenu pour avoir posté {{count}} observations.",
+        "JUDGE_other": "Obtenu pour avoir voté sur {{count}} observations.",
+        "JAMES_WEBB": "Obtenu pour avoir un karma de 100 sur une observation.",
+        "HUBBLE": "Obtenu pour avoir un karma de 10 sur une observation."
       }
     },
     "visibility": {
