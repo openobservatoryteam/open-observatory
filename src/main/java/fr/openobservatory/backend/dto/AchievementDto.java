@@ -1,6 +1,5 @@
 package fr.openobservatory.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.openobservatory.backend.repositories.Achievements;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +18,3 @@ public class AchievementDto {
     private int count;
   }
 }
-
