@@ -29,7 +29,7 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
       <div className="grid grid-flow-col gap-x-8 overflow-x-scroll px-2 max-w-[100vw] mx-auto">
         {data.map((d) => (
           <article
-            className="h-48 w-40"
+            className="h-40 w-24 hover:cursor-pointer"
             key={d.achievement}
             onClick={() => (achievement === d ? setAchievement(null) : setAchievement(d))}
           >

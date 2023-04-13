@@ -45,7 +45,9 @@ function ProfilePage() {
           </Text>
         </section>
         <div
-          className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
+          className={`grid ${
+            isSelf ? 'grid-cols-2' : 'grid-cols-1'
+          } h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4 mb-4`}
         >
           <Button as={Link} className="w-full" to="observations">
             {t('users.observationsHistory')}
