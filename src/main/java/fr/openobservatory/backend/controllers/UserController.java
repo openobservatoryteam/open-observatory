@@ -79,4 +79,12 @@ public class UserController {
     userService.saveUserPosition(username, dto, authentication.getName());
     return ResponseEntity.noContent().build();
   }
+
+  @PatchMapping("{username}/delete")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<Void> deleteUser(
+      Authentication authentication, @PathVariable String username) {
+    userService.deleteUser(username, authentication.getName());
+    return ResponseEntity.noContent().build();
+  }
 }

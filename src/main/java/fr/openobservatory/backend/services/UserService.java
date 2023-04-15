@@ -199,4 +199,15 @@ public class UserService {
         .map(o -> o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
         .reduce(0, Integer::sum);
   }
+
+  public void deleteUser(String username, String issuerUsername) {
+    var issuer =
+        userRepository
+            .findByUsernameIgnoreCase(issuerUsername)
+            .orElseThrow(UnavailableUserException::new);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+    userRepository.delete(user);
+  }
 }
