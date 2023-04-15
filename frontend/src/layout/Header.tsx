@@ -6,6 +6,7 @@ import { ComponentPropsWithoutRef } from 'react';
 
 import logo from '~/assets/logo.svg';
 import { Button, Text, Title } from '~/components';
+import SwitchLang from '~/components/atoms/SwitchLang';
 import { useAuthentication } from '~/providers';
 
 type HeaderProps = ComponentPropsWithoutRef<'header'>;
@@ -18,27 +19,30 @@ export function Header({ className, ...props }: HeaderProps) {
         <Title className="hidden">Open Observatory</Title>
         <img className="h-full" src={logo} alt="Logo Open Observatory" />
       </Link>
-      {isLoggedIn && (
-        <div className="flex items-center gap-4 ml-5">
-          <Text as="span" className="hidden sm:inline">
-            {user?.username}
-          </Text>
-          <Button
-            aria-label="Se déconnecter"
-            className="p-3 sm:p-3.5 justify-self-end"
-            onPress={() => logout.mutate()}
-            rounded
-            title="Se déconnecter"
-          >
-            <FontAwesomeIcon icon={faArrowRightFromBracket} />
-          </Button>
-          {user?.type === 'ADMIN' && (
-            <Button as={Link} className="hidden sm:block" to="/admin/celestial-bodies">
-              ADMINISTRATION
+      <div className="flex gap-x-6">
+        {isLoggedIn && (
+          <div className="flex items-center gap-4">
+            <Text as="span" className="hidden sm:inline">
+              {user?.username}
+            </Text>
+            <Button
+              aria-label="Se déconnecter"
+              className="p-3 sm:p-3.5 justify-self-end"
+              onPress={() => logout.mutate()}
+              rounded
+              title="Se déconnecter"
+            >
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </Button>
-          )}
-        </div>
-      )}
+            {user?.type === 'ADMIN' && (
+              <Button as={Link} className="hidden sm:block" to="/admin/celestial-bodies">
+                ADMINISTRATION
+              </Button>
+            )}
+          </div>
+        )}
+        <SwitchLang />
+      </div>
     </header>
   );
 }
