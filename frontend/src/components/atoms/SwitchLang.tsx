@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 const langs = [
   {
-    name: 'FR',
+    name: '🇫🇷 FR',
     key: 'fr',
   },
   {
-    name: 'EN',
+    name: '🇬🇧 EN',
     key: 'en',
   },
 ];
@@ -21,7 +21,7 @@ function SwitchLang() {
   };
 
   return (
-    <div className="text-white bg-transparent border-white border-2 w-10">
+    <div className="text-white bg-transparent border-white border-2 w-15 rounded-xl">
       <select
         defaultValue={lang}
         onChange={(value) => handleChange(value.currentTarget.value)}
@@ -29,7 +29,9 @@ function SwitchLang() {
       >
         {langs.map((l) => (
           <option value={l.key} key={l.key} className="bg-black">
-            {l.name}
+            <div className="flex items-center">
+              <span>{l.name}</span>
+            </div>
           </option>
         ))}
       </select>
