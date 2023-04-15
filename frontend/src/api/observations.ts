@@ -25,3 +25,5 @@ export const createObservation = (json: CreateObservationData) =>
 type PutVoteData = { id: string; vote: ObservationVote };
 export const putVote = ({ id, vote }: PutVoteData) =>
   client.put(`observations/${id}/vote`, { json: { vote } }).then(() => null);
+
+export const findAllObservation = () => client.get('observations').then((r) => r.json<Observation[]>());
