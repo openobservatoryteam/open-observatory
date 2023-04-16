@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { findAllObservation } from '~/api';
@@ -6,12 +7,12 @@ import { AsideAdmin, List, ObservationCard, Title } from '~/components';
 
 function ObservationAdminPage() {
   const { t } = useTranslation();
+  const [page, setPage] = useState<number>(1);
+  const itemsPerPage = 6;
 
   const observations = useQuery({
-    queryFn: findAllObservation,
-    queryKey: ['observations'],
-    onSuccess: (data) => console.log(data),
-    onError: (e) => console.log(e),
+    queryFn: () => findAllObservation({ page, itemsPerPage }),
+    queryKey: ['page', page, 'itemsPerPage', itemsPerPage],
   });
 
   return (
@@ -27,7 +28,7 @@ function ObservationAdminPage() {
             data={observations.data.data}
             currentPage={observations.data.page}
             pageCount={observations.data.pageCount}
-            onPageChange={() => void 0}
+            onPageChange={(page) => setPage(page)}
             render={(e) => <ObservationCard observation={e} key={e.id} />}
           />
         )}
