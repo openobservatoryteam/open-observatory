@@ -6,6 +6,9 @@
       "illustration": "Illustration de {{name}}",
       "name": "Nom de l'objet céleste"
     },
+    "admin": {
+      "observations": "Dernières observations"
+    },
     "common": {
       "save": "Enregistrer",
       "orientation": "Orientation",

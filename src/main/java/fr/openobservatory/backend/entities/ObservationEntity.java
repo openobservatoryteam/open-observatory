@@ -61,6 +61,11 @@ public class ObservationEntity {
     return Objects.hash(id);
   }
 
+  public boolean isExpired() {
+    return createdAt.isBefore(
+        Instant.now().minusSeconds(this.celestialBody.getValidityTime() * 3600));
+  }
+
   // ---
 
   public enum Visibility {

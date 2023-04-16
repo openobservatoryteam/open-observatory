@@ -1,4 +1,4 @@
-import { Observation, ObservationVisibility, ObservationVote, ObservationWithDetails } from './@types';
+import { Observation, ObservationVisibility, ObservationVote, ObservationWithDetails, SearchResults } from './@types';
 import client from './client';
 
 type FindAllObservationsNearbyData = { lng: number; lat: number; radius: number };
@@ -26,4 +26,4 @@ type PutVoteData = { id: string; vote: ObservationVote };
 export const putVote = ({ id, vote }: PutVoteData) =>
   client.put(`observations/${id}/vote`, { json: { vote } }).then(() => null);
 
-export const findAllObservation = () => client.get('observations').then((r) => r.json<Observation[]>());
+export const findAllObservation = () => client.get('observations').then((r) => r.json<SearchResults<Observation>>());

@@ -29,7 +29,7 @@ public class ObservationController {
   }
 
   @GetMapping
-  public ResponseEntity<List<ObservationDto>> findAll(
+  public ResponseEntity<SearchResultsDto<ObservationWithDetailsDto>> findAll(
       @RequestParam(required = false, defaultValue = "0") Integer page,
       @RequestParam(required = false, defaultValue = "10") Integer itemsPerPage) {
     var observations = observationService.search(page, itemsPerPage);
