@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ObservationRepository extends JpaRepository<ObservationEntity, Long> {
 
+  Page<ObservationEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
   Page<ObservationEntity> findAllByAuthor(UserEntity user, Pageable pageable);
 
   Set<ObservationEntity> findAllByAuthor(UserEntity user);

@@ -6,6 +6,9 @@
       "illustration": "Illustration of {{name}}",
       "name": "Name of celestial body"
     },
+    "admin": {
+      "observations": "Latest observations"
+    },
     "common": {
       "save": "Save",
       "orientation": "Orientation",

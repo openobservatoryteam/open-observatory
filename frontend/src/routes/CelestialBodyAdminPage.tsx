@@ -1,14 +1,12 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from '@tanstack/react-location';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOverlayTriggerState } from 'react-stately';
 
 import { CelestialBody, findAllCelestialBodies } from '~/api';
-import logo from '~/assets/logo.svg';
-import { Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
+import { AsideAdmin, Button, CreateCelestialBodyModal, EditCelestialBody, List, Text, Title } from '~/components';
 
 function CelestialBodyAdminPage() {
   const [editedBody, setEditedBody] = useState<CelestialBody | null>(null);
@@ -33,39 +31,7 @@ function CelestialBodyAdminPage() {
       {createBodyState.isOpen && <CreateCelestialBodyModal state={createBodyState} />}
       {editedBody && editBodyState.isOpen && <EditCelestialBody celestialBody={editedBody} state={editBodyState} />}
       <div className="flex">
-        <aside className="bg-[#333C47] min-h-screen pt-4 px-3 md:px-12">
-          <Link title="Accueil Open Observatory" to="/">
-            <img src={logo} alt="Logo Open Observatory" />
-          </Link>
-          <Text centered className="mb-20 mt-4">
-            {t('common.administrator')}
-          </Text>
-          <ul>
-            <li>
-              <Button
-                as={Link}
-                className="bg-transparent mb-12 py-4 text-white text-xl hover:bg-white hover:opacity-80 hover:text-black"
-                to="/admin/observations"
-              >
-                {t('common.observations')}
-              </Button>
-            </li>
-            <li>
-              <Button as={Link} className="mb-12 py-4 text-xl" color="white" to="/admin/celestial-bodies">
-                {t('common.celestialBody')}
-              </Button>
-            </li>
-            <li>
-              <Button
-                as={Link}
-                className="bg-transparent mb-12 py-4 text-white text-xl hover:bg-white hover:opacity-80 hover:text-black"
-                to="/admin/users"
-              >
-                {t('common.users')}
-              </Button>
-            </li>
-          </ul>
-        </aside>
+        <AsideAdmin selected={1} />
         <div className="flex-1">
           <Title as="h2" centered className="mt-4">
             {t('common.celestialBody')}

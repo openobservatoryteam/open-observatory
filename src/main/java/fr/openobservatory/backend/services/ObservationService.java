@@ -16,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -129,12 +130,20 @@ public class ObservationService {
         .toList();
   }
 
-  public List<ObservationDto> search(Integer page, Integer itemsPerPage) {
+  public SearchResultsDto<ObservationWithDetailsDto> search(Integer page, Integer itemsPerPage) {
     if (itemsPerPage < 0 || itemsPerPage > 100 || page < 0) throw new InvalidPaginationException();
-    return observationRepository.findAll().stream()
-        .limit(itemsPerPage)
-        .map(o -> modelMapper.map(o, ObservationDto.class))
-        .toList();
+    return SearchResultsDto.from(
+        observationRepository
+            .findAllByOrderByCreatedAtDesc(Pageable.ofSize(itemsPerPage))
+            .map(
+                o -> {
+                  var dto = modelMapper.map(o, ObservationWithDetailsDto.class);
+                  dto.setExpired(
+                      o.getCreatedAt()
+                          .plus(o.getCelestialBody().getValidityTime(), ChronoUnit.HOURS)
+                          .isBefore(Instant.now()));
+                  return dto;
+                }));
   }
 
   public void submitVote(Long observationId, VoteDto dto, String issuerUsername) {
