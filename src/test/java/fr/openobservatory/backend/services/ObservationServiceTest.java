@@ -487,12 +487,15 @@ class ObservationServiceTest {
     var visibility = ObservationEntity.Visibility.VISIBLE;
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
+    var body = new CelestialBodyEntity();
+    body.setValidityTime(4);
     // When
     Mockito.when(observationRepository.findAllByOrderByCreatedAtDesc(Pageable.ofSize(itemsPerPage)))
         .thenAnswer(
             answer -> {
               var observation = new ObservationEntity();
               observation.setId(id);
+              observation.setCelestialBody(body);
               observation.setDescription(desc);
               observation.setLatitude(lat);
               observation.setLongitude(lng);
