@@ -19,7 +19,7 @@ function TextInput({ withVisibilityToggle, ...props }: TextInputProps, forwarded
       <div className="bg-white flex px-4 py-2 rounded-3xl text-black w-full">
         <input
           {...inputProps}
-          className={clsx('bg-inherit outline-none w-full')}
+          className={clsx('bg-inherit outline-none w-full break-wor')}
           ref={ref}
           type={isVisible ? 'text' : type}
         />

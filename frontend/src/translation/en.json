@@ -59,7 +59,7 @@
         "exist": "This username is already use."
       },
       "observation": {
-        "description": "The description must not exceed 2048 characters."
+        "description": "The description must not exceed 500 characters."
       },
       "password": {
         "upper": "The password must contain at least one capital letter.",

@@ -30,7 +30,7 @@ function RegistrationPage() {
         .min(8, t('errors.password.min')!)
         .max(32, t('errors.password.max')!),
       passwordConfirmation: z.string(),
-      biography: z.string().max(2048, t('errors.biography.max')!).optional(),
+      biography: z.string().max(500, t('errors.biography.max')!).optional(),
     })
     .refine((data) => data.password === data.passwordConfirmation, {
       message: t('errors.password.notMatch')!,

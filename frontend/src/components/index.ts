@@ -5,6 +5,7 @@ export * from './atoms/Select';
 export * from './atoms/Slider';
 export * from './atoms/Text';
 export * from './atoms/TextInput';
+export * from './atoms/TextArea';
 export * from './atoms/Title';
 export * from './atoms/ToggleButton';
 export * from './molecules/Achievements';
