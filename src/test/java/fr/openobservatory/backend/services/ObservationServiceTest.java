@@ -34,6 +34,8 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class ObservationServiceTest {
@@ -486,7 +488,7 @@ class ObservationServiceTest {
     var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
     var createdAt = Instant.from(timestamp);
     // When
-    Mockito.when(observationRepository.findAll())
+    Mockito.when(observationRepository.findAllByOrderByCreatedAtDesc(Pageable.ofSize(itemsPerPage)))
         .thenAnswer(
             answer -> {
               var observation = new ObservationEntity();
@@ -497,9 +499,10 @@ class ObservationServiceTest {
               observation.setOrientation(orientation);
               observation.setVisibility(visibility);
               observation.setCreatedAt(createdAt);
-              return List.of(observation);
+              return new PageImpl<ObservationEntity>(
+                  List.of(observation), Pageable.ofSize(itemsPerPage), 1);
             });
-    var observations = observationService.search(page, itemsPerPage);
+    var observations = observationService.search(page, itemsPerPage).getData();
     // Then
     assertThat(observations).hasSize(1);
     var observation = observations.get(0);

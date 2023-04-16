@@ -135,7 +135,15 @@ public class ObservationService {
     return SearchResultsDto.from(
         observationRepository
             .findAllByOrderByCreatedAtDesc(Pageable.ofSize(itemsPerPage))
-            .map(o -> modelMapper.map(o, ObservationWithDetailsDto.class)));
+            .map(
+                o -> {
+                  var dto = modelMapper.map(o, ObservationWithDetailsDto.class);
+                  dto.setExpired(
+                      o.getCreatedAt()
+                          .plus(o.getCelestialBody().getValidityTime(), ChronoUnit.HOURS)
+                          .isBefore(Instant.now()));
+                  return dto;
+                }));
   }
 
   public void submitVote(Long observationId, VoteDto dto, String issuerUsername) {
