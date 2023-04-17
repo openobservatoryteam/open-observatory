@@ -24,7 +24,7 @@ function Achievements({ className, data, ...props }: AchievementsProps) {
   return (
     <section className={clsx('flex flex-col gap-y-4', className)} {...props}>
       <Text as="h3" centered>
-        Récompenses
+        {t('common.achievements')}
       </Text>
       <div className="grid grid-flow-col gap-x-8 overflow-x-scroll px-2 max-w-[100vw] mx-auto">
         {data.map((d) => (

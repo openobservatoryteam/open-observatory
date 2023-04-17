@@ -13,7 +13,13 @@ function TextArea({ ...props }: TextAreaProps, forwardedRef?: ForwardedRef<HTMLT
   return (
     <div className={props.className}>
       <div className="bg-white flex px-4 py-2 rounded-3xl text-black w-full">
-        <textarea {...inputProps} className={clsx('bg-inherit outline-none w-full resize-none h-32')} ref={ref} />
+        <textarea
+          {...inputProps}
+          className={clsx(
+            'bg-inherit outline-none w-full resize-none h-6 ransition duration-700 ease-in-out focus:h-32',
+          )}
+          ref={ref}
+        />
       </div>
       {errorMessage && (
         <p className="text-center text-red-500" {...errorMessageProps}>

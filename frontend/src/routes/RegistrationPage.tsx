@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { ApplicationError, CreateUserData, postCreateUser } from '~/api';
-import { Button, Text, TextInput, Title } from '~/components';
+import { Button, Text, TextArea, TextInput, Title } from '~/components';
 import { Footer, Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
@@ -81,7 +81,7 @@ function RegistrationPage() {
           withVisibilityToggle
           {...r(register, 'passwordConfirmation')}
         />
-        <TextInput
+        <TextArea
           aria-label="Biographie"
           errorMessage={formState.errors.biography?.message}
           placeholder={t('users.biography')!}
