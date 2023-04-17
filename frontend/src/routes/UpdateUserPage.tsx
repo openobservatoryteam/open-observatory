@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { updateUser } from '~/api';
+import { ApplicationError, updateUser } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
 import { Button, TextArea } from '~/components';
 import { Footer, Header } from '~/layout';
@@ -34,7 +34,7 @@ function UpdateUserPage() {
     biography: z.string().max(500, t('errors.biography.max')!).optional(),
   });
 
-  const { formState, handleSubmit, setValue, register, watch } = useForm<UpdateUserFormData>({
+  const { formState, handleSubmit, setValue, register, watch, setError } = useForm<UpdateUserFormData>({
     defaultValues: {
       avatar: user?.avatar,
       biography: user?.biography,
@@ -57,6 +57,10 @@ function UpdateUserPage() {
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(['users', '@me'], updatedUser);
       navigate({ to: `/users/${username}`, replace: true });
+    },
+    onError: ({ cause }: { cause?: ApplicationError }) => {
+      if (cause?.message === 'BIOGRAPHY_REACHED_500_CHARACTERS')
+        setError('biography', { message: t('errors.biography.max')! });
     },
   });
 

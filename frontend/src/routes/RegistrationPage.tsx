@@ -44,6 +44,8 @@ function RegistrationPage() {
     onSuccess: () => navigate({ to: '/login' }),
     onError: ({ cause }: { cause?: ApplicationError }) => {
       if (cause?.message === 'USERNAME_ALREADY_USED') setError('username', { message: t('errors.username.exist')! });
+      else if (cause?.message === 'BIOGRAPHY_REACHED_500_CHARACTERS')
+        setError('biography', { message: t('errors.biography.max')! });
       else setError('root', { message: t('errors.unknownRegister')! });
     },
   });
