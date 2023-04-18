@@ -2,18 +2,24 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { findAllObservation } from '~/api';
+import { Observation, SearchResults, findAllObservation } from '~/api';
 import { AsideAdmin, List, ObservationCard, Title } from '~/components';
 
 function ObservationAdminPage() {
   const { t } = useTranslation();
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
+  const [observations, setObservation] = useState<SearchResults<Observation>>();
   const itemsPerPage = 6;
 
-  const observations = useQuery({
+  useQuery({
     queryFn: () => findAllObservation({ page, itemsPerPage }),
     queryKey: ['page', page, 'itemsPerPage', itemsPerPage],
+    onSuccess: (res) => setObservation(res),
   });
+
+  const handlePageChange = (p: number) => {
+    setPage(p);
+  };
 
   return (
     <div className="flex">
@@ -22,13 +28,13 @@ function ObservationAdminPage() {
         <Title as="h2" centered className="mt-4 mb-4">
           {t('admin.observations')}
         </Title>
-        {observations.data && (
+        {observations && (
           <List
             className="mx-4 md:mx-16"
-            data={observations.data.data}
-            currentPage={observations.data.page}
-            pageCount={observations.data.pageCount}
-            onPageChange={(page) => setPage(page)}
+            data={observations.data}
+            currentPage={observations.page}
+            pageCount={observations.pageCount}
+            onPageChange={(p) => handlePageChange(p)}
             render={(e) => <ObservationCard observation={e} key={e.id} />}
           />
         )}
