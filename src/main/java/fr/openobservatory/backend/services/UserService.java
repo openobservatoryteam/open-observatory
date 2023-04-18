@@ -37,6 +37,9 @@ public class UserService {
       throw new InvalidUsernameException();
     if (userRepository.existsByUsernameIgnoreCase(dto.getUsername()))
       throw new UsernameAlreadyUsedException();
+    if (dto.getBiography().length() > 500) {
+      throw new BiographyReached500CharactersException();
+    }
     var entity = new UserEntity();
     entity.setUsername(dto.getUsername());
     entity.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -143,6 +146,9 @@ public class UserService {
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     if (dto.getBiography().isPresent()) {
       var biography = dto.getBiography().get();
+      if (biography.length() > 500) {
+        throw new BiographyReached500CharactersException();
+      }
       user.setBiography(biography);
     }
     if (dto.getAvatar().isPresent()) {
