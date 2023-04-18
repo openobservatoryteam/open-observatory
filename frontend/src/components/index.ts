@@ -24,3 +24,4 @@ export * from './templates/AsideAdmin';
 export * from './templates/CreateCelestialBodyModal';
 export * from './templates/EditCelestialBodyModal';
 export * from './templates/WorldMap';
+export * from './templates/CustomTable';
