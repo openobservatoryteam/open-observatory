@@ -19,6 +19,13 @@ const ObservationAdminPage = () =>
       <page.default />
     </AdminGuard>
   ));
+
+const UserAdminPage = () =>
+  import('./UserAdminPage').then((page) => (
+    <AdminGuard>
+      <page.default />
+    </AdminGuard>
+  ));
 const ChangePasswordPage = () =>
   import('./ChangePasswordPage').then((page) => (
     <AuthenticatedGuard>
@@ -71,6 +78,7 @@ const routes: Route[] = [
     children: [
       { path: 'celestial-bodies', element: CelestialBodyAdminPage },
       { path: 'observations', element: ObservationAdminPage },
+      { path: 'users', element: UserAdminPage },
     ],
   },
   {
