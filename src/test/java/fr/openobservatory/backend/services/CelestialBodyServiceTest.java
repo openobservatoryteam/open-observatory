@@ -3,6 +3,7 @@ package fr.openobservatory.backend.services;
 import static org.assertj.core.api.Assertions.*;
 
 import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.SearchDto;
 import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.exceptions.*;
@@ -166,6 +167,7 @@ class CelestialBodyServiceTest {
     var image = "image";
     var validityTime = 5;
     var pageable = PageRequest.of(page, itemsPerPage);
+    var dto = new SearchDto(itemsPerPage, page);
     // When
     Mockito.when(celestialBodyRepository.findAll(Mockito.isA(PageRequest.class)))
         .thenAnswer(
@@ -178,7 +180,7 @@ class CelestialBodyServiceTest {
               var list = List.of(entity);
               return new PageImpl<>(list, pageable, 1);
             });
-    var searchDto = celestialBodyService.search(page, itemsPerPage);
+    var searchDto = celestialBodyService.search(dto);
     // Then
     assertThat(searchDto.getData()).isNotEmpty();
     assertThat(searchDto.getData().get(0).getId()).isEqualTo(id);
@@ -187,38 +189,13 @@ class CelestialBodyServiceTest {
     assertThat(searchDto.getData().get(0).getImage()).isEqualTo(image);
   }
 
-  @DisplayName("CelestialBodyService#search should fail with to low items per page")
+  @DisplayName("CelestialBodyService#search should fail with invalid dto")
   @Test
   void search_should_fail_with_to_low_items_per_page() {
     // Given
-    var page = 1;
-    var itemsPerPage = -1;
+    var dto = new SearchDto(420, -50);
     // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
-  }
-
-  @DisplayName("CelestialBodyService#search should fail with to high items per page")
-  @Test
-  void search_should_fail_with_to_high_items_per_page() {
-    // Given
-    var page = 1;
-    var itemsPerPage = 200;
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
-  }
-
-  @DisplayName("CelestialBodyService#search should fail with below zero page number")
-  @Test
-  void search_should_fail_with_below_zero_page_number() {
-    // Given
-    var page = -1;
-    var itemsPerPage = 5;
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
+    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(dto);
     // Then
     assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
   }

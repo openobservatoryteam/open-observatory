@@ -10,10 +10,9 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Data
 public class UpdateCelestialBodyDto {
 
-  private JsonNullable<@NotBlank @Size(min = 4, max = 64) String> name = JsonNullable.undefined();
+  private JsonNullable<@NotBlank @Size(min = 4, max = 64) String> name;
 
-  private JsonNullable<@NotNull @Range(min = 1, max = 12) Integer> validityTime =
-      JsonNullable.undefined();
+  private JsonNullable<@NotNull @Range(min = 1, max = 12) Integer> validityTime;
 
-  private JsonNullable<String> image = JsonNullable.undefined();
+  private JsonNullable<@NotNull String> image;
 }

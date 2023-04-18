@@ -2,6 +2,7 @@ package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.CelestialBodyDto;
 import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.SearchDto;
 import fr.openobservatory.backend.dto.SearchResultsDto;
 import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
 import fr.openobservatory.backend.services.CelestialBodyService;
@@ -23,10 +24,8 @@ public class CelestialBodyController {
 
   @GetMapping
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(
-      @RequestParam(required = false, defaultValue = "10") Integer limit,
-      @RequestParam(required = false, defaultValue = "0") Integer page) {
-    var celestialBodies = celestialBodyService.search(page, limit);
+  public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(SearchDto dto) {
+    var celestialBodies = celestialBodyService.search(dto);
     return ResponseEntity.ok(celestialBodies);
   }
 
