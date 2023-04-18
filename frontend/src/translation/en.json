@@ -7,7 +7,8 @@
       "name": "Name of celestial body"
     },
     "admin": {
-      "observations": "Latest observations"
+      "observations": "Latest observations",
+      "users": "Users management"
     },
     "common": {
       "achievements": "Rewards",
