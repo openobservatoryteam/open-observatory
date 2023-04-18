@@ -10,6 +10,7 @@
       "observations": "Dernières observations"
     },
     "common": {
+      "achievements": "Récompenses",
       "save": "Enregistrer",
       "orientation": "Orientation",
       "description": "Description",
@@ -72,7 +73,7 @@
         "incorrect": "Le mot de passe est incorrect."
       },
       "biography": {
-        "max": "La biographie ne doit pas dépasser 2048 caractères."
+        "max": "La biographie ne doit pas dépasser 500 caractères."
       },
       "angle": "Le degré d'orientation doit être une valeur en degrés.",
       "celestialBody": {

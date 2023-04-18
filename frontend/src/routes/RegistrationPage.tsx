@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { ApplicationError, CreateUserData, postCreateUser } from '~/api';
-import { Button, Text, TextInput, Title } from '~/components';
+import { Button, Text, TextArea, TextInput, Title } from '~/components';
 import { Footer, Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
@@ -30,7 +30,7 @@ function RegistrationPage() {
         .min(8, t('errors.password.min')!)
         .max(32, t('errors.password.max')!),
       passwordConfirmation: z.string(),
-      biography: z.string().max(2048, t('errors.biography.max')!).optional(),
+      biography: z.string().max(500, t('errors.biography.max')!).optional(),
     })
     .refine((data) => data.password === data.passwordConfirmation, {
       message: t('errors.password.notMatch')!,
@@ -44,6 +44,8 @@ function RegistrationPage() {
     onSuccess: () => navigate({ to: '/login' }),
     onError: ({ cause }: { cause?: ApplicationError }) => {
       if (cause?.message === 'USERNAME_ALREADY_USED') setError('username', { message: t('errors.username.exist')! });
+      else if (cause?.message === 'BIOGRAPHY_REACHED_500_CHARACTERS')
+        setError('biography', { message: t('errors.biography.max')! });
       else setError('root', { message: t('errors.unknownRegister')! });
     },
   });
@@ -81,7 +83,7 @@ function RegistrationPage() {
           withVisibilityToggle
           {...r(register, 'passwordConfirmation')}
         />
-        <TextInput
+        <TextArea
           aria-label="Biographie"
           errorMessage={formState.errors.biography?.message}
           placeholder={t('users.biography')!}

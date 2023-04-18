@@ -32,7 +32,7 @@ function ProfilePage() {
         <Text as="h2" centered className="mt-3">
           {user.username}
         </Text>
-        <Text centered className="mt-6">
+        <Text centered as="p" className="mt-6 md:w-[45rem] w-72 mx-auto break-words">
           {user.biography}
         </Text>
         {user.achievements.length > 0 && <Achievements className="mt-12" data={user.achievements} />}
