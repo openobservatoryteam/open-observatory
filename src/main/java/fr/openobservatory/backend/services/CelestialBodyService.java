@@ -11,7 +11,6 @@ import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,7 @@ public class CelestialBodyService {
 
   public CelestialBodyDto create(CreateCelestialBodyDto dto) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
       throw new CelestialBodyNameAlreadyUsedException();
     var celestialBody = modelMapper.map(dto, CelestialBodyEntity.class);
@@ -36,8 +34,7 @@ public class CelestialBodyService {
   }
 
   public void delete(Long id) {
-    if (!celestialBodyRepository.existsById(id))
-      throw new UnknownCelestialBodyException();
+    if (!celestialBodyRepository.existsById(id)) throw new UnknownCelestialBodyException();
     celestialBodyRepository.deleteById(id);
   }
 
@@ -50,8 +47,7 @@ public class CelestialBodyService {
 
   public SearchResultsDto<CelestialBodyDto> search(SearchDto dto) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     return SearchResultsDto.from(
         celestialBodyRepository
             .findAll(Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()))
@@ -60,8 +56,7 @@ public class CelestialBodyService {
 
   public CelestialBodyDto update(Long id, UpdateCelestialBodyDto dto) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var celestialBody =
         celestialBodyRepository.findById(id).orElseThrow(UnknownCelestialBodyException::new);
     if (dto.getName().isPresent()) {
@@ -73,8 +68,7 @@ public class CelestialBodyService {
     }
     if (dto.getValidityTime().isPresent())
       celestialBody.setValidityTime(dto.getValidityTime().get());
-    if (dto.getImage().isPresent())
-      celestialBody.setImage(dto.getImage().get());
+    if (dto.getImage().isPresent()) celestialBody.setImage(dto.getImage().get());
     return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
   }
 }

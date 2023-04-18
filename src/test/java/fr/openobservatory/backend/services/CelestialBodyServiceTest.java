@@ -32,14 +32,13 @@ import org.springframework.data.domain.PageRequest;
 @ExtendWith(MockitoExtension.class)
 class CelestialBodyServiceTest {
 
-  @Mock private CelestialBodyRepository celestialBodyRepository;
+  @Mock CelestialBodyRepository celestialBodyRepository;
 
-  @Spy private ModelMapper modelMapper;
+  @Spy ModelMapper modelMapper = new ModelMapper();
 
-  @Spy
-  Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @Spy Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-  @InjectMocks private CelestialBodyService celestialBodyService;
+  @InjectMocks CelestialBodyService celestialBodyService;
 
   // --- CelestialBodyService#create
 
@@ -154,7 +153,8 @@ class CelestialBodyServiceTest {
               entity.setName(name);
               entity.setValidityTime(validityTime);
               entity.setImage(image);
-              return new PageImpl<>(List.of(entity), PageRequest.of(dto.getPage(), dto.getItemsPerPage()), 1);
+              return new PageImpl<>(
+                  List.of(entity), PageRequest.of(dto.getPage(), dto.getItemsPerPage()), 1);
             });
     var searchDto = celestialBodyService.search(dto);
 
@@ -189,7 +189,9 @@ class CelestialBodyServiceTest {
     var name = "Neptune";
     var validityTime = 5;
     var image = "base64:image";
-    var dto = new UpdateCelestialBodyDto(JsonNullable.of(name), JsonNullable.of(validityTime), JsonNullable.of(image));
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.of(name), JsonNullable.of(validityTime), JsonNullable.of(image));
 
     // When
     when(celestialBodyRepository.findById(id))
@@ -222,7 +224,9 @@ class CelestialBodyServiceTest {
     var newName = "Mars";
     var validityTime = 5;
     var image = "base64:image";
-    var dto = new UpdateCelestialBodyDto(JsonNullable.of(newName), JsonNullable.of(validityTime), JsonNullable.of(image));
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.of(newName), JsonNullable.of(validityTime), JsonNullable.of(image));
 
     // When
     when(celestialBodyRepository.findById(id))
@@ -254,7 +258,9 @@ class CelestialBodyServiceTest {
     var name = "Neptune";
     var validityTime = 5;
     var image = "base64:image";
-    var dto = new UpdateCelestialBodyDto(JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(celestialBodyRepository.findById(id))
@@ -283,7 +289,9 @@ class CelestialBodyServiceTest {
   void update_should_throw_when_dto_is_invalid() {
     // Given
     var id = 2L;
-    var dto = new UpdateCelestialBodyDto(JsonNullable.of("A"), JsonNullable.of(-5), JsonNullable.of(null));
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.of("A"), JsonNullable.of(-5), JsonNullable.of(null));
 
     // When
     ThrowingCallable action = () -> celestialBodyService.update(id, dto);
@@ -297,7 +305,9 @@ class CelestialBodyServiceTest {
   void update_should_throw_when_id_is_unknown() {
     // Given
     var id = 2L;
-    var dto = new UpdateCelestialBodyDto(JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.undefined(), JsonNullable.undefined(), JsonNullable.undefined());
 
     // When
     when(celestialBodyRepository.findById(id)).thenReturn(Optional.empty());
@@ -315,7 +325,9 @@ class CelestialBodyServiceTest {
     var name = "Neptune";
     var validityTime = 5;
     var image = "base64:image";
-    var dto = new UpdateCelestialBodyDto(JsonNullable.of("Mars"), JsonNullable.of(4), JsonNullable.of("base64:new_image"));
+    var dto =
+        new UpdateCelestialBodyDto(
+            JsonNullable.of("Mars"), JsonNullable.of(4), JsonNullable.of("base64:new_image"));
 
     // When
     when(celestialBodyRepository.findById(id))
@@ -328,7 +340,8 @@ class CelestialBodyServiceTest {
               entity.setValidityTime(validityTime);
               return Optional.of(entity);
             });
-    when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName().get())).thenReturn(true);
+    when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName().get()))
+        .thenReturn(true);
     ThrowingCallable action = () -> celestialBodyService.update(id, dto);
 
     // Then

@@ -13,7 +13,9 @@ public class ValidationException extends RuntimeException {
 
   public <T> ValidationException(Set<ConstraintViolation<T>> violations) {
     super("One or more errors were encountered while validating the supplied payload.");
-    this.violations = Objects.requireNonNull(violations, "violations must not be null")
-        .stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
+    this.violations =
+        Objects.requireNonNull(violations, "violations must not be null").stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(Collectors.toSet());
   }
 }
