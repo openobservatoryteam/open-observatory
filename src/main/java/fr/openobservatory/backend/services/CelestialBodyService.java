@@ -12,6 +12,7 @@ import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -51,10 +52,9 @@ public class CelestialBodyService {
     var violations = validator.validate(dto);
     if (!violations.isEmpty())
       throw new ValidationException(violations);
-    var pageable = PageRequest.of(dto.getPage(), dto.getItemsPerPage());
     return SearchResultsDto.from(
         celestialBodyRepository
-            .findAll(pageable)
+            .findAll(Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()))
             .map(o -> modelMapper.map(o, CelestialBodyDto.class)));
   }
 
