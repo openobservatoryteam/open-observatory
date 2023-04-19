@@ -1,7 +1,10 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
+import { faShieldHalved } from '@fortawesome/free-solid-svg-icons';
 
 import { User } from '~/api';
-import { AsideAdmin, ColumnsProps, CustomTable, Title } from '~/components';
+import iconUser from '~/assets/png/icon-user.png';
+import { AsideAdmin, ColumnsProps, CustomTable, Title, Text, CustomActionProps } from '~/components';
 
 function UserAdminPage() {
   const { t } = useTranslation();
@@ -9,17 +12,53 @@ function UserAdminPage() {
   const columns: ColumnsProps<User>[] = [
     {
       name: 'Avatar',
-      render: (obj: User) => obj.avatar,
+      render: (obj: User) => <img src={obj.avatar ?? iconUser} className='w-10 h-10'/>,
     },
     {
       name: 'Username',
-      render: (obj: User) => obj.username,
-    },
-    {
-      name: 'Email',
-      render: (obj: User) => obj.username,
+      render: (obj: User) => <Text centered>{obj.username}</Text>,
     },
   ];
+
+  const userData : User[] = [
+    {
+      username: "TOTO",
+      type: "USER",
+      notificationsEnabled: true,
+      public: true,
+      radius: 25
+    },
+    {
+      username: "LULULU",
+      type: "USER",
+      notificationsEnabled: true,
+      public: true,
+      radius: 25
+    },
+    {
+      username: "KEKE",
+      type: "USER",
+      notificationsEnabled: true,
+      public: true,
+      radius: 25
+    }
+  ]
+
+  const customAction : CustomActionProps<User> = {
+    edit : {
+      onEdit : (obj) => {
+          console.log(obj.username)
+      },
+    },
+    delete : {
+      onDelete: (obj) => {
+          console.log(obj.username)
+      },
+    },
+    other : [
+      { element : () => <FontAwesomeIcon icon={faShieldHalved} color="white" className='p-2 rounded-full hover:cursor-pointer hover:bg-slate-400'/>}
+    ]
+  }
 
   return (
     <div className="flex">
@@ -29,11 +68,14 @@ function UserAdminPage() {
           {t('admin.users')}
         </Title>
         <CustomTable
-          data={[]}
+          data={userData}
           columns={columns}
-          page={1}
+          page={0}
           pageCount={2}
-          className="w-3/4 bg-slate-500 mx-auto p-2 rounded-2xl"
+          onItemsPerPageChange={(a) => console.log(a) }
+          onPageChange={(a) => console.log(a)}
+          customsAction={customAction}
+          className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
         />
       </div>
     </div>
