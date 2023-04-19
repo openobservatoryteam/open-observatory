@@ -200,14 +200,10 @@ public class UserService {
         .reduce(0, Integer::sum);
   }
 
-  public void deleteUser(String username, String issuerUsername) {
-    var issuer =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new);
+  public void adminDeleteUser(String username) {
+    if (username == null) throw new InvalidUsernameException();
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     userRepository.delete(user);
   }
 }

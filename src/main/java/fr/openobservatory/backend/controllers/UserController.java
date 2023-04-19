@@ -81,10 +81,9 @@ public class UserController {
   }
 
   @PatchMapping("{username}/delete")
-  @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<Void> deleteUser(
-      Authentication authentication, @PathVariable String username) {
-    userService.deleteUser(username, authentication.getName());
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+    userService.adminDeleteUser(username);
     return ResponseEntity.noContent().build();
   }
 }

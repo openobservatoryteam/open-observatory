@@ -1070,4 +1070,45 @@ class UserServiceTest {
     // Then
     assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
   }
+
+  @DisplayName("UserService#delete should pass")
+  @Test
+  void delete_should_pass() {
+    // Given
+    var username = "XXXX";
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username))
+        .thenReturn(Optional.of(new UserEntity()));
+    userService.adminDeleteUser(username);
+
+    // Then
+    Mockito.verify(userRepository).delete(isA(UserEntity.class));
+  }
+
+  @DisplayName("UserService#delete should fail with unknown user")
+  @Test
+  void delete_should_fail_with_unknown_user() {
+    // Given
+    var username = "XXXX";
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
+    ThrowingCallable action = () -> userService.adminDeleteUser(username);
+
+    // Then
+    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
+  }
+
+  @DisplayName("UserService#delete should fail with invalid username")
+  @Test
+  void delete_should_fail_with_invalid_username() {
+    // Given
+
+    // When
+    ThrowingCallable action = () -> userService.adminDeleteUser(null);
+
+    // Then
+    assertThatThrownBy(action).isInstanceOf(InvalidUsernameException.class);
+  }
 }
