@@ -1,9 +1,7 @@
 package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
-import java.util.Objects;
 import java.util.Set;
-
 import lombok.*;
 import lombok.Builder.Default;
 

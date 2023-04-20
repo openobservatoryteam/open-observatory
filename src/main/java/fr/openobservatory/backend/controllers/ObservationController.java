@@ -5,7 +5,6 @@ import fr.openobservatory.backend.dto.output.ObservationDto;
 import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
 import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.services.ObservationService;
-import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +56,7 @@ public class ObservationController {
   @PatchMapping("/{id}")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<ObservationWithDetailsDto> update(
-      Authentication authentication,
-      @PathVariable Long id,
-      @RequestBody UpdateObservationDto dto) {
+      Authentication authentication, @PathVariable Long id, @RequestBody UpdateObservationDto dto) {
     var observation = observationService.update(id, dto, authentication.getName());
     return ResponseEntity.ok(observation);
   }
@@ -67,9 +64,7 @@ public class ObservationController {
   @PutMapping("/{id}/vote")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> submitVote(
-      Authentication authentication,
-      @PathVariable Long id,
-      @RequestBody SubmitVoteDto vote) {
+      Authentication authentication, @PathVariable Long id, @RequestBody SubmitVoteDto vote) {
     observationService.submitVote(id, vote, authentication.getName());
     return ResponseEntity.noContent().build();
   }

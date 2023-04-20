@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
   boolean existsByUsernameIgnoreCase(String username);
 
   Set<UserEntity>
-  findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
+      findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
           Instant timestamp);
 
   Optional<UserEntity> findByUsernameIgnoreCase(String username);

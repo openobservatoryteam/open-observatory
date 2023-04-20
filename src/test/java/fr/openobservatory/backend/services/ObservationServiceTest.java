@@ -186,7 +186,7 @@ class ObservationServiceTest {
             .timestamp(Instant.now())
             .build();
     var dto =
-        FindNearbyObservationsDto.builder().latitude(49.2).longitude(30.1).radius(100).build();
+        FindNearbyObservationsDto.builder().latitude(49.2).longitude(30.1).radius(100.0).build();
 
     // When
     when(observationRepository.findAllNearby(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
