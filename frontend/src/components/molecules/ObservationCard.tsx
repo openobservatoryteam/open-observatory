@@ -33,8 +33,8 @@ export function ObservationCard({ observation }: ObservationCardProps) {
       </Text>
       <Text as="span" color="black" className="ml-4 mt-2">
         {t('common.on-at', {
-          date: dayjs(observation.createdAt).format('DD/MM/YYYY'),
-          heure: dayjs(observation.createdAt).format('HH:mm'),
+          date: dayjs(observation.timestamp).format('DD/MM/YYYY'),
+          heure: dayjs(observation.timestamp).format('HH:mm'),
         })}
       </Text>
       <div className=" gap-4 py-1.5 ml-4 flex items-center" color="transparent">

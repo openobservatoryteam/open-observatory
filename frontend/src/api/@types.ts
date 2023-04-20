@@ -36,7 +36,7 @@ export type Observation = {
   orientation: number;
   visibility: ObservationVisibility;
   expired: boolean;
-  createdAt: string;
+  timestamp: string;
 };
 
 export type ObservationWithDetails = Observation & {
@@ -60,8 +60,8 @@ export type User = {
   username: string;
   avatar?: string;
   public: boolean;
-  notificationsEnabled: boolean;
-  radius: number;
+  notificationEnabled: boolean;
+  notificationRadius: number;
   type: UserType;
 };
 

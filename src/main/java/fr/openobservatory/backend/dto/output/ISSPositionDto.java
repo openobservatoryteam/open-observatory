@@ -1,6 +1,6 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import lombok.Data;
 
 @Data
@@ -9,5 +9,5 @@ public class ISSPositionDto {
   private boolean isCurrent;
   private double latitude;
   private double longitude;
-  private OffsetDateTime timestamp;
+  private Instant timestamp;
 }

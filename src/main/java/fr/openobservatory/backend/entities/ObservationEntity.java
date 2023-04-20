@@ -2,10 +2,13 @@ package fr.openobservatory.backend.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.Set;
-import lombok.Data;
+import lombok.*;
+import lombok.Builder.Default;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "observation")
@@ -15,51 +18,38 @@ public class ObservationEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(columnDefinition = "TEXT")
+  @Column(length = 500)
   private String description;
 
-  @Column(columnDefinition = "FLOAT", nullable = false)
+  @Column(nullable = false)
   private Double latitude;
 
-  @Column(columnDefinition = "FLOAT", nullable = false)
+  @Column(nullable = false)
   private Double longitude;
 
-  @Column(columnDefinition = "INTEGER", nullable = false)
+  @Column(nullable = false)
   private Integer orientation;
 
-  @ManyToOne
-  @JoinColumn(name = "celestial_body_id")
+  @ManyToOne(optional = false)
   private CelestialBodyEntity celestialBody;
 
-  @ManyToOne
-  @JoinColumn(name = "author_id")
+  @ManyToOne(optional = false)
   private UserEntity author;
 
-  @Column(columnDefinition = "SMALLINT", nullable = false)
+  @Column(nullable = false)
+  @Enumerated(EnumType.ORDINAL)
   private Visibility visibility;
 
   @Column(nullable = false, updatable = false)
-  private Instant createdAt;
+  private Instant timestamp;
 
   // ---
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "observation")
-  private Set<ObservationVoteEntity> votes;
-
-  // ---
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    ObservationEntity that = (ObservationEntity) o;
-    return Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
+  @Default
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<ObservationVoteEntity> votes = Set.of();
 
   // ---
 

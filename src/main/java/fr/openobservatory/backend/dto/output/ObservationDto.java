@@ -1,7 +1,7 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
-import fr.openobservatory.backend.entities.ObservationEntity;
-import java.time.OffsetDateTime;
+import fr.openobservatory.backend.entities.ObservationEntity.Visibility;
+import java.time.Instant;
 import lombok.Data;
 
 @Data
@@ -14,6 +14,6 @@ public class ObservationDto {
   private double latitude;
   private double longitude;
   private int orientation;
-  private ObservationEntity.Visibility visibility;
-  private OffsetDateTime createdAt;
+  private Visibility visibility;
+  private Instant timestamp;
 }

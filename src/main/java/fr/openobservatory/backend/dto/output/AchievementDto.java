@@ -1,4 +1,4 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
 import fr.openobservatory.backend.repositories.Achievements;
 import lombok.AllArgsConstructor;

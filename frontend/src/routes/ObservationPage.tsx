@@ -83,8 +83,8 @@ function ObservationPage(): JSX.Element {
               </Text>
               <Text as="p" className="text-xs md:text-base">
                 {t('common.on-at', {
-                  date: dayjs(observation.createdAt).format('DD/MM/YYYY'),
-                  heure: dayjs(observation.createdAt).format('HH:mm'),
+                  date: dayjs(observation.timestamp).format('DD/MM/YYYY'),
+                  heure: dayjs(observation.timestamp).format('HH:mm'),
                 })}
               </Text>
             </div>

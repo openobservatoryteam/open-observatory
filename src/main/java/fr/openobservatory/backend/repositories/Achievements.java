@@ -9,13 +9,11 @@ import lombok.Getter;
 public interface Achievements {
   @AllArgsConstructor
   enum Achievement {
-    JUDGE("Judge"),
-    OBSERVER("Observer"),
-    FAMOUS("Famous"),
-    HUBBLE("Hubble"),
-    JAMES_WEBB("James Webb");
-
-    private final String code;
+    JUDGE,
+    OBSERVER,
+    FAMOUS,
+    HUBBLE,
+    JAMES_WEBB
   }
 
   default Request onObservationUpdate(ObservationEntity observation) {
@@ -55,10 +53,6 @@ public interface Achievements {
       } else {
         return null;
       }
-    }
-
-    public int getCount() {
-      return this.count;
     }
   }
 }

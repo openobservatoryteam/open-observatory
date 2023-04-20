@@ -3,6 +3,9 @@ package fr.openobservatory.backend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "observation_vote")
@@ -10,19 +13,19 @@ public class ObservationVoteEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Setter(AccessLevel.NONE)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
+  @ManyToOne(optional = false)
   private UserEntity user;
 
-  @ManyToOne
-  @JoinColumn(name = "observation_id", nullable = false)
+  @ManyToOne(optional = false)
   private ObservationEntity observation;
 
-  @Column(name = "vote", nullable = false)
+  @Column(nullable = false)
+  @Enumerated(EnumType.ORDINAL)
   private VoteType vote;
+
+  // ---
 
   @AllArgsConstructor
   @Getter

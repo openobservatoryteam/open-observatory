@@ -1,4 +1,4 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
 import lombok.Data;
 
