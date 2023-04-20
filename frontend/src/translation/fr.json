@@ -11,6 +11,8 @@
       "users": "Gestion des utilisateurs"
     },
     "common": {
+      "user": "Utilisateur",
+      "admin": "Administrateur",
       "achievements": "Récompenses",
       "save": "Enregistrer",
       "orientation": "Orientation",
