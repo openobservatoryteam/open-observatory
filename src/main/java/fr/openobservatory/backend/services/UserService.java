@@ -100,6 +100,10 @@ public class UserService {
     var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer))
       throw new UserNotEditableException();
+    if (issuer.getType() == UserEntity.Type.ADMIN && dto.getPassword().isPresent()) {
+      var password = passwordEncoder.encode(dto.getPassword().get());
+      user.setPassword(password);
+    }
     if (dto.getAvatar().isPresent()) {
       user.setAvatar(dto.getAvatar().get());
     }
