@@ -12,6 +12,7 @@ public class ValidationException extends RuntimeException {
   private final Set<String> violations;
 
   public <T> ValidationException(Set<ConstraintViolation<T>> violations) {
+    super("One or more errors were caught during validation.");
     this.violations =
         Objects.requireNonNull(violations).stream()
             .map(ConstraintViolation::getMessage)
