@@ -1,32 +1,33 @@
-import { faShieldHalved, faUserShield } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
 
-import { User } from '~/api';
+import { User, UserWithProfile } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
 import { AsideAdmin, ColumnsProps, CustomActionProps, CustomTable, Text, Title } from '~/components';
 
 function UserAdminPage() {
   const { t } = useTranslation();
 
-  const columns: ColumnsProps<User>[] = [
+  const columns: ColumnsProps<UserWithProfile>[] = [
     {
       name: 'Avatar',
-      render: (obj: User) => <img src={obj.avatar ?? iconUser} className="w-10 h-10" />,
+      render: (obj: UserWithProfile) => <img src={obj.avatar ?? iconUser} className="w-10 h-10" />,
     },
     {
       name: 'Username',
-      render: (obj: User) => <Text centered>{obj.username}</Text>,
+      render: (obj: UserWithProfile) => <Text centered>{obj.username}</Text>,
     },
   ];
 
-  const userData: User[] = [
+  const userData: UserWithProfile[] = [
     {
       username: 'TOTO',
       type: 'USER',
       notificationsEnabled: true,
       public: true,
       radius: 25,
+      biography: '',
+      karma: 1,
+      achievements: [],
     },
     {
       username: 'LULULU',
@@ -34,6 +35,9 @@ function UserAdminPage() {
       notificationsEnabled: true,
       public: true,
       radius: 25,
+      biography: '',
+      karma: 1,
+      achievements: [],
     },
     {
       username: 'KEKE',
@@ -41,6 +45,9 @@ function UserAdminPage() {
       notificationsEnabled: true,
       public: true,
       radius: 25,
+      biography: '',
+      karma: 1,
+      achievements: [],
     },
   ];
 
@@ -55,36 +62,6 @@ function UserAdminPage() {
         console.log(obj.username);
       },
     },
-    other: [
-      {
-        element: (obj: User) => (
-          <>
-            {obj.type !== 'ADMIN' && (
-              <span className="tooltip">
-                <FontAwesomeIcon
-                  icon={faShieldHalved}
-                  color="white"
-                  className="p-2 rounded-full hover:cursor-pointer hover:bg-slate-400 w-5 tooltip"
-                  onClick={() => console.log(obj.username)}
-                />
-                <span className="tooltiptext">{t('common.user')}</span>
-              </span>
-            )}
-            {obj.type === 'ADMIN' && (
-              <span className="tooltip">
-                <FontAwesomeIcon
-                  icon={faUserShield}
-                  color="white"
-                  className="p-2 rounded-full hover:cursor-pointer hover:bg-slate-400 w-5"
-                  onClick={() => console.log(obj.username)}
-                />
-                <span className="tooltiptext">{t('common.admin')}</span>
-              </span>
-            )}
-          </>
-        ),
-      },
-    ],
   };
 
   return (
