@@ -39,23 +39,23 @@ public class UserService {
 
   public UserWithProfileDto create(CreateUserDto dto) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     if (userRepository.existsByUsernameIgnoreCase(dto.getUsername()))
       throw new UsernameAlreadyUsedException();
-    var user = UserEntity.builder()
-        .username(dto.getUsername())
-        .password(passwordEncoder.encode(dto.getPassword()))
-        .biography(dto.getBiography())
-        .build();
+    var user =
+        UserEntity.builder()
+            .username(dto.getUsername())
+            .password(passwordEncoder.encode(dto.getPassword()))
+            .biography(dto.getBiography())
+            .build();
     return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
   public UserWithProfileDto findByUsername(String username, String issuerUsername) {
     var issuer = findIssuer(issuerUsername, true);
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isViewableBy(user, issuer))
-      throw new UserNotVisibleException();
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
     return buildProfile(user, UserWithProfileDto.class);
   }
 
@@ -63,14 +63,15 @@ public class UserService {
   @Generated
   public List<ObservationWithDetailsDto> findObservationsByUsername(
       String username, String issuerUsername) {
-    var issuer = issuerUsername != null
-        ? userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new)
-        : null;
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isViewableBy(user, issuer))
-      throw new UserNotVisibleException();
+    var issuer =
+        issuerUsername != null
+            ? userRepository
+                .findByUsernameIgnoreCase(issuerUsername)
+                .orElseThrow(UnavailableUserException::new)
+            : null;
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
     return observationRepository.findAllByAuthor(user, Pageable.ofSize(100)).stream()
         .map(
             o -> {
@@ -94,12 +95,11 @@ public class UserService {
   @Transactional
   public SelfUserDto update(String username, UpdateUserDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isEditableBy(user, issuer))
-      throw new UserNotEditableException();
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     if (issuer.getType() == UserEntity.Type.ADMIN && dto.getPassword().isPresent()) {
       var password = passwordEncoder.encode(dto.getPassword().get());
       user.setPassword(password);
@@ -115,8 +115,7 @@ public class UserService {
     }
     if (dto.getNotificationEnabled().isPresent()) {
       user.setNotificationEnabled(dto.getNotificationEnabled().get());
-      if (!user.isNotificationEnabled())
-        pushSubscriptionRepository.deleteAllByUser(user);
+      if (!user.isNotificationEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
     }
     if (dto.getNotificationRadius().isPresent()) {
       user.setNotificationRadius(dto.getNotificationRadius().get());
@@ -126,12 +125,11 @@ public class UserService {
 
   public void updatePassword(String username, UpdatePasswordDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isEditableBy(user, issuer))
-      throw new UserNotEditableException();
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
       throw new PasswordMismatchException();
     }
@@ -141,12 +139,11 @@ public class UserService {
 
   public void updatePosition(String username, UpdatePositionDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
-    var user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isEditableBy(user, issuer))
-      throw new UserNotEditableException();
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
     user.setPositionAt(Instant.now());
     user.setLatitude(dto.getLatitude());
     user.setLongitude(dto.getLongitude());
@@ -161,14 +158,14 @@ public class UserService {
     dto.setKarma(
         observations.stream()
             .map(
-                o -> o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
+                o ->
+                    o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
             .reduce(0, Integer::sum));
     return dto;
   }
 
   private UserEntity findIssuer(String issuerUsername, boolean allowGuest) {
-    if (allowGuest && issuerUsername == null)
-      return null;
+    if (allowGuest && issuerUsername == null) return null;
     return userRepository
         .findByUsernameIgnoreCase(issuerUsername)
         .orElseThrow(UnavailableUserException::new);

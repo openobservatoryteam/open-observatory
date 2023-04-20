@@ -44,32 +44,35 @@ public class ObservationService {
   @Transactional
   public ObservationWithDetailsDto create(String issuerUsername, CreateObservationDto dto) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
-    var celestialBody = celestialBodyRepository
-        .findById(dto.getCelestialBodyId())
-        .orElseThrow(InvalidCelestialBodyIdException::new);
+    var celestialBody =
+        celestialBodyRepository
+            .findById(dto.getCelestialBodyId())
+            .orElseThrow(InvalidCelestialBodyIdException::new);
     var observation = modelMapper.map(dto, ObservationEntity.class);
     observation.setAuthor(issuer);
     observation.setCelestialBody(celestialBody);
     var savedObservation = observationRepository.save(observation);
     achievementService.checkForAchievements(savedObservation);
     // Quite ugly, to be optimized
-    var notifiableUsers = userRepository
-        .findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
-            Instant.now().minus(7, ChronoUnit.DAYS));
-    var notification = PushNotificationDto.builder()
-        .code("OBSERVATION_NEARBY")
-        .link("/observations/" + savedObservation.getId())
-        .build();
+    var notifiableUsers =
+        userRepository
+            .findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
+                Instant.now().minus(7, ChronoUnit.DAYS));
+    var notification =
+        PushNotificationDto.builder()
+            .code("OBSERVATION_NEARBY")
+            .link("/observations/" + savedObservation.getId())
+            .build();
     notifiableUsers.forEach(
         user -> {
-          if (user.equals(issuer))
-            return;
-          double[] topLeft = getPointCorner(
-              user.getLatitude(), user.getLongitude(), -user.getNotificationRadius());
-          double[] bottomRight = getPointCorner(user.getLatitude(), user.getLongitude(), user.getNotificationRadius());
+          if (user.equals(issuer)) return;
+          double[] topLeft =
+              getPointCorner(
+                  user.getLatitude(), user.getLongitude(), -user.getNotificationRadius());
+          double[] bottomRight =
+              getPointCorner(user.getLatitude(), user.getLongitude(), user.getNotificationRadius());
           if (topLeft[0] < observation.getLatitude()
               && observation.getLatitude() < bottomRight[0]
               && topLeft[1] < observation.getLongitude()
@@ -82,7 +85,8 @@ public class ObservationService {
 
   public ObservationWithDetailsDto findById(Long id, String issuerUsername) {
     var issuer = findIssuer(issuerUsername, true);
-    var observation = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    var observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
     return buildDetailed(observation, issuer);
   }
 
@@ -100,8 +104,7 @@ public class ObservationService {
   public SearchResultsDto<ObservationWithDetailsDto> search(
       PaginationDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
     return SearchResultsDto.from(
         observationRepository
@@ -112,11 +115,11 @@ public class ObservationService {
 
   public void submitVote(Long observationId, SubmitVoteDto dto, String issuerUsername) {
     var issuer = findIssuer(issuerUsername, false);
-    var observation = observationRepository.findById(observationId).orElseThrow(UnknownObservationException::new);
+    var observation =
+        observationRepository.findById(observationId).orElseThrow(UnknownObservationException::new);
     var currentVote = observationVoteRepository.findByObservationAndUser(observation, issuer);
     if (dto.getVote() == null) {
-      if (currentVote.isEmpty())
-        return;
+      if (currentVote.isEmpty()) return;
       observationVoteRepository.delete(currentVote.get());
       return;
     }
@@ -131,12 +134,11 @@ public class ObservationService {
   public ObservationWithDetailsDto update(
       Long id, UpdateObservationDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
-    if (!violations.isEmpty())
-      throw new ValidationException(violations);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
-    var observation = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
-    if (!isEditableBy(observation, issuer))
-      throw new ObservationNotEditableException();
+    var observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    if (!isEditableBy(observation, issuer)) throw new ObservationNotEditableException();
     if (dto.getDescription().isPresent()) {
       observation.setDescription(dto.getDescription().get());
     }
@@ -169,22 +171,20 @@ public class ObservationService {
   /**
    * Calculates coordinates given a point and a distance.
    *
-   * @param lat      Latitude to start from.
-   * @param lng      Longitude to start from.
+   * @param lat Latitude to start from.
+   * @param lng Longitude to start from.
    * @param distance Distance (in kilometers) to shift of.
    * @return An array containing {shiftedLatitude, shiftedLongitude}.
-   * @implNote Involved formulas:
-   *           <a href="https://stackoverflow.com/a/1253545"></a>
+   * @implNote Involved formulas: <a href="https://stackoverflow.com/a/1253545"></a>
    */
   private double[] getPointCorner(double lat, double lng, double distance) {
     double latShift = distance / RATIO_KM_LATITUDE;
     double lngShift = distance / (RATIO_KM_LONGITUDE * Math.cos(Math.toRadians(lat)));
-    return new double[] { lat + latShift, lng + lngShift };
+    return new double[] {lat + latShift, lng + lngShift};
   }
 
   private UserEntity findIssuer(String issuerUsername, boolean allowGuest) {
-    if (allowGuest && issuerUsername == null)
-      return null;
+    if (allowGuest && issuerUsername == null) return null;
     return userRepository
         .findByUsernameIgnoreCase(issuerUsername)
         .orElseThrow(UnavailableUserException::new);
