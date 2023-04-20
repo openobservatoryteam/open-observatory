@@ -113,7 +113,7 @@ class ObservationServiceTest {
     when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
         .thenReturn(Optional.of(issuer));
     when(userRepository
-            .findAllByNotificationsEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndLastPositionUpdateIsGreaterThanEqual(
+            .findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
                 isA(Instant.class)))
         .thenReturn(notifiableUsers);
     when(celestialBodyRepository.findById(celestialBody.getId()))

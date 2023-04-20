@@ -24,6 +24,8 @@ public class CelestialBodyController {
   @GetMapping
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(PaginationDto dto) {
+    if (dto.getItemsPerPage() == null) dto.setItemsPerPage(10);
+    if (dto.getPage() == null) dto.setPage(0);
     var celestialBodies = celestialBodyService.search(dto);
     return ResponseEntity.ok(celestialBodies);
   }

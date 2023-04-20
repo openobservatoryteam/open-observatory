@@ -12,6 +12,7 @@ import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -91,6 +92,7 @@ public class UserService {
         .orElseThrow(UnavailableUserException::new);
   }
 
+  @Transactional
   public SelfUserDto update(String username, UpdateUserDto dto, String issuerUsername) {
     var violations = validator.validate(dto);
     if (!violations.isEmpty()) throw new ValidationException(violations);

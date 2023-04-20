@@ -8,6 +8,7 @@ import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -54,6 +55,7 @@ public class CelestialBodyService {
             .map(o -> modelMapper.map(o, CelestialBodyDto.class)));
   }
 
+  @Transactional
   public CelestialBodyDto update(Long id, UpdateCelestialBodyDto dto) {
     var violations = validator.validate(dto);
     if (!violations.isEmpty()) throw new ValidationException(violations);

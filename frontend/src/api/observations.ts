@@ -1,10 +1,10 @@
 import { Observation, ObservationVisibility, ObservationVote, ObservationWithDetails, SearchResults } from './@types';
 import client from './client';
 
-type FindAllObservationsNearbyData = { lng: number; lat: number; radius: number };
-export const findAllObservationsNearby = ({ lng, lat, radius }: FindAllObservationsNearbyData) =>
+type FindAllObservationsNearbyData = { longitude: number; latitude: number; radius: number };
+export const findAllObservationsNearby = ({ longitude, latitude, radius }: FindAllObservationsNearbyData) =>
   client
-    .get('observations/nearby', { searchParams: { lng, lat, radius: radius.toFixed(2) } })
+    .get('observations/nearby', { searchParams: { longitude, latitude, radius: radius.toFixed(2) } })
     .then((r) => r.json<Observation[]>());
 
 export const findObservationById = (id: string) =>
@@ -13,8 +13,8 @@ export const findObservationById = (id: string) =>
 export type CreateObservationData = {
   celestialBodyId: number;
   description?: string;
-  lng: number;
-  lat: number;
+  longitude: number;
+  latitude: number;
   orientation: number;
   visibility: ObservationVisibility;
   timestamp: string;

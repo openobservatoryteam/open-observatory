@@ -19,5 +19,5 @@ public class FindNearbyObservationsDto {
 
   @NotNull(message = "radius.required")
   @Range(message = "radius.range", min = 0, max = 250)
-  private Integer radius;
+  private Double radius;
 }

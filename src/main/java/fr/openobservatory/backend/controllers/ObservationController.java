@@ -26,6 +26,8 @@ public class ObservationController {
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<SearchResultsDto<ObservationWithDetailsDto>> search(
       Authentication authentication, PaginationDto dto) {
+    if (dto.getItemsPerPage() == null) dto.setItemsPerPage(10);
+    if (dto.getPage() == null) dto.setPage(0);
     var observations = observationService.search(dto, authentication.getName());
     return ResponseEntity.ok(observations);
   }
@@ -57,7 +59,7 @@ public class ObservationController {
   public ResponseEntity<ObservationWithDetailsDto> update(
       Authentication authentication,
       @PathVariable Long id,
-      @RequestBody @Valid UpdateObservationDto dto) {
+      @RequestBody UpdateObservationDto dto) {
     var observation = observationService.update(id, dto, authentication.getName());
     return ResponseEntity.ok(observation);
   }
@@ -67,7 +69,7 @@ public class ObservationController {
   public ResponseEntity<Void> submitVote(
       Authentication authentication,
       @PathVariable Long id,
-      @RequestBody @Valid SubmitVoteDto vote) {
+      @RequestBody SubmitVoteDto vote) {
     observationService.submitVote(id, vote, authentication.getName());
     return ResponseEntity.noContent().build();
   }

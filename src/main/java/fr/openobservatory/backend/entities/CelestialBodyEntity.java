@@ -22,8 +22,7 @@ public class CelestialBodyEntity {
   @Column(length = 64, nullable = false, unique = true)
   private String name;
 
-  @Column(nullable = false)
-  @Lob
+  @Column(columnDefinition = "TEXT", nullable = false)
   private String image;
 
   @Column(nullable = false)

@@ -41,7 +41,7 @@ public class UserEntity {
 
   // --- Profile information
 
-  @Column private String avatar;
+  @Column(columnDefinition = "TEXT") private String avatar;
 
   @Column(length = 500)
   private String biography;

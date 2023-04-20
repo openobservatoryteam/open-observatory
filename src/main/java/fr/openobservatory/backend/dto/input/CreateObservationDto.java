@@ -21,13 +21,13 @@ public class CreateObservationDto {
   @Size(message = "description.size", max = 500)
   private String description;
 
-  @NotNull(message = "longitude.required")
-  @Range(message = "longitude.range", min = -180, max = 180)
-  private Double longitude;
-
   @NotNull(message = "latitude.required")
   @Range(message = "latitude.range", min = -90, max = 90)
   private Double latitude;
+
+  @NotNull(message = "longitude.required")
+  @Range(message = "longitude.range", min = -180, max = 180)
+  private Double longitude;
 
   @NotNull(message = "orientation.required")
   @Range(message = "orientation.range", min = 0, max = 360)

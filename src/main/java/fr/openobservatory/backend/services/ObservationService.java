@@ -12,6 +12,7 @@ import fr.openobservatory.backend.repositories.CelestialBodyRepository;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.ObservationVoteRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -40,6 +41,7 @@ public class ObservationService {
 
   // ---
 
+  @Transactional
   public ObservationWithDetailsDto create(String issuerUsername, CreateObservationDto dto) {
     var violations = validator.validate(dto);
     if (!violations.isEmpty()) throw new ValidationException(violations);
@@ -56,7 +58,7 @@ public class ObservationService {
     // Quite ugly, to be optimized
     var notifiableUsers =
         userRepository
-            .findAllByNotificationsEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndLastPositionUpdateIsGreaterThanEqual(
+            .findAllByNotificationEnabledIsTrueAndLatitudeIsNotNullAndLongitudeIsNotNullAndPositionAtIsGreaterThanEqual(
                 Instant.now().minus(7, ChronoUnit.DAYS));
     var notification =
         PushNotificationDto.builder()
