@@ -11,6 +11,8 @@
       "users": "Users management"
     },
     "common": {
+      "user": "User",
+      "admin": "Administrator",
       "achievements": "Rewards",
       "save": "Save",
       "orientation": "Orientation",
