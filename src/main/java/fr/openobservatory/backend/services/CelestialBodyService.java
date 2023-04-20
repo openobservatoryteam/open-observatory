@@ -29,10 +29,7 @@ public class CelestialBodyService {
     if (!violations.isEmpty()) throw new ValidationException(violations);
     if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
       throw new CelestialBodyNameAlreadyUsedException();
-    var celestialBody = new CelestialBodyEntity();
-    celestialBody.setName(dto.getName());
-    celestialBody.setValidityTime(dto.getValidityTime());
-    celestialBody.setImage(dto.getImage());
+    var celestialBody = modelMapper.map(dto, CelestialBodyEntity.class);
     return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
   }
 

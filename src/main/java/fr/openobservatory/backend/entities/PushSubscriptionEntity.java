@@ -3,6 +3,7 @@ package fr.openobservatory.backend.entities;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +27,6 @@ public class PushSubscriptionEntity {
   private UserEntity user;
 
   @Column(nullable = false, updatable = false)
+  @CreationTimestamp
   private Instant createdAt;
 }
