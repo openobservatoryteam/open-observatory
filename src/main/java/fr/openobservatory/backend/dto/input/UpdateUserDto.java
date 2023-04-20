@@ -31,4 +31,8 @@ public class UpdateUserDto {
           @NotNull(message = "notificationRadius.required")
           @Range(message = "notificationRadius.range", min = 5, max = 50) Integer>
       notificationRadius = JsonNullable.undefined();
+
+  @Default
+  private JsonNullable<@NotNull(message = "password.required") @Size(message = "password.size", min = 8) String>
+    password = JsonNullable.undefined();
 }
