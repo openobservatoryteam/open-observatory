@@ -25,3 +25,4 @@ export * from './templates/CreateCelestialBodyModal';
 export * from './templates/EditCelestialBodyModal';
 export * from './templates/WorldMap';
 export * from './templates/CustomTable';
+export * from './templates/EditUserModal';
