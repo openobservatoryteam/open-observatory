@@ -40,7 +40,6 @@ class UserServiceTest {
   @Mock ObservationRepository observationRepository;
   @Spy PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   @Mock PushSubscriptionRepository pushSubscriptionRepository;
-  @Mock UserAchievementRepository userAchievementRepository;
   @Mock UserRepository userRepository;
   @Spy Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
   @InjectMocks UserService userService;
@@ -430,7 +429,7 @@ class UserServiceTest {
   @Test
   void updatePosition_should_throw_when_dto_is_invalid() {
     // Given
-    var dto = UpdatePositionDto.builder().latitude(110).longitude(420).build();
+    var dto = UpdatePositionDto.builder().latitude(110.0).longitude(420.0).build();
 
     // When
     ThrowingCallable action = () -> userService.updatePosition("target", dto, "issuer");
