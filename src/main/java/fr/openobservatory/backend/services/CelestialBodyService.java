@@ -1,15 +1,17 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.CelestialBodyDto;
-import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
-import fr.openobservatory.backend.dto.SearchResultsDto;
-import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.PaginationDto;
+import fr.openobservatory.backend.dto.input.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.dto.output.CelestialBodyDto;
+import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -18,14 +20,13 @@ public class CelestialBodyService {
 
   private final CelestialBodyRepository celestialBodyRepository;
   private final ModelMapper modelMapper;
+  private final Validator validator;
 
   // ---
 
   public CelestialBodyDto create(CreateCelestialBodyDto dto) {
-    if (dto.getName().length() < 4 || dto.getName().length() > 64)
-      throw new InvalidCelestialBodyNameException();
-    if (dto.getValidityTime() < 1 || dto.getValidityTime() > 12)
-      throw new InvalidCelestialBodyValidityTimeException();
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     if (celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
       throw new CelestialBodyNameAlreadyUsedException();
     var celestialBody = new CelestialBodyEntity();
@@ -47,35 +48,32 @@ public class CelestialBodyService {
         .orElseThrow(UnknownCelestialBodyException::new);
   }
 
-  public SearchResultsDto<CelestialBodyDto> search(Integer page, Integer itemsPerPage) {
-    if (itemsPerPage < 0 || itemsPerPage > 100 || page < 0) throw new InvalidPaginationException();
-    var pageable = PageRequest.of(page, itemsPerPage);
+  public SearchResultsDto<CelestialBodyDto> search(PaginationDto dto) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     return SearchResultsDto.from(
         celestialBodyRepository
-            .findAll(pageable)
+            .findAll(Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()))
             .map(o -> modelMapper.map(o, CelestialBodyDto.class)));
   }
 
   public CelestialBodyDto update(Long id, UpdateCelestialBodyDto dto) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var celestialBody =
         celestialBodyRepository.findById(id).orElseThrow(UnknownCelestialBodyException::new);
     if (dto.getName().isPresent()) {
       var name = dto.getName().get();
-      if (name.length() < 4 || name.length() > 64) throw new InvalidCelestialBodyNameException();
       if (!celestialBody.getName().equalsIgnoreCase(name)
           && celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(name))
         throw new CelestialBodyNameAlreadyUsedException();
       celestialBody.setName(name);
     }
     if (dto.getValidityTime().isPresent()) {
-      var validityTime = dto.getValidityTime().get();
-      if (validityTime < 1 || validityTime > 12)
-        throw new InvalidCelestialBodyValidityTimeException();
-      celestialBody.setValidityTime(validityTime);
+      celestialBody.setValidityTime(dto.getValidityTime().get());
     }
     if (dto.getImage().isPresent()) {
-      var image = dto.getImage().get();
-      celestialBody.setImage(image);
+      celestialBody.setImage(dto.getImage().get());
     }
     return modelMapper.map(celestialBodyRepository.save(celestialBody), CelestialBodyDto.class);
   }

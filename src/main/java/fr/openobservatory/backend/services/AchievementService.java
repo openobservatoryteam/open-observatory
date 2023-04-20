@@ -43,9 +43,10 @@ public class AchievementService {
                 userAchievementRepository
                     .findByUserAndAchievement(observation.getAuthor(), a.achievement())
                     .orElse(
-                        new UserAchievementEntity()
-                            .setUser(a.user())
-                            .setAchievement(a.achievement()));
+                        UserAchievementEntity.builder()
+                            .achievement(a.achievement())
+                            .user(a.user())
+                            .build());
             achievement.setLevel(a.level());
             userAchievementRepository.save(achievement);
           }
@@ -62,9 +63,10 @@ public class AchievementService {
                 userAchievementRepository
                     .findByUserAndAchievement(a.user(), a.achievement())
                     .orElse(
-                        new UserAchievementEntity()
-                            .setUser(a.user())
-                            .setAchievement(a.achievement()));
+                        UserAchievementEntity.builder()
+                            .achievement(a.achievement())
+                            .user(a.user())
+                            .build());
             achievement.setLevel(a.level());
             userAchievementRepository.save(achievement);
           }

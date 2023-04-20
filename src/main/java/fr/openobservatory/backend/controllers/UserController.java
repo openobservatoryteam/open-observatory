@@ -1,8 +1,13 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.dto.input.CreateUserDto;
+import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
+import fr.openobservatory.backend.dto.input.UpdatePositionDto;
+import fr.openobservatory.backend.dto.input.UpdateUserDto;
+import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
+import fr.openobservatory.backend.dto.output.SelfUserDto;
+import fr.openobservatory.backend.dto.output.UserWithProfileDto;
 import fr.openobservatory.backend.services.UserService;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +27,7 @@ public class UserController {
 
   @PostMapping("/register")
   @PreAuthorize("isAnonymous()")
-  public ResponseEntity<UserWithProfileDto> register(@RequestBody @Valid CreateUserDto dto) {
+  public ResponseEntity<UserWithProfileDto> register(@RequestBody CreateUserDto dto) {
     var user = userService.create(dto);
     return ResponseEntity.created(URI.create("/users/" + user.getUsername())).body(user);
   }
@@ -55,7 +60,7 @@ public class UserController {
   public ResponseEntity<UserWithProfileDto> update(
       Authentication authentication,
       @PathVariable String username,
-      @RequestBody @Valid UpdateProfileDto dto) {
+      @RequestBody UpdateUserDto dto) {
     var user = userService.update(username, dto, authentication.getName());
     return ResponseEntity.ok(user);
   }
@@ -65,8 +70,8 @@ public class UserController {
   public ResponseEntity<Void> changePassword(
       Authentication authentication,
       @PathVariable String username,
-      @RequestBody @Valid ChangePasswordDto dto) {
-    userService.modifyPassword(username, dto, authentication.getName());
+      @RequestBody UpdatePasswordDto dto) {
+    userService.updatePassword(username, dto, authentication.getName());
     return ResponseEntity.noContent().build();
   }
 
@@ -75,8 +80,8 @@ public class UserController {
   public ResponseEntity<Void> updateUserPosition(
       Authentication authentication,
       @PathVariable String username,
-      @RequestBody @Valid UpdatePositionDto dto) {
-    userService.saveUserPosition(username, dto, authentication.getName());
+      @RequestBody UpdatePositionDto dto) {
+    userService.updatePosition(username, dto, authentication.getName());
     return ResponseEntity.noContent().build();
   }
 }

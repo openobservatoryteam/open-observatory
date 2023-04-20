@@ -1,6 +1,6 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -10,6 +10,5 @@ public class PushSubscriptionDto {
 
   private String endpoint;
   private String p256dh;
-  private String userAgent;
-  private OffsetDateTime createdAt;
+  private Instant createdAt;
 }

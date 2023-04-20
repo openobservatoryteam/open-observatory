@@ -1,11 +1,11 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.CelestialBodyDto;
-import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
-import fr.openobservatory.backend.dto.SearchResultsDto;
-import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.PaginationDto;
+import fr.openobservatory.backend.dto.input.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.dto.output.CelestialBodyDto;
+import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.services.CelestialBodyService;
-import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,8 @@ public class CelestialBodyController {
 
   @GetMapping
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(
-      @RequestParam(required = false, defaultValue = "10") Integer limit,
-      @RequestParam(required = false, defaultValue = "0") Integer page) {
-    var celestialBodies = celestialBodyService.search(page, limit);
+  public ResponseEntity<SearchResultsDto<CelestialBodyDto>> search(PaginationDto dto) {
+    var celestialBodies = celestialBodyService.search(dto);
     return ResponseEntity.ok(celestialBodies);
   }
 
@@ -39,7 +37,7 @@ public class CelestialBodyController {
 
   @PostMapping
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<CelestialBodyDto> create(@RequestBody @Valid CreateCelestialBodyDto dto) {
+  public ResponseEntity<CelestialBodyDto> create(@RequestBody CreateCelestialBodyDto dto) {
     var celestialBody = celestialBodyService.create(dto);
     return ResponseEntity.created(URI.create("/celestial-bodies/" + celestialBody.getId()))
         .body(celestialBody);
@@ -48,7 +46,7 @@ public class CelestialBodyController {
   @PatchMapping("/{id}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<CelestialBodyDto> update(
-      @PathVariable Long id, @RequestBody @Valid UpdateCelestialBodyDto dto) {
+      @PathVariable Long id, @RequestBody UpdateCelestialBodyDto dto) {
     var celestialBody = celestialBodyService.update(id, dto);
     return ResponseEntity.ok(celestialBody);
   }

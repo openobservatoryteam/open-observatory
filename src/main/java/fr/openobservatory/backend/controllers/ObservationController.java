@@ -1,6 +1,9 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.dto.input.*;
+import fr.openobservatory.backend.dto.output.ObservationDto;
+import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
+import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.services.ObservationService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -19,27 +22,25 @@ public class ObservationController {
 
   // ---
 
+  @GetMapping
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<SearchResultsDto<ObservationWithDetailsDto>> search(
+      Authentication authentication, PaginationDto dto) {
+    var observations = observationService.search(dto, authentication.getName());
+    return ResponseEntity.ok(observations);
+  }
+
   @PostMapping
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<ObservationWithDetailsDto> create(
-      Authentication authentication,
-      @RequestBody @Valid CreateObservationDto createObservationDto) {
+      Authentication authentication, @RequestBody CreateObservationDto createObservationDto) {
     var observation = observationService.create(authentication.getName(), createObservationDto);
     return ResponseEntity.ok(observation);
   }
 
-  @GetMapping
-  public ResponseEntity<SearchResultsDto<ObservationWithDetailsDto>> findAll(
-      @RequestParam(required = false, defaultValue = "0") Integer page,
-      @RequestParam(required = false, defaultValue = "10") Integer itemsPerPage) {
-    var observations = observationService.search(page, itemsPerPage);
-    return ResponseEntity.ok(observations);
-  }
-
   @GetMapping("/nearby")
-  public ResponseEntity<List<ObservationDto>> findAllNearby(
-      @RequestParam Double lng, @RequestParam Double lat, @RequestParam Double radius) {
-    var observations = observationService.findAllNearby(lng, lat, radius);
+  public ResponseEntity<List<ObservationDto>> findAllNearby(FindNearbyObservationsDto dto) {
+    var observations = observationService.findAllNearby(dto);
     return ResponseEntity.ok(observations);
   }
 
@@ -64,7 +65,9 @@ public class ObservationController {
   @PutMapping("/{id}/vote")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> submitVote(
-      Authentication authentication, @PathVariable Long id, @RequestBody @Valid VoteDto vote) {
+      Authentication authentication,
+      @PathVariable Long id,
+      @RequestBody @Valid SubmitVoteDto vote) {
     observationService.submitVote(id, vote, authentication.getName());
     return ResponseEntity.noContent().build();
   }

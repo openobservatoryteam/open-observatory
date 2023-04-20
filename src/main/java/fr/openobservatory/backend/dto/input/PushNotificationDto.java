@@ -1,11 +1,11 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.input;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
-@Accessors(chain = true)
+@Builder
 @Data
 public class PushNotificationDto {
 

@@ -1,6 +1,6 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
-import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.entities.ObservationVoteEntity.VoteType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ObservationWithDetailsDto extends ObservationDto {
 
-  private ObservationVoteEntity.VoteType currentVote;
+  private VoteType currentVote;
   private boolean isExpired;
   private int karma;
 }

@@ -1,26 +1,31 @@
 package fr.openobservatory.backend.entities;
 
-import fr.openobservatory.backend.repositories.Achievements;
+import fr.openobservatory.backend.repositories.Achievements.Achievement;
+import fr.openobservatory.backend.repositories.Achievements.Level;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "user_achievement")
-@Accessors(chain = true)
 public class UserAchievementEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
-
-  @Column private Achievements.Achievement achievement;
+  @Column(nullable = false)
+  private Achievement achievement;
 
   @Column(nullable = false)
-  private Achievements.Level level;
+  private Level level;
+
+  @ManyToOne(optional = false)
+  private UserEntity user;
 }

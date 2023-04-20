@@ -13,13 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ObservationRepository extends JpaRepository<ObservationEntity, Long> {
 
-  Page<ObservationEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+  Page<ObservationEntity> findAllByOrderByTimestampDesc(Pageable pageable);
 
   Page<ObservationEntity> findAllByAuthor(UserEntity user, Pageable pageable);
 
   Set<ObservationEntity> findAllByAuthor(UserEntity user);
 
   @Query(
-      "FROM ObservationEntity o WHERE (o.latitude BETWEEN :latX AND :latY) AND (o.longitude BETWEEN :lngX AND :lngY) AND (CURRENT_TIMESTAMP - o.createdAt) < MAKE_INTERVAL(0, 0, 0, 0, o.celestialBody.validityTime)")
+      "FROM ObservationEntity o WHERE (o.latitude BETWEEN :latX AND :latY) AND (o.longitude BETWEEN :lngX AND :lngY) AND (CURRENT_TIMESTAMP - o.timestamp) < MAKE_INTERVAL(0, 0, 0, 0, o.celestialBody.validityTime)")
   Collection<ObservationEntity> findAllNearby(double latX, double latY, double lngX, double lngY);
 }

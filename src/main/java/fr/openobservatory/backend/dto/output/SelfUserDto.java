@@ -1,4 +1,4 @@
-package fr.openobservatory.backend.dto;
+package fr.openobservatory.backend.dto.output;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SelfUserDto extends UserWithProfileDto {
-  private Integer radius;
+
   private boolean notificationsEnabled;
+  private Integer notificationRadius;
 }

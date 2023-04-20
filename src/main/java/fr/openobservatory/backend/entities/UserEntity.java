@@ -3,10 +3,13 @@ package fr.openobservatory.backend.entities;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Set;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.*;
+import lombok.Builder.Default;
+import org.hibernate.annotations.CreationTimestamp;
 
-@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "\"user\"")
@@ -20,65 +23,69 @@ public class UserEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = false)
+  // --- Credentials
+
+  @Column(length = 32, nullable = false, unique = true, updatable = false)
   private String username;
 
-  @Column(columnDefinition = "VARCHAR(60)", nullable = false)
+  @Column(length = 72, nullable = false)
   private String password;
 
-  @Column(columnDefinition = "TEXT")
-  private String avatar;
-
-  @Column(columnDefinition = "TEXT")
-  private String biography;
-
-  @Column(columnDefinition = "BOOLEAN")
-  private boolean isPublic;
-
-  @Column(columnDefinition = "SMALLINT")
-  private Type type;
+  @Column(nullable = false)
+  @Default
+  private Type type = Type.USER;
 
   @Column(nullable = false, updatable = false)
+  @CreationTimestamp
   private Instant createdAt;
 
-  @Column(columnDefinition = "FLOAT")
-  private Double latitude;
+  // --- Profile information
 
-  @Column(columnDefinition = "FLOAT")
-  private Double longitude;
+  @Column private String avatar;
 
-  @Column private Instant lastPositionUpdate;
+  @Column(length = 500)
+  private String biography;
 
-  @Column private Integer radius;
+  @Column(nullable = false)
+  @Default
+  private boolean isPublic = true;
 
-  @Column(columnDefinition = "BOOLEAN")
-  private boolean notificationsEnabled;
+  // --- Last position
 
-  @OneToMany(mappedBy = "user")
-  private Set<ObservationVoteEntity> votes;
+  @Column private Double latitude;
 
-  @OneToMany(mappedBy = "user")
-  private Set<UserAchievementEntity> achievements;
+  @Column private Double longitude;
+
+  @Column private Instant positionAt;
+
+  // --- Notification settings
+
+  @Column(nullable = false)
+  @Default
+  private Integer notificationRadius = 5;
+
+  @Column(nullable = false)
+  private boolean notificationEnabled;
 
   // ---
+
+  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
+  @Default
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<UserAchievementEntity> achievements = Set.of();
 
   @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
-  private Set<ObservationEntity> observations;
+  @Default
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<ObservationEntity> observations = Set.of();
 
-  // ---
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    UserEntity that = (UserEntity) o;
-    return username.equalsIgnoreCase(that.username);
-  }
-
-  @Override
-  public int hashCode() {
-    return username.hashCode();
-  }
+  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
+  @Default
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<ObservationVoteEntity> votes = Set.of();
 
   // ---
 

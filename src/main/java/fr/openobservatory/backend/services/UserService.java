@@ -1,19 +1,23 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.dto.input.CreateUserDto;
+import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
+import fr.openobservatory.backend.dto.input.UpdatePositionDto;
+import fr.openobservatory.backend.dto.input.UpdateUserDto;
+import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
+import fr.openobservatory.backend.dto.output.SelfUserDto;
+import fr.openobservatory.backend.dto.output.UserWithProfileDto;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.ObservationRepository;
 import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
-import fr.openobservatory.backend.repositories.UserAchievementRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
+import jakarta.validation.Validator;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,52 +32,34 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final PushSubscriptionRepository pushSubscriptionRepository;
   private final UserRepository userRepository;
-  private final UserAchievementRepository userAchievementRepository;
+  private final Validator validator;
 
   // ---
 
   public UserWithProfileDto create(CreateUserDto dto) {
-    if (!Pattern.matches(UserEntity.USERNAME_PATTERN, dto.getUsername()))
-      throw new InvalidUsernameException();
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     if (userRepository.existsByUsernameIgnoreCase(dto.getUsername()))
       throw new UsernameAlreadyUsedException();
-    if (dto.getBiography().length() > 500) {
-      throw new BiographyReached500CharactersException();
-    }
-    var entity = new UserEntity();
-    entity.setUsername(dto.getUsername());
-    entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-    entity.setBiography(dto.getBiography());
-    entity.setType(UserEntity.Type.USER);
-    entity.setPublic(true);
-    entity.setCreatedAt(Instant.now());
-    entity.setNotificationsEnabled(false);
-    entity.setRadius(5);
-    var userDto = modelMapper.map(userRepository.save(entity), UserWithProfileDto.class);
-    userDto.setAchievements(Set.of());
-    userDto.setKarma(0);
-    return userDto;
+    var user =
+        UserEntity.builder()
+            .username(dto.getUsername())
+            .password(passwordEncoder.encode(dto.getPassword()))
+            .biography(dto.getBiography())
+            .build();
+    return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
   public UserWithProfileDto findByUsername(String username, String issuerUsername) {
-    var issuer =
-        issuerUsername != null
-            ? userRepository
-                .findByUsernameIgnoreCase(issuerUsername)
-                .orElseThrow(UnavailableUserException::new)
-            : null;
+    var issuer = findIssuer(issuerUsername, true);
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isViewableBy(user, issuer)) throw new UserNotVisibleException();
-    var dto = modelMapper.map(user, UserWithProfileDto.class);
-    dto.setAchievements(
-        userAchievementRepository.findAllByUser(user).stream()
-            .map(a -> modelMapper.map(a, AchievementDto.class))
-            .collect(Collectors.toSet()));
-    dto.setKarma(getKarma(user));
-    return dto;
+    return buildProfile(user, UserWithProfileDto.class);
   }
 
+  // TODO: Move to ObservationService
+  @Generated
   public List<ObservationWithDetailsDto> findObservationsByUsername(
       String username, String issuerUsername) {
     var issuer =
@@ -90,7 +76,7 @@ public class UserService {
             o -> {
               var dto = modelMapper.map(o, ObservationWithDetailsDto.class);
               dto.setExpired(
-                  o.getCreatedAt()
+                  o.getTimestamp()
                       .plus(o.getCelestialBody().getValidityTime(), ChronoUnit.HOURS)
                       .isBefore(Instant.now()));
               return dto;
@@ -99,33 +85,42 @@ public class UserService {
   }
 
   public SelfUserDto findSelf(String issuerUsername) {
-    var dto =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .map(u -> modelMapper.map(u, SelfUserDto.class))
-            .orElseThrow(UnavailableUserException::new);
-    dto.setAchievements(
-        userAchievementRepository
-            .findAllByUser(
-                userRepository
-                    .findByUsernameIgnoreCase(issuerUsername)
-                    .orElseThrow(UnknownUserException::new))
-            .stream()
-            .map(a -> modelMapper.map(a, AchievementDto.class))
-            .collect(Collectors.toSet()));
-    dto.setKarma(
-        getKarma(
-            userRepository
-                .findByUsernameIgnoreCase(issuerUsername)
-                .orElseThrow(UnknownUserException::new)));
-    return dto;
+    return userRepository
+        .findByUsernameIgnoreCase(issuerUsername)
+        .map(u -> buildProfile(u, SelfUserDto.class))
+        .orElseThrow(UnavailableUserException::new);
   }
 
-  public void modifyPassword(String username, ChangePasswordDto dto, String issuerUsername) {
-    var issuer =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new);
+  public SelfUserDto update(String username, UpdateUserDto dto, String issuerUsername) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var issuer = findIssuer(issuerUsername, false);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+    if (dto.getAvatar().isPresent()) {
+      user.setAvatar(dto.getAvatar().get());
+    }
+    if (dto.getBiography().isPresent()) {
+      user.setBiography(dto.getBiography().get());
+    }
+    if (dto.getIsPublic().isPresent()) {
+      user.setPublic(dto.getIsPublic().get());
+    }
+    if (dto.getNotificationEnabled().isPresent()) {
+      user.setNotificationEnabled(dto.getNotificationEnabled().get());
+      if (!user.isNotificationEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
+    }
+    if (dto.getNotificationRadius().isPresent()) {
+      user.setNotificationRadius(dto.getNotificationRadius().get());
+    }
+    return buildProfile(userRepository.save(user), SelfUserDto.class);
+  }
+
+  public void updatePassword(String username, UpdatePasswordDto dto, String issuerUsername) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var issuer = findIssuer(issuerUsername, false);
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
@@ -136,44 +131,39 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public SelfUserDto update(String username, UpdateProfileDto dto, String issuerUsername) {
-    var issuer =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new);
+  public void updatePosition(String username, UpdatePositionDto dto, String issuerUsername) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var issuer = findIssuer(issuerUsername, false);
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
-    if (dto.getBiography().isPresent()) {
-      var biography = dto.getBiography().get();
-      if (biography.length() > 500) {
-        throw new BiographyReached500CharactersException();
-      }
-      user.setBiography(biography);
-    }
-    if (dto.getAvatar().isPresent()) {
-      user.setAvatar(dto.getAvatar().get());
-    }
-    if (dto.getIsPublic().isPresent()) {
-      user.setPublic(dto.getIsPublic().get());
-    }
-    if (dto.getRadius().isPresent()) {
-      user.setRadius(dto.getRadius().get());
-    }
-    if (dto.getNotificationsEnabled().isPresent()) {
-      user.setNotificationsEnabled(dto.getNotificationsEnabled().get());
-      if (!user.isNotificationsEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
-    }
-    var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
-    userDto.setAchievements(
-        userAchievementRepository.findAllByUser(user).stream()
-            .map(a -> modelMapper.map(a, AchievementDto.class))
-            .collect(Collectors.toSet()));
-    userDto.setKarma(getKarma(user));
-    return userDto;
+    user.setPositionAt(Instant.now());
+    user.setLatitude(dto.getLatitude());
+    user.setLongitude(dto.getLongitude());
+    userRepository.save(user);
   }
 
   // ---
+
+  private <T extends UserWithProfileDto> T buildProfile(UserEntity user, Class<T> clazz) {
+    var observations = observationRepository.findAllByAuthor(user);
+    var dto = modelMapper.map(user, clazz);
+    dto.setKarma(
+        observations.stream()
+            .map(
+                o ->
+                    o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
+            .reduce(0, Integer::sum));
+    return dto;
+  }
+
+  private UserEntity findIssuer(String issuerUsername, boolean allowGuest) {
+    if (allowGuest && issuerUsername == null) return null;
+    return userRepository
+        .findByUsernameIgnoreCase(issuerUsername)
+        .orElseThrow(UnavailableUserException::new);
+  }
 
   private boolean isEditableBy(UserEntity targetedUser, UserEntity issuer) {
     return issuer.getType().equals(UserEntity.Type.ADMIN) || targetedUser.equals(issuer);
@@ -183,26 +173,5 @@ public class UserService {
     return (issuer != null && issuer.getType().equals(UserEntity.Type.ADMIN))
         || targetedUser.isPublic()
         || targetedUser.equals(issuer);
-  }
-
-  public void saveUserPosition(String username, UpdatePositionDto dto, String issuerUsername) {
-    var issuer =
-        userRepository
-            .findByUsernameIgnoreCase(issuerUsername)
-            .orElseThrow(UnavailableUserException::new);
-    var user =
-        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
-    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
-    user.setLastPositionUpdate(Instant.now());
-    user.setLatitude(dto.getLatitude());
-    user.setLongitude(dto.getLongitude());
-    userRepository.save(user);
-  }
-
-  public int getKarma(UserEntity user) {
-    var observations = observationRepository.findAllByAuthor(user);
-    return observations.stream()
-        .map(o -> o.getVotes().stream().map(v -> v.getVote().getWeight()).reduce(0, Integer::sum))
-        .reduce(0, Integer::sum);
   }
 }
