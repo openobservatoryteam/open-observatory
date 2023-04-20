@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useOverlayTriggerState } from 'react-stately';
 
-import { User, UserWithProfile } from '~/api';
+import { UserWithProfile } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
-import { AsideAdmin, ColumnsProps, CustomActionProps, CustomTable, Text, Title } from '~/components';
+import { AsideAdmin, ColumnsProps, CustomActionProps, CustomTable, EditUserModal, Text, Title } from '~/components';
 
 function UserAdminPage() {
   const { t } = useTranslation();
-
+  const [editUser, setEditUser] = useState<UserWithProfile | null>(null);
   const columns: ColumnsProps<UserWithProfile>[] = [
     {
       name: 'Avatar',
@@ -17,6 +19,10 @@ function UserAdminPage() {
       render: (obj: UserWithProfile) => <Text centered>{obj.username}</Text>,
     },
   ];
+
+  const editUserState = useOverlayTriggerState({
+    onOpenChange: (isOpen) => (isOpen ? undefined : setEditUser(null)),
+  });
 
   const userData: UserWithProfile[] = [
     {
@@ -51,38 +57,42 @@ function UserAdminPage() {
     },
   ];
 
-  const customAction: CustomActionProps<User> = {
+  const customAction: CustomActionProps<UserWithProfile> = {
     edit: {
-      onEdit: (obj) => {
-        console.log(obj.username);
+      onEdit: (obj: UserWithProfile) => {
+        setEditUser(obj);
+        editUserState.open();
       },
     },
     delete: {
-      onDelete: (obj) => {
+      onDelete: (obj: UserWithProfile) => {
         console.log(obj.username);
       },
     },
   };
 
   return (
-    <div className="flex">
-      <AsideAdmin selected={2} />
-      <div className="flex-1">
-        <Title as="h2" centered className="mt-4 mb-4">
-          {t('admin.users')}
-        </Title>
-        <CustomTable
-          data={userData}
-          columns={columns}
-          page={0}
-          pageCount={2}
-          onItemsPerPageChange={(a) => console.log(a)}
-          onPageChange={(a) => console.log(a)}
-          customsAction={customAction}
-          className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
-        />
+    <>
+      {editUser && editUserState.isOpen && <EditUserModal user={editUser} state={editUserState} />}
+      <div className="flex">
+        <AsideAdmin selected={2} />
+        <div className="flex-1">
+          <Title as="h2" centered className="mt-4 mb-4">
+            {t('admin.users')}
+          </Title>
+          <CustomTable
+            data={userData}
+            columns={columns}
+            page={0}
+            pageCount={2}
+            onItemsPerPageChange={(a) => console.log(a)}
+            onPageChange={(a) => console.log(a)}
+            customsAction={customAction}
+            className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
