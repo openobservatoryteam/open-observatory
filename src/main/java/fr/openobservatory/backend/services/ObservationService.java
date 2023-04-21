@@ -156,7 +156,9 @@ public class ObservationService {
     if (!violations.isEmpty()) throw new ValidationException(violations);
     var observation =
         observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
-    observation.setDescription(dto.getDescription().get());
+    if (dto.getDescription().isPresent()) {
+      observation.setDescription(dto.getDescription().get());
+    }
     return modelMapper.map(observationRepository.save(observation), ObservationDto.class);
   }
 
