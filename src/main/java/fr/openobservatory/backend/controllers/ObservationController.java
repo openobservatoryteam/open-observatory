@@ -68,4 +68,11 @@ public class ObservationController {
     observationService.submitVote(id, vote, authentication.getName());
     return ResponseEntity.noContent().build();
   }
+
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  public ResponseEntity<ObservationDto> deleteObservation(@PathVariable Long id) {
+    var obs = observationService.delete(id);
+    return ResponseEntity.ok(obs);
+  }
 }

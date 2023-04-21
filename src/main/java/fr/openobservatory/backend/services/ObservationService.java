@@ -145,6 +145,12 @@ public class ObservationService {
     return buildDetailed(observationRepository.save(observation), issuer);
   }
 
+  public ObservationDto delete(Long id) {
+    var obs = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    observationRepository.deleteById(id);
+    return modelMapper.map(obs, ObservationDto.class);
+  }
+
   // ---
 
   private ObservationWithDetailsDto buildDetailed(
