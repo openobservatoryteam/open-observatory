@@ -1080,7 +1080,7 @@ class UserServiceTest {
     // When
     when(userRepository.findByUsernameIgnoreCase(username))
         .thenReturn(Optional.of(new UserEntity()));
-    userService.adminDeleteUser(username);
+    userService.delete(username);
 
     // Then
     Mockito.verify(userRepository).delete(isA(UserEntity.class));
@@ -1094,7 +1094,7 @@ class UserServiceTest {
 
     // When
     when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.adminDeleteUser(username);
+    ThrowingCallable action = () -> userService.delete(username);
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
@@ -1106,7 +1106,7 @@ class UserServiceTest {
     // Given
 
     // When
-    ThrowingCallable action = () -> userService.adminDeleteUser(null);
+    ThrowingCallable action = () -> userService.delete(null);
 
     // Then
     assertThatThrownBy(action).isInstanceOf(InvalidUsernameException.class);

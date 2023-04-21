@@ -80,10 +80,10 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("{username}/delete")
+  @DeleteMapping("/{username}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
   public ResponseEntity<Void> deleteUser(@PathVariable String username) {
-    userService.adminDeleteUser(username);
+    userService.delete(username);
     return ResponseEntity.noContent().build();
   }
 }

@@ -200,8 +200,7 @@ public class UserService {
         .reduce(0, Integer::sum);
   }
 
-  public void adminDeleteUser(String username) {
-    if (username == null) throw new InvalidUsernameException();
+  public void delete(String username) {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     userRepository.delete(user);
