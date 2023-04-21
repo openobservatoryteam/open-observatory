@@ -151,6 +151,15 @@ public class ObservationService {
     return modelMapper.map(obs, ObservationDto.class);
   }
 
+  public ObservationDto updateFromAdmin(Long id, UpdateObservationDto dto) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    observation.setDescription(dto.getDescription().get());
+    return modelMapper.map(observationRepository.save(observation), ObservationDto.class);
+  }
+
   // ---
 
   private ObservationWithDetailsDto buildDetailed(
