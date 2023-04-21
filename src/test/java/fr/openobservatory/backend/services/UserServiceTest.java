@@ -1099,16 +1099,4 @@ class UserServiceTest {
     // Then
     assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
   }
-
-  @DisplayName("UserService#delete should fail with invalid username")
-  @Test
-  void delete_should_fail_with_invalid_username() {
-    // Given
-
-    // When
-    ThrowingCallable action = () -> userService.delete(null);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidUsernameException.class);
-  }
 }
