@@ -86,4 +86,12 @@ public class UserController {
     userService.delete(username);
     return ResponseEntity.noContent().build();
   }
+
+  @PatchMapping("/{username}")
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  public ResponseEntity<UserWithProfileDto> updateFromAdmin(
+      @PathVariable String username, @RequestBody @Valid UpdateProfileDto dto) {
+    var user = userService.updateFromAdmin(username, dto);
+    return ResponseEntity.ok(user);
+  }
 }

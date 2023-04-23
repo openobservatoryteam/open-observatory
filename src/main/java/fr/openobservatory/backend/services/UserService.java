@@ -141,30 +141,7 @@ public class UserService {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
-    if (dto.getBiography().isPresent()) {
-      var biography = dto.getBiography().get();
-      user.setBiography(biography);
-    }
-    if (dto.getAvatar().isPresent()) {
-      user.setAvatar(dto.getAvatar().get());
-    }
-    if (dto.getIsPublic().isPresent()) {
-      user.setPublic(dto.getIsPublic().get());
-    }
-    if (dto.getRadius().isPresent()) {
-      user.setRadius(dto.getRadius().get());
-    }
-    if (dto.getNotificationsEnabled().isPresent()) {
-      user.setNotificationsEnabled(dto.getNotificationsEnabled().get());
-      if (!user.isNotificationsEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
-    }
-    var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
-    userDto.setAchievements(
-        userAchievementRepository.findAllByUser(user).stream()
-            .map(a -> modelMapper.map(a, AchievementDto.class))
-            .collect(Collectors.toSet()));
-    userDto.setKarma(getKarma(user));
-    return userDto;
+    return getUpdatedSelfUserDto(dto, user);
   }
 
   // ---
@@ -204,5 +181,40 @@ public class UserService {
     var user =
         userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
     userRepository.delete(user);
+  }
+
+  public SelfUserDto updateFromAdmin(String username, UpdateProfileDto dto) {
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    return getUpdatedSelfUserDto(dto, user);
+  }
+
+  // ---
+
+  private SelfUserDto getUpdatedSelfUserDto(UpdateProfileDto dto, UserEntity user) {
+    if (dto.getBiography().isPresent()) {
+      var biography = dto.getBiography().get();
+      user.setBiography(biography);
+    }
+    if (dto.getAvatar().isPresent()) {
+      user.setAvatar(dto.getAvatar().get());
+    }
+    if (dto.getIsPublic().isPresent()) {
+      user.setPublic(dto.getIsPublic().get());
+    }
+    if (dto.getRadius().isPresent()) {
+      user.setRadius(dto.getRadius().get());
+    }
+    if (dto.getNotificationsEnabled().isPresent()) {
+      user.setNotificationsEnabled(dto.getNotificationsEnabled().get());
+      if (!user.isNotificationsEnabled()) pushSubscriptionRepository.deleteAllByUser(user);
+    }
+    var userDto = modelMapper.map(userRepository.save(user), SelfUserDto.class);
+    userDto.setAchievements(
+        userAchievementRepository.findAllByUser(user).stream()
+            .map(a -> modelMapper.map(a, AchievementDto.class))
+            .collect(Collectors.toSet()));
+    userDto.setKarma(getKarma(user));
+    return userDto;
   }
 }
