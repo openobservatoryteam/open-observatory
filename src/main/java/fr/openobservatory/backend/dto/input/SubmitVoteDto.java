@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class SubmitVoteDto {
 
-  VoteType vote;
+  private VoteType vote;
 }
