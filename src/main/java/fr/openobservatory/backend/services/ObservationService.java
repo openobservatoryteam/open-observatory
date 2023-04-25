@@ -6,6 +6,7 @@ import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
 import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.entities.ObservationEntity;
 import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.entities.ObservationVoteEntity.VoteType;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
@@ -125,9 +126,10 @@ public class ObservationService {
       observationVoteRepository.delete(currentVote.get());
       return;
     }
-    var vote = currentVote.orElse(modelMapper.map(dto, ObservationVoteEntity.class));
+    var vote = currentVote.orElse(new ObservationVoteEntity());
     vote.setUser(issuer);
     vote.setObservation(observation);
+    vote.setVote(VoteType.valueOf(dto.getVote()));
     var saveVote = observationVoteRepository.save(vote);
     achievementService.checkForAchievements(saveVote);
   }
