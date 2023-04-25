@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.dto.input;
 
-import fr.openobservatory.backend.entities.ObservationEntity;
+import fr.openobservatory.backend.entities.ObservationEntity.Visibility;
+import fr.openobservatory.backend.validation.EnumValue;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
@@ -34,7 +35,8 @@ public class CreateObservationDto {
   private Integer orientation;
 
   @NotNull(message = "visibility.required")
-  private ObservationEntity.Visibility visibility;
+  @EnumValue(message = "visibility.invalid", value = Visibility.class)
+  private String visibility;
 
   @NotNull(message = "timestamp.required")
   @PastOrPresent(message = "timestamp.pastOrPresent")
