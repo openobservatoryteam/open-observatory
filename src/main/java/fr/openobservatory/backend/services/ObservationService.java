@@ -114,6 +114,8 @@ public class ObservationService {
   }
 
   public void submitVote(Long observationId, SubmitVoteDto dto, String issuerUsername) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
     var issuer = findIssuer(issuerUsername, false);
     var observation =
         observationRepository.findById(observationId).orElseThrow(UnknownObservationException::new);
@@ -123,10 +125,9 @@ public class ObservationService {
       observationVoteRepository.delete(currentVote.get());
       return;
     }
-    var vote = currentVote.orElse(new ObservationVoteEntity());
+    var vote = currentVote.orElse(modelMapper.map(dto, ObservationVoteEntity.class));
     vote.setUser(issuer);
     vote.setObservation(observation);
-    vote.setVote(dto.getVote());
     var saveVote = observationVoteRepository.save(vote);
     achievementService.checkForAchievements(saveVote);
   }

@@ -67,7 +67,7 @@ class ObservationServiceTest {
             .latitude(12.5)
             .longitude(49.3)
             .orientation(30)
-            .visibility(Visibility.VISIBLE)
+            .visibility("VISIBLE")
             .timestamp(Instant.ofEpochSecond(1355314332L))
             .build();
     var notifiableUsers =
@@ -129,7 +129,7 @@ class ObservationServiceTest {
     assertThat(observation.getLatitude()).isEqualTo(dto.getLatitude());
     assertThat(observation.getLongitude()).isEqualTo(dto.getLongitude());
     assertThat(observation.getOrientation()).isEqualTo(dto.getOrientation());
-    assertThat(observation.getVisibility()).isEqualTo(dto.getVisibility());
+    assertThat(observation.getVisibility().name()).isEqualTo(dto.getVisibility());
     assertThat(observation.getTimestamp()).isEqualTo(dto.getTimestamp());
     assertThat(observation.getCurrentVote()).isNull();
     assertThat(observation.isExpired()).isTrue();
@@ -147,7 +147,7 @@ class ObservationServiceTest {
             .longitude(-390.90)
             .orientation(361)
             .timestamp(Instant.now().plus(5, ChronoUnit.HOURS))
-            .visibility(null)
+            .visibility("THIS_IS_NOT_A_VISIBILITY")
             .build();
 
     // When
@@ -164,7 +164,7 @@ class ObservationServiceTest {
                 "longitude.range",
                 "orientation.range",
                 "timestamp.pastOrPresent",
-                "visibility.required"));
+                "visibility.invalid"));
   }
 
   // --- ObservationService#findAllNearby
@@ -312,7 +312,7 @@ class ObservationServiceTest {
     // Given
     var issuer = UserEntity.builder().username("issuer").build();
     var observation = ObservationEntity.builder().id(1L).build();
-    var dto = SubmitVoteDto.builder().vote(VoteType.UPVOTE).build();
+    var dto = SubmitVoteDto.builder().vote("UPVOTE").build();
 
     // When
     when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
@@ -364,6 +364,21 @@ class ObservationServiceTest {
     when(observationVoteRepository.findByObservationAndUser(observation, issuer))
         .thenReturn(Optional.empty());
     observationService.submitVote(observation.getId(), dto, issuer.getUsername());
+  }
+
+  @DisplayName("ObservationService#submitVote should throw when dto is invalid")
+  @Test
+  void submitVote_should_throw_when_dto_is_invalid() {
+    // Given
+    var dto = SubmitVoteDto.builder().vote("UNKNOWN_VOTE").build();
+
+    // When
+    ThrowingCallable action = () -> observationService.submitVote(2L, dto, "issuer");
+
+    // Then
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("vote.invalid"));
   }
 
   // --- ObservationService#update
