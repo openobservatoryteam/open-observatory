@@ -2,6 +2,7 @@ package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import fr.openobservatory.backend.dto.ChangePasswordDto;
@@ -1083,7 +1084,7 @@ class UserServiceTest {
     userService.delete(username);
 
     // Then
-    Mockito.verify(userRepository).delete(isA(UserEntity.class));
+    Mockito.verify(userRepository, times(1)).delete(Mockito.any());
   }
 
   @DisplayName("UserService#delete should fail with unknown user")
@@ -1095,6 +1096,61 @@ class UserServiceTest {
     // When
     when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
     ThrowingCallable action = () -> userService.delete(username);
+
+    // Then
+    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
+  }
+
+  @DisplayName("UserService#edit from admin should pass")
+  @Test
+  void edit_from_admin_should_pass() {
+    // Given
+    var username = "XXXX";
+    var biography = "This is my new biography";
+    var avatar = "avatar";
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.of(biography),
+            JsonNullable.of(avatar),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username))
+        .then(
+            a -> {
+              var entity = new UserEntity();
+              entity.setUsername(username);
+              entity.setType(Type.USER);
+              return Optional.of(entity);
+            });
+    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
+    var user = userService.updateFromAdmin(username, dto);
+
+    // Then
+    Mockito.verify(userRepository, times(1)).save(Mockito.any());
+    assertThat(user.getUsername()).isEqualTo(username);
+  }
+
+  @DisplayName("UserService#edit from admin should fail with unknown user")
+  @Test
+  void edit_from_admin_should_fail_with_unknown_user() {
+    // Given
+    var username = "XXXX";
+    var biography = "This is my new biography";
+    var avatar = "avatar";
+    var dto =
+        new UpdateProfileDto(
+            JsonNullable.of(biography),
+            JsonNullable.of(avatar),
+            JsonNullable.undefined(),
+            JsonNullable.undefined(),
+            JsonNullable.undefined());
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
+    ThrowingCallable action = () -> userService.updateFromAdmin(username, dto);
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
