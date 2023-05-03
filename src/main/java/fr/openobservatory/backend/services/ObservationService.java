@@ -148,6 +148,23 @@ public class ObservationService {
     return buildDetailed(observationRepository.save(observation), issuer);
   }
 
+  public ObservationDto delete(Long id) {
+    var obs = observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    observationRepository.deleteById(id);
+    return modelMapper.map(obs, ObservationDto.class);
+  }
+
+  public ObservationDto updateFromAdmin(Long id, UpdateObservationDto dto) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var observation =
+        observationRepository.findById(id).orElseThrow(UnknownObservationException::new);
+    if (dto.getDescription().isPresent()) {
+      observation.setDescription(dto.getDescription().get());
+    }
+    return modelMapper.map(observationRepository.save(observation), ObservationDto.class);
+  }
+
   // ---
 
   private ObservationWithDetailsDto buildDetailed(

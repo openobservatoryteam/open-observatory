@@ -1,6 +1,5 @@
 package fr.openobservatory.backend.dto.input;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -12,8 +11,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class UpdateObservationDto {
 
   @Default
-  private JsonNullable<
-          @NotNull(message = "description.required") @Size(message = "description.size", max = 500)
-          String>
-      description = JsonNullable.undefined();
+  private JsonNullable<@Size(message = "description.size", max = 500) String> description =
+      JsonNullable.undefined();
 }
