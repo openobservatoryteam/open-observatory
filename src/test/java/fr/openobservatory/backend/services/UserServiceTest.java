@@ -21,7 +21,6 @@ import jakarta.validation.Validator;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.jose4j.jwk.Use;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -109,17 +108,14 @@ class UserServiceTest {
   @Test
   void delete_should_delete_the_user() {
     // Given
-    var issuer = UserEntity.builder()
-        .username("issuer")
-        .type(Type.ADMIN)
-        .build();
-    var target = UserEntity.builder()
-        .username("target")
-        .build();
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
+    var target = UserEntity.builder().username("target").build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername())).thenReturn(Optional.of(issuer));
-    when(userRepository.findByUsernameIgnoreCase(target.getUsername())).thenReturn(Optional.of(target));
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
     userService.delete(target.getUsername(), issuer.getUsername());
 
     // Then
@@ -130,16 +126,14 @@ class UserServiceTest {
   @Test
   void delete_should_throw_when_issuer_cant_delete_the_user() {
     // Given
-    var issuer = UserEntity.builder()
-        .username("issuer")
-        .build();
-    var target = UserEntity.builder()
-        .username("target")
-        .build();
+    var issuer = UserEntity.builder().username("issuer").build();
+    var target = UserEntity.builder().username("target").build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername())).thenReturn(Optional.of(issuer));
-    when(userRepository.findByUsernameIgnoreCase(target.getUsername())).thenReturn(Optional.of(target));
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
     ThrowingCallable action = () -> userService.delete(target.getUsername(), issuer.getUsername());
 
     // Then
