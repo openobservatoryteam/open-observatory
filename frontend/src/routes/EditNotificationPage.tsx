@@ -44,7 +44,7 @@ function EditNotificationPage() {
     notificationMutation.mutate({ username: user!.username, ...values });
     const result = await notifications.request();
     if (values.notificationEnabled && result === 'granted' && push.supported) {
-      push.subscribe();
+      await push.subscribe();
     }
   };
   return (
