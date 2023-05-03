@@ -7,7 +7,7 @@ import lombok.Data;
 public class UserDto {
 
   private String username;
-  private String avatar;
+  private Long avatarId;
   private boolean isPublic;
   private Type type;
 }

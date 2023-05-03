@@ -242,7 +242,6 @@ class UserServiceTest {
     var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
     var dto =
         UpdateUserDto.builder()
-            .avatar(JsonNullable.of("new_avatar"))
             .biography(JsonNullable.of("Goodbye World!"))
             .isPublic(JsonNullable.of(true))
             .notificationEnabled(JsonNullable.of(true))
@@ -258,7 +257,6 @@ class UserServiceTest {
     var user = userService.update(target.getUsername(), dto, issuer.getUsername());
 
     // Then
-    assertThat(user.getAvatar()).isEqualTo(dto.getAvatar().get());
     assertThat(user.getBiography()).isEqualTo(dto.getBiography().get());
   }
 

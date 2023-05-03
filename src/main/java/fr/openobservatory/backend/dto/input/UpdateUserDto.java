@@ -12,8 +12,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Data
 public class UpdateUserDto {
 
-  @Default private JsonNullable<String> avatar = JsonNullable.undefined();
-
   @Default
   private JsonNullable<@Size(message = "biography.size", max = 500) String> biography =
       JsonNullable.undefined();

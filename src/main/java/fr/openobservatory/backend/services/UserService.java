@@ -1,6 +1,7 @@
 package fr.openobservatory.backend.services;
 
 import fr.openobservatory.backend.dto.input.CreateUserDto;
+import fr.openobservatory.backend.dto.input.SendMediaDto;
 import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
 import fr.openobservatory.backend.dto.input.UpdatePositionDto;
 import fr.openobservatory.backend.dto.input.UpdateUserDto;
@@ -14,6 +15,7 @@ import fr.openobservatory.backend.repositories.PushSubscriptionRepository;
 import fr.openobservatory.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
+  private final MediaService mediaService;
   private final ModelMapper modelMapper;
   private final ObservationRepository observationRepository;
   private final PasswordEncoder passwordEncoder;
@@ -109,9 +112,6 @@ public class UserService {
       var password = passwordEncoder.encode(dto.getPassword().get());
       user.setPassword(password);
     }
-    if (dto.getAvatar().isPresent()) {
-      user.setAvatar(dto.getAvatar().get());
-    }
     if (dto.getBiography().isPresent()) {
       user.setBiography(dto.getBiography().get());
     }
@@ -126,6 +126,19 @@ public class UserService {
       user.setNotificationRadius(dto.getNotificationRadius().get());
     }
     return buildProfile(userRepository.save(user), SelfUserDto.class);
+  }
+
+  public UserWithProfileDto updateAvatar(String username, SendMediaDto dto, String issuerUsername)
+      throws IOException {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var issuer = findIssuer(issuerUsername, false);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+    var media = mediaService.create(dto);
+    user.setAvatarId(media.getId());
+    return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
   public void updatePassword(String username, UpdatePasswordDto dto, String issuerUsername) {
