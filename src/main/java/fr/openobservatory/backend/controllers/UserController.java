@@ -87,16 +87,8 @@ public class UserController {
 
   @DeleteMapping("/{username}")
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<Void> deleteUser(@PathVariable String username) {
-    userService.delete(username);
+  public ResponseEntity<Void> delete(Authentication authentication, @PathVariable String username) {
+    userService.delete(username, authentication.getName());
     return ResponseEntity.noContent().build();
-  }
-
-  @PatchMapping("/{username}")
-  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<UserWithProfileDto> updateFromAdmin(
-      @PathVariable String username, @RequestBody @Valid UpdateProfileDto dto) {
-    var user = userService.updateFromAdmin(username, dto);
-    return ResponseEntity.ok(user);
   }
 }

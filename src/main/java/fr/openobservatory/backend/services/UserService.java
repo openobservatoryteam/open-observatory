@@ -50,6 +50,14 @@ public class UserService {
     return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
+  public void delete(String username, String issuerUsername) {
+    var issuer = findIssuer(issuerUsername, false);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+    userRepository.delete(user);
+  }
+
   public UserWithProfileDto findByUsername(String username, String issuerUsername) {
     var issuer = findIssuer(issuerUsername, true);
     var user =
