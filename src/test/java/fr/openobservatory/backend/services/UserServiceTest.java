@@ -102,6 +102,44 @@ class UserServiceTest {
     assertThatThrownBy(action).isInstanceOf(UsernameAlreadyUsedException.class);
   }
 
+  // --- UserService#delete
+
+  @DisplayName("UserService#delete should delete the user")
+  @Test
+  void delete_should_delete_the_user() {
+    // Given
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
+    var target = UserEntity.builder().username("target").build();
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    userService.delete(target.getUsername(), issuer.getUsername());
+
+    // Then
+    verify(userRepository).delete(isA(UserEntity.class));
+  }
+
+  @DisplayName("UserService#delete should throw when issuer can't delete the user")
+  @Test
+  void delete_should_throw_when_issuer_cant_delete_the_user() {
+    // Given
+    var issuer = UserEntity.builder().username("issuer").build();
+    var target = UserEntity.builder().username("target").build();
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action = () -> userService.delete(target.getUsername(), issuer.getUsername());
+
+    // Then
+    assertThatThrownBy(action).isInstanceOf(UserNotEditableException.class);
+  }
+
   // --- UserService#findByUsername
 
   @DisplayName("UserService#findByUsername should find user")

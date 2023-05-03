@@ -18,7 +18,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,6 +50,14 @@ public class UserService {
     return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
+  public void delete(String username, String issuerUsername) {
+    var issuer = findIssuer(issuerUsername, false);
+    var user =
+        userRepository.findByUsernameIgnoreCase(username).orElseThrow(UnknownUserException::new);
+    if (!isEditableBy(user, issuer)) throw new UserNotEditableException();
+    userRepository.delete(user);
+  }
+
   public UserWithProfileDto findByUsername(String username, String issuerUsername) {
     var issuer = findIssuer(issuerUsername, true);
     var user =
@@ -59,8 +66,6 @@ public class UserService {
     return buildProfile(user, UserWithProfileDto.class);
   }
 
-  // TODO: Move to ObservationService
-  @Generated
   public List<ObservationWithDetailsDto> findObservationsByUsername(
       String username, String issuerUsername) {
     var issuer =

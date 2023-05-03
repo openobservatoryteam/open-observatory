@@ -84,4 +84,11 @@ public class UserController {
     userService.updatePosition(username, dto, authentication.getName());
     return ResponseEntity.noContent().build();
   }
+
+  @DeleteMapping("/{username}")
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  public ResponseEntity<Void> delete(Authentication authentication, @PathVariable String username) {
+    userService.delete(username, authentication.getName());
+    return ResponseEntity.noContent().build();
+  }
 }
