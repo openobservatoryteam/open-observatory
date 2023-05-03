@@ -1,113 +1,98 @@
 package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import fr.openobservatory.backend.dto.ChangePasswordDto;
-import fr.openobservatory.backend.dto.CreateUserDto;
-import fr.openobservatory.backend.dto.UpdateProfileDto;
-import fr.openobservatory.backend.entities.CelestialBodyEntity;
+import fr.openobservatory.backend.dto.input.CreateUserDto;
+import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
+import fr.openobservatory.backend.dto.input.UpdatePositionDto;
+import fr.openobservatory.backend.dto.input.UpdateUserDto;
 import fr.openobservatory.backend.entities.ObservationEntity;
+import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.entities.ObservationVoteEntity.VoteType;
+import fr.openobservatory.backend.entities.UserAchievementEntity;
 import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.entities.UserEntity.Type;
 import fr.openobservatory.backend.exceptions.*;
-import fr.openobservatory.backend.repositories.ObservationRepository;
-import fr.openobservatory.backend.repositories.UserAchievementRepository;
-import fr.openobservatory.backend.repositories.UserRepository;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
+import fr.openobservatory.backend.repositories.*;
+import fr.openobservatory.backend.repositories.Achievements.Achievement;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.MappingContext;
 import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-  @Spy private ModelMapper modelMapper = new ModelMapper();
-
-  @Spy private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-  @Mock private UserRepository userRepository;
-
-  @Mock private ObservationRepository observationRepository;
-
-  @Mock private UserAchievementRepository userAchievementRepository;
-
-  @InjectMocks private UserService userService;
-
-  @BeforeEach
-  void setup_modelmapper() {
-    modelMapper.addConverter(
-        new Converter<Instant, OffsetDateTime>() {
-          @Override
-          public OffsetDateTime convert(MappingContext<Instant, OffsetDateTime> context) {
-            return context.getSource().atOffset(ZoneOffset.UTC);
-          }
-        });
-  }
+  @Spy ModelMapper modelMapper = new ModelMapper();
+  @Mock ObservationRepository observationRepository;
+  @Spy PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  @Mock PushSubscriptionRepository pushSubscriptionRepository;
+  @Mock UserRepository userRepository;
+  @Spy Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @InjectMocks UserService userService;
 
   // --- UserService#create
 
-  @DisplayName("UserService#create should pass with valid DTO")
+  @DisplayName("UserService#create should create a new user")
   @Test
-  void create_should_pass_with_valid_dto() {
+  void create_should_create_a_new_user() {
     // Given
-    var dto = new CreateUserDto("heidi", "Heidi123", "This is me");
+    var dto =
+        CreateUserDto.builder()
+            .username("Toto")
+            .password("OneTwoThree123!")
+            .biography("It's a me, Mario!")
+            .build();
 
     // When
-    when(userRepository.existsByUsernameIgnoreCase(dto.getUsername())).thenReturn(false);
+    when(observationRepository.findAllByAuthor(isA(UserEntity.class))).thenReturn(Set.of());
     when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
     var user = userService.create(dto);
 
     // Then
-    assertThat(user.getAchievements()).isEmpty();
-    assertThat(user.getAvatar()).isNull();
-    assertThat(user.getBiography()).isEqualTo(dto.getBiography());
-    assertThat(user.getKarma()).isZero();
-    assertThat(user.getType()).isEqualTo(Type.USER);
     assertThat(user.getUsername()).isEqualTo(dto.getUsername());
-    assertThat(user.getAchievements()).isEqualTo(Set.of());
+    assertThat(user.getBiography()).isEqualTo(dto.getBiography());
+    verify(passwordEncoder, times(1)).encode(dto.getPassword());
   }
 
-  @DisplayName("UserService#create should fail with invalid username")
+  @DisplayName("UserService#create should throw when dto is invalid")
   @Test
-  void create_should_fail_with_invalid_username() {
+  void create_should_throw_when_dto_is_invalid() {
     // Given
-    var dto = new CreateUserDto("(heidi .", "Heidi123", "This is me");
+    var dto = CreateUserDto.builder().username("$").password("nopass").biography(null).build();
 
     // When
     ThrowingCallable action = () -> userService.create(dto);
 
     // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidUsernameException.class);
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("username.format", "password.size"));
   }
 
-  @DisplayName("UserService#create should fail with existing username")
+  @DisplayName("UserService#create should throw when username is already used")
   @Test
-  void create_should_fail_with_existing_username() {
+  void create_should_throw_when_username_is_already_used() {
     // Given
-    var dto = new CreateUserDto("heidi", "Heidi123", "This is me");
+    var dto =
+        CreateUserDto.builder()
+            .username("Toto")
+            .password("OneTwoThree123!")
+            .biography("It's a me, Mario!")
+            .build();
 
     // When
     when(userRepository.existsByUsernameIgnoreCase(dto.getUsername())).thenReturn(true);
@@ -119,1040 +104,359 @@ class UserServiceTest {
 
   // --- UserService#findByUsername
 
-  @DisplayName("UserService#findByUsername should pass with public user and administrator issuer")
+  @DisplayName("UserService#findByUsername should find user")
   @Test
-  void find_by_username_should_pass_with_public_user_and_administrator_issuer() {
+  void findByUsername_should_find_user() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
+    var target = UserEntity.builder().username("target").build();
+    var issuer = UserEntity.builder().username("issuer").build();
+
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.ADMIN);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(true);
-              return Optional.of(entity);
-            });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
-        .thenReturn(Set.of());
-    when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
-    var user = userService.findByUsername(username, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    var user = userService.findByUsername(target.getUsername(), issuer.getUsername());
 
     // Then
-    assertThat(user.getUsername()).isEqualTo(username);
+    assertThat(user.getUsername()).isEqualTo(target.getUsername());
   }
 
-  @DisplayName("UserService#findByUsername should pass with public user and regular issuer")
+  @DisplayName("UserService#findByUsername should throw when profile is private")
   @Test
-  void find_by_username_should_pass_with_public_user_and_regular_issuer() {
+  void findByUsername_should_throw_when_profile_is_private() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
+    var target = UserEntity.builder().username("target").isPublic(false).build();
+    var issuer = UserEntity.builder().username("issuer").build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(true);
-              return Optional.of(entity);
-            });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
-        .thenReturn(Set.of());
-    when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
-    var user = userService.findByUsername(username, issuerUsername);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName("UserService#findByUsername should pass with public user and anonymous issuer")
-  @Test
-  void find_by_username_should_pass_with_public_user_and_anonymous_issuer() {
-    // Given
-    var username = "lima";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(true);
-              return Optional.of(entity);
-            });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
-        .thenReturn(Set.of());
-    when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
-    var user = userService.findByUsername(username, null);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName("UserService#findByUsername should pass with private user and same issuer")
-  @Test
-  void find_by_username_should_pass_with_user_and_same_issuer() {
-    // Given
-    var username = "lima";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(false);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
-        .thenReturn(Set.of());
-    when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
-    var user = userService.findByUsername(username, username);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName("UserService#findByUsername should pass with private user and administrator issuer")
-  @Test
-  void find_by_username_should_pass_with_private_user_and_administrator_issuer() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.ADMIN);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(false);
-              return Optional.of(entity);
-            });
-    when(userAchievementRepository.findAllByUser(Mockito.isA(UserEntity.class)))
-        .thenReturn(Set.of());
-    when(observationRepository.findAllByAuthor(Mockito.isA(UserEntity.class))).thenReturn(Set.of());
-    var user = userService.findByUsername(username, issuerUsername);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName("UserService#findByUsername should fail with private user and regular issuer")
-  @Test
-  void find_by_username_should_fail_with_private_user_and_regular_issuer() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(false);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.findByUsername(username, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    ThrowingCallable action =
+        () -> userService.findByUsername(target.getUsername(), issuer.getUsername());
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UserNotVisibleException.class);
   }
 
-  @DisplayName("UserService#findByUsername should fail with private user and anonymous issuer")
+  @DisplayName("UserService#findByUsername should throw when profile is private (no issuer)")
   @Test
-  void find_by_username_should_fail_with_private_user_and_anonymous_issuer() {
+  void findByUsername_should_throw_when_profile_is_private_without_issuer() {
     // Given
-    var username = "lima";
+    var target = UserEntity.builder().username("target").isPublic(false).build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPublic(false);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.findByUsername(username, null);
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action = () -> userService.findByUsername(target.getUsername(), null);
 
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UserNotVisibleException.class);
-  }
-
-  @DisplayName("UserService#findByUsername should fail with unknown user")
-  @Test
-  void find_by_username_should_fail_with_unknown_user() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.findByUsername(username, issuerUsername);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
-  }
-
-  @DisplayName("UserService#findByUsername should fail with unavailable issuer")
-  @Test
-  void find_by_username_should_fail_with_unavailable_issuer() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.findByUsername(username, issuerUsername);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
-  }
-
-  // --- UserService#findObservationByUsername
-  @DisplayName(
-      "UserService#findObservationByUsername should return user's observations when issuer is the targeted user with private profile")
-  @Test
-  void findObservationByUsername_should_return_user_observations_when_issuer_is_targeted_user() {
-    // Given
-    var targetedUser = "Eikjos";
-    var issuer = "Eikjos";
-    var celestialBody = new CelestialBodyEntity();
-    celestialBody.setValidityTime(5);
-    var observationId = 2L;
-    var desc = "Ceci est le soleil";
-    var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
-    var createdAt = Instant.from(timestamp);
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(issuer);
-              user.setType(Type.USER);
-              return Optional.of(user);
-            });
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(false);
-              return Optional.of(user);
-            });
-    Mockito.when(
-            observationRepository.findAllByAuthor(
-                Mockito.isA(UserEntity.class), Mockito.isA(Pageable.class)))
-        .thenAnswer(
-            answer -> {
-              var observation = new ObservationEntity();
-              observation.setAuthor(answer.getArgument(0));
-              observation.setId(observationId);
-              observation.setDescription(desc);
-              observation.setCelestialBody(celestialBody);
-              observation.setCreatedAt(createdAt);
-              var list = List.of(observation);
-              return new PageImpl<>(list, Pageable.ofSize(100), 1);
-            });
-    var observations = userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThat(observations).hasSize(1);
-    var observation = observations.get(0);
-    assertThat(observation.getId()).isEqualTo(observationId);
-    assertThat(observation.getDescription()).isEqualTo(desc);
-    assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
-    assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(5);
-    assertThat(observation.getAuthor().getUsername()).isEqualTo(targetedUser);
-  }
-
-  @DisplayName(
-      "UserService#findObservationByUsername should return user's observations when issuer is not the targeted user with public profile")
-  @Test
-  void
-      findObservationByUsername_should_return_user_observations_when_issuer_is_not_target_but_profile_is_public() {
-    // Given
-    var targetedUser = "Eikjos";
-    var issuer = "Keke";
-    var celestialBody = new CelestialBodyEntity();
-    celestialBody.setValidityTime(5);
-    var observationId = 2L;
-    var desc = "Ceci est le soleil";
-    var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
-    var createdAt = Instant.from(timestamp);
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(issuer);
-              user.setType(Type.USER);
-              return Optional.of(user);
-            });
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(true);
-              return Optional.of(user);
-            });
-    Mockito.when(
-            observationRepository.findAllByAuthor(
-                Mockito.isA(UserEntity.class), Mockito.isA(Pageable.class)))
-        .thenAnswer(
-            answer -> {
-              var observation = new ObservationEntity();
-              observation.setAuthor(answer.getArgument(0));
-              observation.setId(observationId);
-              observation.setDescription(desc);
-              observation.setCelestialBody(celestialBody);
-              observation.setCreatedAt(createdAt);
-              var list = List.of(observation);
-              return new PageImpl<>(list, Pageable.ofSize(100), 1);
-            });
-    var observations = userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThat(observations).hasSize(1);
-    var observation = observations.get(0);
-    assertThat(observation.getId()).isEqualTo(observationId);
-    assertThat(observation.getDescription()).isEqualTo(desc);
-    assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
-    assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(5);
-    assertThat(observation.getAuthor().getUsername()).isEqualTo(targetedUser);
-  }
-
-  @DisplayName(
-      "UserService#findObservationByUsername should return user's observations when issuer is null with public profile")
-  @Test
-  void
-      findObservationByUsername_should_return_user_observations_when_issuer_is_null_but_profile_is_public() {
-    // Given
-    var targetedUser = "Eikjos";
-    String issuer = null;
-    var celestialBody = new CelestialBodyEntity();
-    celestialBody.setValidityTime(5);
-    var observationId = 2L;
-    var desc = "Ceci est le soleil";
-    var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
-    var createdAt = Instant.from(timestamp);
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(true);
-              return Optional.of(user);
-            });
-    Mockito.when(
-            observationRepository.findAllByAuthor(
-                Mockito.isA(UserEntity.class), Mockito.isA(Pageable.class)))
-        .thenAnswer(
-            answer -> {
-              var observation = new ObservationEntity();
-              observation.setAuthor(answer.getArgument(0));
-              observation.setId(observationId);
-              observation.setDescription(desc);
-              observation.setCelestialBody(celestialBody);
-              observation.setCreatedAt(createdAt);
-              var list = List.of(observation);
-              return new PageImpl<>(list, Pageable.ofSize(100), 1);
-            });
-    var observations = userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThat(observations).hasSize(1);
-    var observation = observations.get(0);
-    assertThat(observation.getId()).isEqualTo(observationId);
-    assertThat(observation.getDescription()).isEqualTo(desc);
-    assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
-    assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(5);
-    assertThat(observation.getAuthor().getUsername()).isEqualTo(targetedUser);
-  }
-
-  @DisplayName(
-      "UserService#findObservationByUsername should return user's observations when issuer is not the targeted user with private profile but issuer is admin")
-  @Test
-  void
-      findObservationByUsername_should_return_user_observations_when_targeted_is_private_and_issuer_is_admin() {
-    // Given
-    var targetedUser = "Eikjos";
-    var issuer = "MrAdmin";
-    var celestialBody = new CelestialBodyEntity();
-    celestialBody.setValidityTime(5);
-    var observationId = 2L;
-    var desc = "Ceci est le soleil";
-    var timestamp = OffsetDateTime.of(2023, 3, 21, 18, 12, 30, 0, ZoneOffset.UTC);
-    var createdAt = Instant.from(timestamp);
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(issuer);
-              user.setType(Type.ADMIN);
-              return Optional.of(user);
-            });
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(false);
-              return Optional.of(user);
-            });
-    Mockito.when(
-            observationRepository.findAllByAuthor(
-                Mockito.isA(UserEntity.class), Mockito.isA(Pageable.class)))
-        .thenAnswer(
-            answer -> {
-              var observation = new ObservationEntity();
-              observation.setAuthor(answer.getArgument(0));
-              observation.setId(observationId);
-              observation.setDescription(desc);
-              observation.setCelestialBody(celestialBody);
-              observation.setCreatedAt(createdAt);
-              var list = List.of(observation);
-              return new PageImpl<>(list, Pageable.ofSize(100), 1);
-            });
-    var observations = userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThat(observations).hasSize(1);
-    var observation = observations.get(0);
-    assertThat(observation.getId()).isEqualTo(observationId);
-    assertThat(observation.getDescription()).isEqualTo(desc);
-    assertThat(observation.getCreatedAt()).isEqualTo(timestamp);
-    assertThat(observation.getCelestialBody().getValidityTime()).isEqualTo(5);
-    assertThat(observation.getAuthor().getUsername()).isEqualTo(targetedUser);
-  }
-
-  @DisplayName("UserService#findObservationByeUsername should fail with unavailable issuer")
-  @Test
-  void findObservationByUsername_should_fail_with_unavailable_issuer() {
-    // Given
-    var issuer = "Hoshi";
-    var targetedUser = "Tsuki";
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenThrow(UnavailableUserException.class);
-    ThrowingCallable action = () -> userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
-  }
-
-  @DisplayName("UserService#findObservartionByUsername should fail with unknown targeted user")
-  @Test
-  void findObservationByUsername_should_fail_with_unknown_targeted_user() {
-    // Given
-    var issuer = "Kevin";
-    var targetedUser = "Thomas";
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenReturn(Optional.of(new UserEntity()));
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenThrow(UnknownUserException.class);
-    ThrowingCallable action = () -> userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
-  }
-
-  @DisplayName(
-      "UserService#findObservationByUsername should fail when issuer is not targeted user and profile is private")
-  @Test
-  void findObservationByUsername_should_fail_with_issuer_not_targeted_and_private_profile() {
-    // Given
-    var issuer = "Eikjos";
-    var targetedUser = "ShyUser";
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(issuer))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(issuer);
-              user.setType(Type.USER);
-              return Optional.of(user);
-            });
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(false);
-              return Optional.of(user);
-            });
-    ThrowingCallable action = () -> userService.findObservationsByUsername(targetedUser, issuer);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UserNotVisibleException.class);
-  }
-
-  @DisplayName(
-      "UserService#findObservationByUsername should fail when issuer is null and profile is private")
-  @Test
-  void findObservationByUsername_should_fail_with_issuer_null_and_private_profile() {
-    // Given
-    String issuer = null;
-    var targetedUser = "ShyUser";
-    // When
-    Mockito.when(userRepository.findByUsernameIgnoreCase(targetedUser))
-        .thenAnswer(
-            answer -> {
-              var user = new UserEntity();
-              user.setUsername(targetedUser);
-              user.setType(Type.USER);
-              user.setPublic(false);
-              return Optional.of(user);
-            });
-    ThrowingCallable action = () -> userService.findObservationsByUsername(targetedUser, issuer);
     // Then
     assertThatThrownBy(action).isInstanceOf(UserNotVisibleException.class);
   }
 
   // --- UserService#findSelf
 
-  @DisplayName("UserService#findSelf should pass with existing issuer")
+  @DisplayName("UserService#findSelf should find the issuer")
   @Test
-  void find_self_should_pass_with_existing_issuer() {
+  void findSelf_should_find_the_issuer() {
     // Given
-    var issuerUsername = "heidi";
+    var issuer =
+        UserEntity.builder()
+            .username("issuer")
+            .achievements(
+                Set.of(UserAchievementEntity.builder().achievement(Achievement.JAMES_WEBB).build()))
+            .build();
+    var observation =
+        ObservationEntity.builder()
+            .votes(Set.of(ObservationVoteEntity.builder().vote(VoteType.DOWNVOTE).build()))
+            .build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              return Optional.of(entity);
-            });
-    var user = userService.findSelf(issuerUsername);
+    when(observationRepository.findAllByAuthor(issuer)).thenReturn(Set.of(observation));
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    var user = userService.findSelf(issuer.getUsername());
 
     // Then
-    assertThat(user.getUsername()).isEqualTo(issuerUsername);
+    assertThat(user.getUsername()).isEqualTo(issuer.getUsername());
+    assertThat(user.getAchievements()).isNotEmpty();
+    assertThat(user.getAchievements().get(0).getAchievement()).isEqualTo(Achievement.JAMES_WEBB);
+    assertThat(user.getKarma()).isEqualTo(-1);
   }
 
-  @DisplayName("UserService#findSelf should fail with unavailable issuer")
+  // --- UserService#update
+
+  @DisplayName("UserService#update should update the targeted user")
   @Test
-  void find_self_should_pass_with_existing_username() {
+  void update_should_update_the_targeted_user() {
     // Given
-    var issuerUsername = "heidi";
+    var target =
+        UserEntity.builder()
+            .username("target")
+            .avatar("avatar")
+            .biography("Hello World")
+            .isPublic(false)
+            .notificationEnabled(false)
+            .notificationRadius(10)
+            .build();
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
+    var dto =
+        UpdateUserDto.builder()
+            .avatar(JsonNullable.of("new_avatar"))
+            .biography(JsonNullable.of("Goodbye World!"))
+            .isPublic(JsonNullable.of(true))
+            .notificationEnabled(JsonNullable.of(true))
+            .notificationRadius(JsonNullable.of(15))
+            .build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.findSelf(issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
+    var user = userService.update(target.getUsername(), dto, issuer.getUsername());
 
     // Then
-    assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
+    assertThat(user.getAvatar()).isEqualTo(dto.getAvatar().get());
+    assertThat(user.getBiography()).isEqualTo(dto.getBiography().get());
   }
 
-  // UserService#modifyPassword
-
-  @DisplayName(
-      "UserService#modifyPassword should pass with existing user and valid data and administrator issuer")
+  @DisplayName("UserService#update should clear current subscriptions")
   @Test
-  void modify_password_should_pass_with_existing_user_and_valid_data_and_administrator_issuer() {
+  void update_should_clear_current_subscriptions() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    var targetedUserPassword = "helloWorld123!";
-    var targetedUserPasswordHash = passwordEncoder.encode(targetedUserPassword);
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+    var target =
+        UserEntity.builder().username("target").isPublic(false).notificationEnabled(true).build();
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
+    var dto = UpdateUserDto.builder().notificationEnabled(JsonNullable.of(false)).build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.ADMIN);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPassword(targetedUserPasswordHash);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
+    userService.update(target.getUsername(), dto, issuer.getUsername());
 
     // Then
-    assertThatNoException().isThrownBy(action);
+    verify(pushSubscriptionRepository, times(1)).deleteAllByUser(target);
   }
 
-  @DisplayName(
-      "UserService#modifyPassword should pass with existing user and valid data and same issuer")
+  @DisplayName("UserService#update should update nothing")
   @Test
-  void modify_password_should_pass_with_existing_user_and_valid_data_and_same_issuer() {
+  void update_should_update_nothing() {
     // Given
-    var username = "lima";
-    var issuerUsername = "lima";
-
-    var targetedUserPassword = "helloWorld123!";
-    var targetedUserPasswordHash = passwordEncoder.encode(targetedUserPassword);
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+    var target =
+        UserEntity.builder()
+            .username("target")
+            .avatar("avatar")
+            .biography("Hello World")
+            .isPublic(false)
+            .notificationEnabled(false)
+            .notificationRadius(10)
+            .build();
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
+    var dto = UpdateUserDto.builder().build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPassword(targetedUserPasswordHash);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
+    var user = userService.update(target.getUsername(), dto, issuer.getUsername());
 
     // Then
-    assertThatNoException().isThrownBy(action);
+    assertThat(user.getAvatar()).isEqualTo(target.getAvatar());
+    assertThat(user.getBiography()).isEqualTo(target.getBiography());
   }
 
-  @DisplayName(
-      "UserService#modifyPassword should fail with existing user and valid data and different issuer")
+  @DisplayName("UserService#update should throw when dto is invalid")
   @Test
-  void modify_password_should_fail_with_existing_user_and_valid_data_and_different_issuer() {
+  void update_should_throw_when_dto_is_invalid() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    var targetedUserPassword = "helloWorld123!";
-    var targetedUserPasswordHash = passwordEncoder.encode(targetedUserPassword);
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+    var dto =
+        UpdateUserDto.builder()
+            .notificationEnabled(JsonNullable.of(true))
+            .notificationRadius(JsonNullable.of(150))
+            .build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPassword(targetedUserPasswordHash);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    ThrowingCallable action = () -> userService.update("target", dto, "target");
+
+    // Then
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("notificationRadius.range"));
+  }
+
+  @DisplayName("UserService#update should throw when issuer can't edit target")
+  @Test
+  void update_should_throw_when_issuer_cant_edit_target() {
+    // Given
+    var target = UserEntity.builder().username("target").build();
+    var issuer = UserEntity.builder().username("issuer").build();
+    var dto =
+        UpdateUserDto.builder()
+            .notificationEnabled(JsonNullable.of(true))
+            .notificationRadius(JsonNullable.of(15))
+            .build();
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action =
+        () -> userService.update(target.getUsername(), dto, issuer.getUsername());
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UserNotEditableException.class);
   }
 
-  @DisplayName("UserService#modifyPassword should fail with existing user and password mismatch")
-  @Test
-  void modify_password_should_fail_with_existing_user_and_password_mismatch() {
-    // Given
-    var username = "heidi";
-    var issuerUsername = "heidi";
+  // --- UserService#updatePassword
 
-    var targetedUserPassword = "helloWorld123!";
-    var targetedUserPasswordHash = passwordEncoder.encode("HelloWorld123!");
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+  @DisplayName("UserService#updatePassword should update user password")
+  @Test
+  void updatePassword_should_update_user_password() {
+    // Given
+    var target =
+        UserEntity.builder()
+            .username("target")
+            .password(passwordEncoder.encode("Password123!"))
+            .build();
+    var dto =
+        UpdatePasswordDto.builder().oldPassword("Password123!").newPassword("Password456!").build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setPassword(targetedUserPasswordHash);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    userService.updatePassword(target.getUsername(), dto, target.getUsername());
+
+    // Then
+    verify(passwordEncoder, times(1)).encode(dto.getNewPassword());
+    verify(userRepository, times(1)).save(isA(UserEntity.class));
+  }
+
+  @DisplayName("UserService#updatePassword should throw when dto is invalid")
+  @Test
+  void updatePassword_should_throw_when_dto_is_invalid() {
+    // Given
+    var dto = UpdatePasswordDto.builder().oldPassword(null).newPassword("a").build();
+
+    // When
+    ThrowingCallable action = () -> userService.updatePassword("target", dto, "target");
+
+    // Then
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue(
+            "violations", Set.of("oldPassword.required", "newPassword.size"));
+  }
+
+  @DisplayName("UserService#updatePassword should throw when issuer can't edit target")
+  @Test
+  void updatePassword_should_throw_when_issuer_cant_edit_target() {
+    // Given
+    var target =
+        UserEntity.builder()
+            .username("target")
+            .password(passwordEncoder.encode("Password123!"))
+            .build();
+    var dto =
+        UpdatePasswordDto.builder().oldPassword("Password123!").newPassword("Password456!").build();
+    var issuer = UserEntity.builder().username("issuer").build();
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action =
+        () -> userService.updatePassword(target.getUsername(), dto, issuer.getUsername());
+
+    // Then
+    assertThatThrownBy(action).isInstanceOf(UserNotEditableException.class);
+  }
+
+  @DisplayName("UserService#updatePassword should throw when paswords don't match")
+  @Test
+  void updatePassword_should_throw_when_passwords_dont_match() {
+    // Given
+    var target =
+        UserEntity.builder()
+            .username("target")
+            .password(passwordEncoder.encode("Password123!"))
+            .build();
+    var dto =
+        UpdatePasswordDto.builder().oldPassword("Password456!").newPassword("Password456!").build();
+
+    // When
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action =
+        () -> userService.updatePassword(target.getUsername(), dto, target.getUsername());
 
     // Then
     assertThatThrownBy(action).isInstanceOf(PasswordMismatchException.class);
   }
 
-  @DisplayName("UserService#modifyPassword should fail with unknown user")
-  @Test
-  void modify_password_should_fail_with_unknown_user() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
+  // --- UserService#updatePosition
 
-    var targetedUserPassword = "helloWorld123!";
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+  @DisplayName("UserService#updatePosition should update user position")
+  @Test
+  void updatePosition_should_update_user_position() {
+    // Given
+    var target = UserEntity.builder().username("target").build();
+    var dto = UpdatePositionDto.builder().latitude(3.402892).longitude(22.39392).build();
+    var issuer = UserEntity.builder().username("issuer").type(Type.ADMIN).build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    userService.updatePosition(target.getUsername(), dto, issuer.getUsername());
 
     // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
+    verify(userRepository, times(1)).save(isA(UserEntity.class));
   }
 
-  @DisplayName("UserService#modifyPassword should fail with unknown issuer")
+  @DisplayName("UserService#updatePosition should throw when dto is invalid")
   @Test
-  void modify_password_should_fail_with_unknown_issuer() {
+  void updatePosition_should_throw_when_dto_is_invalid() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    var targetedUserPassword = "helloWorld123!";
-    var dto = new ChangePasswordDto(targetedUserPassword, "newPassword123!");
+    var dto = UpdatePositionDto.builder().latitude(110.0).longitude(420.0).build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.modifyPassword(username, dto, issuerUsername);
+    ThrowingCallable action = () -> userService.updatePosition("target", dto, "issuer");
 
     // Then
-    assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("latitude.range", "longitude.range"));
   }
 
-  // --- UserService#update
-
-  @DisplayName(
-      "UserService#update should pass with existing user and valid data and administrator issuer")
+  @DisplayName("UserService#updatePosition should throw when issuer can't edit target")
   @Test
-  void update_should_pass_with_existing_user_and_valid_data_and_administrator_issuer() {
+  void updatePosition_should_throw_when_issuer_cant_edit_target() {
     // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-    var biography = "This is my new biography";
-    var avatar = "avatar";
-    var radius = 20;
-
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.of(biography),
-            JsonNullable.of(avatar),
-            JsonNullable.undefined(),
-            JsonNullable.of(radius),
-            JsonNullable.undefined());
+    var target = UserEntity.builder().username("target").build();
+    var dto = UpdatePositionDto.builder().latitude(3.402892).longitude(22.39392).build();
+    var issuer = UserEntity.builder().username("issuer").build();
 
     // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.ADMIN);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              return Optional.of(entity);
-            });
-    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
-    var user = userService.update(username, dto, issuerUsername);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-    assertThat(user.getBiography()).isEqualTo(biography);
-    assertThat(user.getAvatar()).isEqualTo(avatar);
-    assertThat(user.getRadius()).isEqualTo(radius);
-  }
-
-  @DisplayName("UserService#update should pass with existing user and valid data and same issuer")
-  @Test
-  void update_should_pass_with_existing_user_and_valid_data_and_same_issuer() {
-    // Given
-    var username = "heidi";
-    var issuerUsername = "heidi";
-    var biography = "This is my new biography";
-    var avatar = "avatar";
-    var radius = 30;
-    var notificationEnabled = true;
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.of(biography),
-            JsonNullable.of(avatar),
-            JsonNullable.undefined(),
-            JsonNullable.of(radius),
-            JsonNullable.of(notificationEnabled));
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
-    var user = userService.update(username, dto, issuerUsername);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-    assertThat(user.getBiography()).isEqualTo(biography);
-    assertThat(user.getAvatar()).isEqualTo(avatar);
-    assertThat(user.getRadius()).isEqualTo(radius);
-    assertThat(user.isNotificationsEnabled()).isEqualTo(notificationEnabled);
-  }
-
-  @DisplayName("UserService#update should pass with existing user and no data and same issuer")
-  @Test
-  void update_should_pass_with_existing_user_and_no_data_and_same_issuer() {
-    // Given
-    var username = "heidi";
-    var issuerUsername = "heidi";
-
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
-    var user = userService.update(username, dto, issuerUsername);
-
-    // Then
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName(
-      "UserService#update should fail with existing user and filled data and different issuer")
-  @Test
-  void update_should_fail_with_existing_user_and_valid_data_and_different_issuer() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-    var biography = "This is my new biography";
-    var avatar = "avatar";
-
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.of(biography),
-            JsonNullable.of(avatar),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.update(username, dto, issuerUsername);
+    when(userRepository.findByUsernameIgnoreCase(issuer.getUsername()))
+        .thenReturn(Optional.of(issuer));
+    when(userRepository.findByUsernameIgnoreCase(target.getUsername()))
+        .thenReturn(Optional.of(target));
+    ThrowingCallable action =
+        () -> userService.updatePosition(target.getUsername(), dto, issuer.getUsername());
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UserNotEditableException.class);
-  }
-
-  @DisplayName("UserService#update should fail with unknown user")
-  @Test
-  void update_should_fail_with_unknown_user() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(issuerUsername);
-              return Optional.of(entity);
-            });
-    ThrowingCallable action = () -> userService.update(username, dto, issuerUsername);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
-  }
-
-  @DisplayName("UserService#update should fail with unknown issuer")
-  @Test
-  void update_should_fail_with_unknown_issuer() {
-    // Given
-    var username = "lima";
-    var issuerUsername = "heidi";
-
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(issuerUsername)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.update(username, dto, issuerUsername);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnavailableUserException.class);
-  }
-
-  @DisplayName("UserService#delete should pass")
-  @Test
-  void delete_should_pass() {
-    // Given
-    var username = "XXXX";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .thenReturn(Optional.of(new UserEntity()));
-    userService.delete(username);
-
-    // Then
-    Mockito.verify(userRepository, times(1)).delete(Mockito.any());
-  }
-
-  @DisplayName("UserService#delete should fail with unknown user")
-  @Test
-  void delete_should_fail_with_unknown_user() {
-    // Given
-    var username = "XXXX";
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.delete(username);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
-  }
-
-  @DisplayName("UserService#edit from admin should pass")
-  @Test
-  void edit_from_admin_should_pass() {
-    // Given
-    var username = "XXXX";
-    var biography = "This is my new biography";
-    var avatar = "avatar";
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.of(biography),
-            JsonNullable.of(avatar),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username))
-        .then(
-            a -> {
-              var entity = new UserEntity();
-              entity.setUsername(username);
-              entity.setType(Type.USER);
-              return Optional.of(entity);
-            });
-    when(userRepository.save(isA(UserEntity.class))).then(a -> a.getArgument(0));
-    var user = userService.updateFromAdmin(username, dto);
-
-    // Then
-    Mockito.verify(userRepository, times(1)).save(Mockito.any());
-    assertThat(user.getUsername()).isEqualTo(username);
-  }
-
-  @DisplayName("UserService#edit from admin should fail with unknown user")
-  @Test
-  void edit_from_admin_should_fail_with_unknown_user() {
-    // Given
-    var username = "XXXX";
-    var biography = "This is my new biography";
-    var avatar = "avatar";
-    var dto =
-        new UpdateProfileDto(
-            JsonNullable.of(biography),
-            JsonNullable.of(avatar),
-            JsonNullable.undefined(),
-            JsonNullable.undefined(),
-            JsonNullable.undefined());
-
-    // When
-    when(userRepository.findByUsernameIgnoreCase(username)).thenReturn(Optional.empty());
-    ThrowingCallable action = () -> userService.updateFromAdmin(username, dto);
-
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownUserException.class);
   }
 }

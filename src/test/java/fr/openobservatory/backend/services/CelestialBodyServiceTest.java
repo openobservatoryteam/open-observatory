@@ -1,120 +1,121 @@
 package fr.openobservatory.backend.services;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.*;
 
-import fr.openobservatory.backend.dto.CreateCelestialBodyDto;
-import fr.openobservatory.backend.dto.UpdateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.CreateCelestialBodyDto;
+import fr.openobservatory.backend.dto.input.PaginationDto;
+import fr.openobservatory.backend.dto.input.UpdateCelestialBodyDto;
 import fr.openobservatory.backend.entities.CelestialBodyEntity;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.CelestialBodyRepository;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.ThrowableAssert;
+import java.util.Set;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class CelestialBodyServiceTest {
 
-  @Spy private ModelMapper modelMapper;
-  @Mock private CelestialBodyRepository celestialBodyRepository;
+  @Spy ModelMapper modelMapper;
+  @Mock CelestialBodyRepository celestialBodyRepository;
+  @Spy Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @InjectMocks CelestialBodyService celestialBodyService;
 
-  @InjectMocks private CelestialBodyService celestialBodyService;
+  // --- CelestialBodyService#create
 
-  @DisplayName("CelestialBodyService#create should return registered CelestialBody with ")
+  @DisplayName("CelestialBodyService#create should create a celestial body")
   @Test
-  void create_should_return_celestialBody_with_valid_input() {
+  void create_should_create_a_celestial_body() {
     // Given
-    var id = 1L;
-    var dto = new CreateCelestialBodyDto("Neptune", 3, "image");
+    var dto =
+        CreateCelestialBodyDto.builder().name("Neptune").validityTime(3).image("image").build();
+
     // When
-    Mockito.when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
-        .thenReturn(false);
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = answer.getArgument(0, CelestialBodyEntity.class);
-              entity.setId(id);
-              return entity;
-            });
+    when(celestialBodyRepository.save(isA(CelestialBodyEntity.class))).then(a -> a.getArgument(0));
     var celestialBody = celestialBodyService.create(dto);
+
     // Then
-    assertThat(celestialBody.getId()).isEqualTo(id);
     assertThat(celestialBody.getName()).isEqualTo(dto.getName());
-    assertThat(celestialBody.getImage()).isEqualTo(dto.getImage());
     assertThat(celestialBody.getValidityTime()).isEqualTo(dto.getValidityTime());
+    assertThat(celestialBody.getImage()).isEqualTo(dto.getImage());
   }
 
-  @DisplayName("CelestialBodyService#create should return registered CelestialBody with ")
+  @DisplayName("CelestialBodyService#create should throw when dto is invalid")
   @Test
-  void create_should_fail_with_existing_celestialBody_name() {
+  void create_should_throw_when_dto_is_invalid() {
     // Given
-    var dto = new CreateCelestialBodyDto("Neptune", 3, "image");
+    var dto = CreateCelestialBodyDto.builder().name("a").validityTime(5).image("image").build();
+
     // When
-    Mockito.when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
+    ThrowingCallable action = () -> celestialBodyService.create(dto);
+
+    // Then
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("name.size"));
+  }
+
+  @DisplayName("CelestialBodyService#create should throw when name is already used")
+  @Test
+  void create_should_throw_when_name_is_already_used() {
+    // Given
+    var dto =
+        CreateCelestialBodyDto.builder().name("Neptune").validityTime(3).image("image").build();
+
+    // When
+    when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName()))
         .thenReturn(true);
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.create(dto);
+    ThrowingCallable action = () -> celestialBodyService.create(dto);
+
     // Then
     assertThatThrownBy(action).isInstanceOf(CelestialBodyNameAlreadyUsedException.class);
   }
 
-  @DisplayName("CelestialBodyService#create should fail with too short name")
+  // --- CelestialBodyService#delete
+
+  @DisplayName("CelestialBodyService#delete should delete the targeted body")
   @Test
-  void create_should_fail_with_too_short_name() {
+  void delete_should_delete_the_targeted_body() {
     // Given
-    var dto = new CreateCelestialBodyDto("a", 5, "image");
+    var id = 2L;
+
     // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.create(dto);
+    when(celestialBodyRepository.existsById(id)).thenReturn(true);
+    celestialBodyService.delete(id);
+
     // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyNameException.class);
+    verify(celestialBodyRepository, times(1)).deleteById(id);
   }
 
-  @DisplayName("CelestialBodyService#create should fail with too long name")
+  @DisplayName("CelestialBodyService#delete should throw when body is unknown")
   @Test
-  void create_should_fail_with_too_long_name() {
+  void delete_should_throw_when_body_is_unknown() {
     // Given
-    var dto =
-        new CreateCelestialBodyDto(
-            "Ceci est un nom d'objet celeste qui n'est pas valid car il fait plus de 64 caractères",
-            5,
-            "image");
+    var id = 3L;
+
     // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.create(dto);
+    ThrowingCallable action = () -> celestialBodyService.delete(id);
+
     // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyNameException.class);
+    assertThatThrownBy(action).isInstanceOf(UnknownCelestialBodyException.class);
   }
 
-  @DisplayName("CelestialBodyService#create should fail with too low validity time")
-  @Test
-  void create_should_fail_with_too_low_validity_time() {
-    // Given
-    var dto = new CreateCelestialBodyDto("Neptune", 0, "image");
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.create(dto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyValidityTimeException.class);
-  }
-
-  @DisplayName("CeletialBodyService#create should faiil with too high validity time")
-  @Test
-  void create_should_fail_with_too_high_validity_time() {
-    // Given
-    var dto = new CreateCelestialBodyDto("Neptune", 13, "image");
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.create(dto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyValidityTimeException.class);
-  }
+  // --- CelestialBodyService#findById
 
   @DisplayName("CelestialBodyService#findById should return found celestial body with given id")
   @Test
@@ -125,7 +126,7 @@ class CelestialBodyServiceTest {
     var image = "image";
     var validityTime = 5;
     // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
+    when(celestialBodyRepository.findById(isA(Long.class)))
         .thenAnswer(
             answer -> {
               var entity = new CelestialBodyEntity();
@@ -149,387 +150,189 @@ class CelestialBodyServiceTest {
     // Given
     var id = 5L;
     // When
-    Mockito.when(celestialBodyRepository.findById(id)).thenReturn(Optional.empty());
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.findById(id);
+    when(celestialBodyRepository.findById(id)).thenReturn(Optional.empty());
+    ThrowingCallable action = () -> celestialBodyService.findById(id);
     // Then
     assertThatThrownBy(action).isInstanceOf(UnknownCelestialBodyException.class);
   }
 
-  @DisplayName("CelestialBodyService#search should return page with celestial bodies")
+  // --- CelestialBodyService#search
+
+  @DisplayName("CelestialBodyService#search should search celestial bodies")
   @Test
-  void search_should_return_page_with_celestial_bodies() {
+  void search_should_search_celestial_bodies() {
     // Given
-    var page = 1;
-    var itemsPerPage = 10;
-    var id = 1L;
-    var name = "Neptune";
-    var image = "image";
-    var validityTime = 5;
-    var pageable = PageRequest.of(page, itemsPerPage);
+    var dto = PaginationDto.builder().itemsPerPage(1).page(0).build();
+    var entity =
+        CelestialBodyEntity.builder()
+            .id(33L)
+            .name("Neptune")
+            .validityTime(5)
+            .image("image")
+            .build();
+
     // When
-    Mockito.when(celestialBodyRepository.findAll(Mockito.isA(PageRequest.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setValidityTime(validityTime);
-              entity.setImage(image);
-              var list = List.of(entity);
-              return new PageImpl<>(list, pageable, 1);
-            });
-    var searchDto = celestialBodyService.search(page, itemsPerPage);
+    when(celestialBodyRepository.findAll(isA(Pageable.class)))
+        .thenReturn(
+            new PageImpl<>(
+                List.of(entity),
+                Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()),
+                1));
+    var search = celestialBodyService.search(dto);
+
     // Then
-    assertThat(searchDto.getData()).isNotEmpty();
-    assertThat(searchDto.getData().get(0).getId()).isEqualTo(id);
-    assertThat(searchDto.getData().get(0).getName()).isEqualTo(name);
-    assertThat(searchDto.getData().get(0).getValidityTime()).isEqualTo(validityTime);
-    assertThat(searchDto.getData().get(0).getImage()).isEqualTo(image);
+    assertThat(search.getItemsPerPage()).isEqualTo(dto.getItemsPerPage());
+    assertThat(search.getPage()).isEqualTo(dto.getPage());
+    assertThat(search.getItemCount()).isOne();
+    assertThat(search.getData()).isNotEmpty();
+
+    var body = search.getData().get(0);
+    assertThat(body.getId()).isEqualTo(entity.getId());
+    assertThat(body.getName()).isEqualTo(entity.getName());
+    assertThat(body.getValidityTime()).isEqualTo(entity.getValidityTime());
+    assertThat(body.getImage()).isEqualTo(entity.getImage());
   }
 
-  @DisplayName("CelestialBodyService#search should fail with to low items per page")
+  @DisplayName("CelestialBodyService#search should throw when dto is invalid")
   @Test
   void search_should_fail_with_to_low_items_per_page() {
     // Given
-    var page = 1;
-    var itemsPerPage = -1;
+    var dto = PaginationDto.builder().itemsPerPage(-3).page(-1).build();
+
     // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
+    ThrowingCallable action = () -> celestialBodyService.search(dto);
+
     // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("itemsPerPage.range", "page.range"));
   }
 
-  @DisplayName("CelestialBodyService#search should fail with to high items per page")
-  @Test
-  void search_should_fail_with_to_high_items_per_page() {
-    // Given
-    var page = 1;
-    var itemsPerPage = 200;
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
-  }
+  // --- CelestialBodyService#update
 
-  @DisplayName("CelestialBodyService#search should fail with below zero page number")
+  @DisplayName("CelestialBodyService#update should update the targeted body (name != newName)")
   @Test
-  void search_should_fail_with_below_zero_page_number() {
-    // Given
-    var page = -1;
-    var itemsPerPage = 5;
-    // When
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.search(page, itemsPerPage);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidPaginationException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should return updated celestial body")
-  @Test
-  void update_should_return_updated_celestial_body() {
+  void update_should_update_the_targeted_body_name_neq_newName() {
     // Given
     var id = 3L;
-    var name = "Neptune";
-    var validityTime = 5;
-    var image = "image";
-    var newName = JsonNullable.of("Mars");
-    var newValidityTime = JsonNullable.of(6);
-    var newImage = JsonNullable.of("new image");
-    var updateDto = new UpdateCelestialBodyDto();
-    updateDto.setName(newName);
-    updateDto.setValidityTime(newValidityTime);
-    updateDto.setImage(newImage);
+    var entity =
+        CelestialBodyEntity.builder().id(id).name("Neptune").validityTime(5).image("image").build();
+    var dto =
+        UpdateCelestialBodyDto.builder()
+            .name(JsonNullable.of("Mars"))
+            .validityTime(JsonNullable.of(8))
+            .image(JsonNullable.of("new_image"))
+            .build();
+
     // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setImage(image);
-              entity.setValidityTime(validityTime);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(answer -> answer.getArgument(0, CelestialBodyEntity.class));
-    var celestialBody = celestialBodyService.update(id, updateDto);
+    when(celestialBodyRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(celestialBodyRepository.save(isA(CelestialBodyEntity.class)))
+        .thenAnswer(a -> a.getArgument(0));
+    var celestialBody = celestialBodyService.update(id, dto);
+
     // Then
     assertThat(celestialBody.getId()).isEqualTo(id);
-    assertThat(celestialBody.getName()).isEqualTo(newName.get());
-    assertThat(celestialBody.getValidityTime()).isEqualTo(newValidityTime.get());
-    assertThat(celestialBody.getImage()).isEqualTo(newImage.get());
+    assertThat(celestialBody.getName()).isEqualTo(dto.getName().get());
+    assertThat(celestialBody.getValidityTime()).isEqualTo(dto.getValidityTime().get());
+    assertThat(celestialBody.getImage()).isEqualTo(dto.getImage().get());
   }
 
-  @DisplayName("CelestialBodyService#update should return updated celestial body with no name")
+  @DisplayName("CelestialBodyService#update should update the targeted body (name == newName)")
   @Test
-  void update_should_return_updated_celestial_body_with_no_name() {
+  void update_should_update_the_targeted_body_name_eq_newName() {
     // Given
     var id = 3L;
-    var name = "Neptune";
-    var validityTime = 5;
-    var image = "image";
-    JsonNullable<String> newName = JsonNullable.undefined();
-    var newValidityTime = JsonNullable.of(6);
-    var newImage = JsonNullable.of("new image");
-    var updateDto = new UpdateCelestialBodyDto();
-    updateDto.setName(newName);
-    updateDto.setValidityTime(newValidityTime);
-    updateDto.setImage(newImage);
+    var entity =
+        CelestialBodyEntity.builder().id(id).name("Neptune").validityTime(5).image("image").build();
+    var dto =
+        UpdateCelestialBodyDto.builder()
+            .name(JsonNullable.of("Neptune"))
+            .validityTime(JsonNullable.of(8))
+            .image(JsonNullable.of("new_image"))
+            .build();
+
     // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setImage(image);
-              entity.setValidityTime(validityTime);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(answer -> answer.getArgument(0, CelestialBodyEntity.class));
-    var celestialBody = celestialBodyService.update(id, updateDto);
+    when(celestialBodyRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(celestialBodyRepository.save(isA(CelestialBodyEntity.class)))
+        .thenAnswer(a -> a.getArgument(0));
+    var celestialBody = celestialBodyService.update(id, dto);
+
     // Then
     assertThat(celestialBody.getId()).isEqualTo(id);
-    assertThat(celestialBody.getName()).isEqualTo(name);
-    assertThat(celestialBody.getValidityTime()).isEqualTo(newValidityTime.get());
-    assertThat(celestialBody.getImage()).isEqualTo(newImage.get());
+    assertThat(celestialBody.getName()).isEqualTo(dto.getName().get());
+    assertThat(celestialBody.getValidityTime()).isEqualTo(dto.getValidityTime().get());
+    assertThat(celestialBody.getImage()).isEqualTo(dto.getImage().get());
   }
 
-  @DisplayName(
-      "CelestialBodyService#update should return updated celestial body with no validity time")
+  @DisplayName("CelestialBodyService#update should leave the body as is")
   @Test
-  void update_should_return_updated_celestial_body_with_no_validityTime() {
+  void update_should_leave_the_body_as_is() {
     // Given
     var id = 3L;
-    var name = "Neptune";
-    var validityTime = 5;
-    var image = "image";
-    var newName = JsonNullable.of("Mars");
-    JsonNullable<Integer> newValidityTime = JsonNullable.undefined();
-    var newImage = JsonNullable.of("new image");
-    var updateDto = new UpdateCelestialBodyDto();
-    updateDto.setName(newName);
-    updateDto.setValidityTime(newValidityTime);
-    updateDto.setImage(newImage);
+    var entity =
+        CelestialBodyEntity.builder().id(id).name("Neptune").validityTime(5).image("image").build();
+    var dto =
+        UpdateCelestialBodyDto.builder()
+            .name(JsonNullable.undefined())
+            .validityTime(JsonNullable.undefined())
+            .image(JsonNullable.undefined())
+            .build();
+
     // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setImage(image);
-              entity.setValidityTime(validityTime);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(answer -> answer.getArgument(0, CelestialBodyEntity.class));
-    var celestialBody = celestialBodyService.update(id, updateDto);
+    when(celestialBodyRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(celestialBodyRepository.save(isA(CelestialBodyEntity.class)))
+        .thenAnswer(a -> a.getArgument(0));
+    var celestialBody = celestialBodyService.update(id, dto);
+
     // Then
     assertThat(celestialBody.getId()).isEqualTo(id);
-    assertThat(celestialBody.getName()).isEqualTo(newName.get());
-    assertThat(celestialBody.getValidityTime()).isEqualTo(validityTime);
-    assertThat(celestialBody.getImage()).isEqualTo(newImage.get());
+    assertThat(celestialBody.getName()).isEqualTo(entity.getName());
+    assertThat(celestialBody.getValidityTime()).isEqualTo(entity.getValidityTime());
+    assertThat(celestialBody.getImage()).isEqualTo(entity.getImage());
   }
 
-  @DisplayName("CelestialBodyService#update should return updated celestial body with no image")
+  @DisplayName("CelestialBodyService#update should throw when dto is invalid")
   @Test
-  void update_should_return_updated_celestial_body_with_no_image() {
+  void update_should_throw_when_dto_is_invalid() {
     // Given
     var id = 3L;
-    var name = "Neptune";
-    var validityTime = 5;
-    var image = "image";
-    var newName = JsonNullable.of("Mars");
-    var newValidityTime = JsonNullable.of(6);
-    JsonNullable<String> newImage = JsonNullable.undefined();
-    var updateDto = new UpdateCelestialBodyDto();
-    updateDto.setName(newName);
-    updateDto.setValidityTime(newValidityTime);
-    updateDto.setImage(newImage);
+    var dto =
+        UpdateCelestialBodyDto.builder()
+            .name(JsonNullable.of("CB"))
+            .validityTime(JsonNullable.of(900))
+            .image(JsonNullable.undefined())
+            .build();
+
     // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setImage(image);
-              entity.setValidityTime(validityTime);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(answer -> answer.getArgument(0, CelestialBodyEntity.class));
-    var celestialBody = celestialBodyService.update(id, updateDto);
+    ThrowingCallable action = () -> celestialBodyService.update(id, dto);
+
     // Then
-    assertThat(celestialBody.getId()).isEqualTo(id);
-    assertThat(celestialBody.getName()).isEqualTo(newName.get());
-    assertThat(celestialBody.getValidityTime()).isEqualTo(newValidityTime.get());
-    assertThat(celestialBody.getImage()).isEqualTo(image);
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("name.size", "validityTime.range"));
   }
 
-  @DisplayName(
-      "CelestialBodyService#update should return updated celestial body new name is same as name")
+  @DisplayName("CelestialBodyService#update should throw when new name is already used")
   @Test
-  void update_should_return_updated_celestial_body_when_newName_same_as_name() {
+  void update_should_throw_when_new_name_is_already_used() {
     // Given
     var id = 3L;
-    var name = "Neptune";
-    var validityTime = 5;
-    var image = "image";
-    var newName = JsonNullable.of("Neptune");
-    var newValidityTime = JsonNullable.of(6);
-    var newImage = JsonNullable.of("new image");
-    var updateDto = new UpdateCelestialBodyDto();
-    updateDto.setName(newName);
-    updateDto.setValidityTime(newValidityTime);
-    updateDto.setImage(newImage);
-    // When
-    Mockito.when(celestialBodyRepository.findById(Mockito.isA(Long.class)))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setId(id);
-              entity.setName(name);
-              entity.setImage(image);
-              entity.setValidityTime(validityTime);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.save(Mockito.isA(CelestialBodyEntity.class)))
-        .thenAnswer(answer -> answer.getArgument(0, CelestialBodyEntity.class));
-    var celestialBody = celestialBodyService.update(id, updateDto);
-    // Then
-    assertThat(celestialBody.getId()).isEqualTo(id);
-    assertThat(celestialBody.getName()).isEqualTo(newName.get());
-    assertThat(celestialBody.getValidityTime()).isEqualTo(newValidityTime.get());
-    assertThat(celestialBody.getImage()).isEqualTo(newImage.get());
-  }
+    var entity =
+        CelestialBodyEntity.builder().id(id).name("Neptune").validityTime(5).image("image").build();
+    var dto =
+        UpdateCelestialBodyDto.builder()
+            .name(JsonNullable.of("Mars"))
+            .validityTime(JsonNullable.of(8))
+            .image(JsonNullable.of("new_image"))
+            .build();
 
-  @DisplayName("CelestialBodyService#update should fail with unknown celestial body")
-  @Test
-  void update_should_fail_with_unknown_celestialBody() {
-    // Given
-    var id = 2L;
     // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenThrow(UnknownCelestialBodyException.class);
-    ThrowableAssert.ThrowingCallable action =
-        () -> celestialBodyService.update(id, new UpdateCelestialBodyDto());
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownCelestialBodyException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should fail with too short celestiial body name")
-  @Test
-  void update_should_fail_with_too_short_celestialBody_name() {
-    // Given
-    var id = 2L;
-    var updateDto = new UpdateCelestialBodyDto();
-    var newName = JsonNullable.of("a");
-    updateDto.setName(newName);
-    // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenReturn(Optional.of(new CelestialBodyEntity()));
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.update(id, updateDto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyNameException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should fail with too long celestiial body name")
-  @Test
-  void update_should_fail_with_too_long_celestialBody_name() {
-    // Given
-    var id = 2L;
-    var updateDto = new UpdateCelestialBodyDto();
-    var newName =
-        JsonNullable.of(
-            "Ceci est un nom d'objet celeste qui n'est pas valid car il fait plus de 64 caractères");
-    updateDto.setName(newName);
-    // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenReturn(Optional.of(new CelestialBodyEntity()));
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.update(id, updateDto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyNameException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should fail with already used celestial body name")
-  @Test
-  void update_should_fail_with_already_used_celestialBody_name() {
-    // Given
-    var id = 2L;
-    var name = "Mars";
-    var updateDto = new UpdateCelestialBodyDto();
-    var newName = JsonNullable.of("Neptune");
-    updateDto.setName(newName);
-    // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenAnswer(
-            answer -> {
-              var entity = new CelestialBodyEntity();
-              entity.setName(name);
-              return Optional.of(entity);
-            });
-    Mockito.when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(newName.get()))
+    when(celestialBodyRepository.existsCelestialBodyByNameIgnoreCase(dto.getName().get()))
         .thenReturn(true);
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.update(id, updateDto);
+    when(celestialBodyRepository.findById(id)).thenReturn(Optional.of(entity));
+    ThrowingCallable action = () -> celestialBodyService.update(id, dto);
+
     // Then
     assertThatThrownBy(action).isInstanceOf(CelestialBodyNameAlreadyUsedException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should fail with too low validity time")
-  @Test
-  void update_should_fail_with_too_low_validity_time() {
-    // Given
-    var id = 2L;
-    var updateDto = new UpdateCelestialBodyDto();
-    var newValidityTime = JsonNullable.of(0);
-    updateDto.setValidityTime(newValidityTime);
-    // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenReturn(Optional.of(new CelestialBodyEntity()));
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.update(id, updateDto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyValidityTimeException.class);
-  }
-
-  @DisplayName("CelestialBodyService#update should fail with too high validity time")
-  @Test
-  void update_should_fail_with_too_high_validity_time() {
-    // Given
-    var id = 2L;
-    var updateDto = new UpdateCelestialBodyDto();
-    var newValidityTime = JsonNullable.of(13);
-    updateDto.setValidityTime(newValidityTime);
-    // When
-    Mockito.when(celestialBodyRepository.findById(id))
-        .thenReturn(Optional.of(new CelestialBodyEntity()));
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.update(id, updateDto);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(InvalidCelestialBodyValidityTimeException.class);
-  }
-
-  @DisplayName("CelestialBodyService#delete should fail with unknown celestial body")
-  @Test
-  void delete_should_fail_with_unknown_celestialBody() {
-    // Given
-    var id = 3L;
-    // When
-    Mockito.when(celestialBodyRepository.existsById(id)).thenReturn(false);
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.delete(id);
-    // Then
-    assertThatThrownBy(action).isInstanceOf(UnknownCelestialBodyException.class);
-  }
-
-  @DisplayName("CelestialBodyService#delete should return nothing with existing celestial body")
-  @Test
-  void delete_should_return_nothing_with_existing_celestialBody() {
-    // Given
-    var id = 2L;
-    // When
-    Mockito.when(celestialBodyRepository.existsById(id)).thenReturn(true);
-    ThrowableAssert.ThrowingCallable action = () -> celestialBodyService.delete(id);
-    // Then
-    assertThatNoException().isThrownBy(action);
   }
 }

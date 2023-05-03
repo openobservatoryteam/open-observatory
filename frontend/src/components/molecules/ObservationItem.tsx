@@ -32,7 +32,7 @@ function ObservationItem<C extends ElementType = 'div'>({
           {observation.celestialBody.name}
         </Text>
         <Text as="p" centered color="black" className="text-sm">
-          {dayjs(observation.createdAt).format('le DD/MM/YYYY')}
+          {dayjs(observation.timestamp).format('le DD/MM/YYYY')}
         </Text>
         {observation.expired && (
           <Text as="p" centered color="black" className="text-[0.8em]">

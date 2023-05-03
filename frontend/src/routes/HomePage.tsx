@@ -25,8 +25,8 @@ function HomePage() {
         className="h-[calc(100vh-8.75rem)]"
         minZoom={3}
         worldCopyJump
-        radius={user != null ? user!.radius : 0}
-        withoutNotificationCircle={user != null ? !user!.notificationsEnabled : false}
+        radius={user != null ? user!.notificationRadius : 0}
+        withoutNotificationCircle={user != null ? !user!.notificationEnabled : false}
       >
         <ISSPositions />
         <NearbyObservations />

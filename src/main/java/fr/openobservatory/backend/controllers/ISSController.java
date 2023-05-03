@@ -1,6 +1,6 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.ISSPositionDto;
+import fr.openobservatory.backend.dto.output.ISSPositionDto;
 import fr.openobservatory.backend.services.ISSService;
 import java.util.List;
 import lombok.AllArgsConstructor;
