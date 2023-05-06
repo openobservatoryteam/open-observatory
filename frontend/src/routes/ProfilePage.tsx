@@ -32,7 +32,7 @@ function ProfilePage() {
         <Text as="h2" centered className="mt-3">
           {user.username}
         </Text>
-        <Text centered className="mt-6">
+        <Text centered as="p" className="mt-6 md:w-[45rem] w-72 mx-auto break-words">
           {user.biography}
         </Text>
         {user.achievements.length > 0 && <Achievements className="mt-12" data={user.achievements} />}
@@ -45,7 +45,9 @@ function ProfilePage() {
           </Text>
         </section>
         <div
-          className={`grid ${isSelf ? 'grid-cols-2' : 'grid-cols-1'} h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4`}
+          className={`grid ${
+            isSelf ? 'grid-cols-2' : 'grid-cols-1'
+          } h-20 gap-x-4 max-w-screen-md mt-12 mx-auto px-4 mb-4`}
         >
           <Button as={Link} className="w-full" to="observations">
             {t('users.observationsHistory')}

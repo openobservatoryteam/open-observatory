@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CreateObservationData, ObservationVisibility, createObservation, findAllCelestialBodies } from '~/api';
 import celeste from '~/assets/png/celeste.png';
-import { Button, DatePicker, Map, MarkerInput, Select, TextInput, Title } from '~/components';
+import { Button, DatePicker, MarkerInput, Select, TextInput, Title, WorldMap } from '~/components';
 import { Header } from '~/layout';
 import { registerAdapter as r } from '~/utils';
 
@@ -76,7 +76,7 @@ function ReportObservationPage() {
               {...r(register, 'description', {
                 required: false,
                 validate: (o) =>
-                  o == null || String(o)?.length <= 2048 ? undefined : t('errors.observation.description')!,
+                  o == null || String(o)?.length <= 500 ? undefined : t('errors.observation.description')!,
               })}
             />
             <TextInput
@@ -95,14 +95,14 @@ function ReportObservationPage() {
             />
           </div>
         </div>
-        <Map className="h-60" worldCopyJump>
+        <WorldMap className="h-60" worldCopyJump>
           <MarkerInput
             onMove={(p) => {
-              setValue('lat', p.lat);
-              setValue('lng', p.lng);
+              setValue('latitude', p.lat);
+              setValue('longitude', p.lng);
             }}
           />
-        </Map>
+        </WorldMap>
         <div className="bg-slate-600 flex justify-center py-3">
           <Button isDisabled={isLoading} type="submit">
             {t('common.save')}

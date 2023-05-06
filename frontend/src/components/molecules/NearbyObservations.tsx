@@ -17,8 +17,9 @@ function NearbyObservations() {
   const nearbyObservations = useQuery({
     queryFn: () =>
       findAllObservationsNearby({
-        radius: getRadius(map.getCenter().lat, map.getZoom()) / 2,
-        ...map.getCenter(),
+        radius: Math.max(Math.min(getRadius(map.getCenter().lat, map.getZoom()) / 2), 250),
+        latitude: map.getCenter().lat,
+        longitude: map.getCenter().lng,
       }),
     queryKey: ['observations', 'nearby'],
   });

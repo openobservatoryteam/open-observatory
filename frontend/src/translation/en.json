@@ -6,7 +6,14 @@
       "illustration": "Illustration of {{name}}",
       "name": "Name of celestial body"
     },
+    "admin": {
+      "observations": "Latest observations",
+      "users": "Users management"
+    },
     "common": {
+      "user": "User",
+      "admin": "Administrator",
+      "achievements": "Rewards",
       "save": "Save",
       "orientation": "Orientation",
       "description": "Description",
@@ -56,7 +63,7 @@
         "exist": "This username is already use."
       },
       "observation": {
-        "description": "The description must not exceed 2048 characters."
+        "description": "The description must not exceed 500 characters."
       },
       "password": {
         "upper": "The password must contain at least one capital letter.",
@@ -123,7 +130,31 @@
       "newPasswordConfirmation": "New password confirmation",
       "karma": "Karma",
       "edit": "Edit my profile",
-      "observationsHistory": "Observations history"
+      "observationsHistory": "Observations history",
+      "achievement": {
+        "FAMOUS": "Famous",
+        "HUBBLE": "Hubble",
+        "OBSERVER": "Observer",
+        "JUDGE": "Judge",
+        "JAMES_WEBB": "James Webb"
+      },
+      "achievementLevel": {
+        "NEW": "New",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "EXPERT": "Expert"
+      }
+    },
+    "achievement": {
+      "description": {
+        "OBSERVER_one": "Obtained for sending {{count}} observation.",
+        "JUDGE_one": "Obtained for voting on {{count}} observation.",
+        "FAMOUS": "Obtained for having a karma greater than {{count}}.",
+        "OBSERVER_other": "Obtained for sending {{count}} observations.",
+        "JUDGE_other": "Obtained for voting on {{count}} observations.",
+        "JAMES_WEBB": "Obtained for having a karma of 100 on an observation.",
+        "HUBBLE": "Obtained for having a karma of 100 on an observation."
+      }
     },
     "visibility": {
       "clearly": "Observable with the naked eye",

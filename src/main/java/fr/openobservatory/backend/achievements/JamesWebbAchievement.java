@@ -5,7 +5,7 @@ import fr.openobservatory.backend.repositories.Achievements;
 
 public class JamesWebbAchievement implements Achievements {
 
-  private static final Achievement actual = Achievement.JAMES_WEB;
+  private static final Achievement actual = Achievement.JAMES_WEBB;
 
   @Override
   public Request onVoteSubmit(ObservationVoteEntity vote) {

@@ -9,13 +9,11 @@ import lombok.Getter;
 public interface Achievements {
   @AllArgsConstructor
   enum Achievement {
-    JUDGE("Judge"),
-    OBSERVER("Observer"),
-    FAMOUS("Famous"),
-    HUBBLE("Hubble"),
-    JAMES_WEB("James Web");
-
-    private final String code;
+    JUDGE,
+    OBSERVER,
+    FAMOUS,
+    HUBBLE,
+    JAMES_WEBB
   }
 
   default Request onObservationUpdate(ObservationEntity observation) {
@@ -33,11 +31,15 @@ public interface Achievements {
   enum Level {
     NEW(1),
     BEGINNER(10),
-    INTERMEDIATES(25),
+    INTERMEDIATE(25),
     EXPERT(100),
     NONE(0);
 
     private final int count;
+
+    public String getName() {
+      return name();
+    }
 
     public static Level getLevel(Integer count) {
       if (count == 1) {
@@ -45,7 +47,7 @@ public interface Achievements {
       } else if (count == 10) {
         return Level.BEGINNER;
       } else if (count == 25) {
-        return Level.INTERMEDIATES;
+        return Level.INTERMEDIATE;
       } else if (count == 100) {
         return EXPERT;
       } else {

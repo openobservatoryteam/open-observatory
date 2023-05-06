@@ -1,8 +1,7 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.*;
+import fr.openobservatory.backend.dto.input.SubscribeNotificationsDto;
 import fr.openobservatory.backend.services.PushSubscriptionService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,11 +26,8 @@ public class PushSubscriptionController {
   @PostMapping("/subscribe")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> subscribe(
-      HttpServletRequest request,
-      Authentication authentication,
-      @RequestBody SubscribeNotificationsDto dto) {
-    var userAgent = request.getHeader("User-Agent");
-    pushSubscriptionService.subscribe(authentication.getName(), dto, userAgent);
+      Authentication authentication, @RequestBody SubscribeNotificationsDto dto) {
+    pushSubscriptionService.subscribe(authentication.getName(), dto);
     return ResponseEntity.noContent().build();
   }
 }

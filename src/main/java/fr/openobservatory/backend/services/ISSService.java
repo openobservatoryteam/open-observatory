@@ -1,6 +1,6 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.ISSPositionDto;
+import fr.openobservatory.backend.dto.output.ISSPositionDto;
 import fr.openobservatory.backend.exceptions.UnavailableISSPositionsException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -51,9 +51,7 @@ public class ISSService {
     if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null)
       throw new UnavailableISSPositionsException();
     var positions = Arrays.asList(response.getBody());
-    positions.stream()
-        .filter(p -> p.getTimestamp().toInstant().equals(now))
-        .forEach(p -> p.setCurrent(true));
+    positions.stream().filter(p -> p.getTimestamp().equals(now)).forEach(p -> p.setCurrent(true));
     return positions;
   }
 

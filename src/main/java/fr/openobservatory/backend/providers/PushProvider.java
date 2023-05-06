@@ -49,7 +49,7 @@ public class PushProvider {
     } catch (InterruptedException e) {
       send(message);
     } catch (JoseException | GeneralSecurityException | IOException | ExecutionException e) {
-      throw new RuntimeException(e);
+      throw new PushMessageException();
     }
   }
 

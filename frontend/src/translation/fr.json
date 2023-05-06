@@ -6,7 +6,14 @@
       "illustration": "Illustration de {{name}}",
       "name": "Nom de l'objet céleste"
     },
+    "admin": {
+      "observations": "Dernières observations",
+      "users": "Gestion des utilisateurs"
+    },
     "common": {
+      "user": "Utilisateur",
+      "admin": "Administrateur",
+      "achievements": "Récompenses",
       "save": "Enregistrer",
       "orientation": "Orientation",
       "description": "Description",
@@ -69,7 +76,7 @@
         "incorrect": "Le mot de passe est incorrect."
       },
       "biography": {
-        "max": "La biographie ne doit pas dépasser 2048 caractères."
+        "max": "La biographie ne doit pas dépasser 500 caractères."
       },
       "angle": "Le degré d'orientation doit être une valeur en degrés.",
       "celestialBody": {
@@ -123,7 +130,31 @@
       "newPasswordConfirmation": "Confirmation du nouveau mot de passe",
       "karma": "Karma",
       "edit": "Éditer mon profil",
-      "observationsHistory": "Historique des observations"
+      "observationsHistory": "Historique des observations",
+      "achievement": {
+        "FAMOUS": "Réputé",
+        "HUBBLE": "Hubble",
+        "OBSERVER": "Observateur",
+        "JUDGE": "Juge",
+        "JAMES_WEBB": "James Webb"
+      },
+      "achievementLevel": {
+        "NEW": "Nouveau",
+        "BEGINNER": "Débutant",
+        "INTERMEDIATE": "Intermédiaire",
+        "EXPERT": "Expert"
+      }
+    },
+    "achievement": {
+      "description": {
+        "OBSERVER_one": "Obtenu pour avoir posté {{count}} observation.",
+        "JUDGE_one": "Obtenu pour avoir voté sur {{count}} observation.",
+        "FAMOUS": "Obtenu pour avoir eu un karma supérieur à {{count}}.",
+        "OBSERVER_other": "Obtenu pour avoir posté {{count}} observations.",
+        "JUDGE_other": "Obtenu pour avoir voté sur {{count}} observations.",
+        "JAMES_WEBB": "Obtenu pour avoir un karma de 100 sur une observation.",
+        "HUBBLE": "Obtenu pour avoir un karma de 10 sur une observation."
+      }
     },
     "visibility": {
       "clearly": "Observable à l'oeil nu",

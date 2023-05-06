@@ -1,6 +1,6 @@
 import { Route } from '@tanstack/react-location';
 
-import { AuthenticatedGuard } from '~/guards';
+import { AdminGuard, AuthenticatedGuard } from '~/guards';
 
 const HomePage = () => import('./HomePage').then((page) => <page.default />);
 const LoginPage = () => import('./LoginPage').then((page) => <page.default />);
@@ -8,9 +8,23 @@ const RegistrationPage = () => import('./RegistrationPage').then((page) => <page
 const ObservationPage = () => import('./ObservationPage').then((page) => <page.default />);
 const CelestialBodyAdminPage = () =>
   import('./CelestialBodyAdminPage').then((page) => (
-    <AuthenticatedGuard>
+    <AdminGuard>
       <page.default />
-    </AuthenticatedGuard>
+    </AdminGuard>
+  ));
+
+const ObservationAdminPage = () =>
+  import('./ObservationAdminPage').then((page) => (
+    <AdminGuard>
+      <page.default />
+    </AdminGuard>
+  ));
+
+const UserAdminPage = () =>
+  import('./UserAdminPage').then((page) => (
+    <AdminGuard>
+      <page.default />
+    </AdminGuard>
   ));
 const ChangePasswordPage = () =>
   import('./ChangePasswordPage').then((page) => (
@@ -59,7 +73,14 @@ const routes: Route[] = [
   { path: '/login', element: LoginPage },
   { path: '/register', element: RegistrationPage },
   { path: '/observations/:id', element: ObservationPage },
-  { path: '/admin/celestial-bodies', element: CelestialBodyAdminPage },
+  {
+    path: '/admin',
+    children: [
+      { path: 'celestial-bodies', element: CelestialBodyAdminPage },
+      { path: 'observations', element: ObservationAdminPage },
+      { path: 'users', element: UserAdminPage },
+    ],
+  },
   {
     path: '/users/:username',
     children: [
