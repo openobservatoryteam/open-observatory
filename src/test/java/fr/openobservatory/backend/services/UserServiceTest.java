@@ -3,21 +3,16 @@ package fr.openobservatory.backend.services;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import fr.openobservatory.backend.dto.input.CreateUserDto;
-import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
-import fr.openobservatory.backend.dto.input.UpdatePositionDto;
-import fr.openobservatory.backend.dto.input.UpdateUserDto;
-import fr.openobservatory.backend.entities.ObservationEntity;
-import fr.openobservatory.backend.entities.ObservationVoteEntity;
+import fr.openobservatory.backend.dto.input.*;
+import fr.openobservatory.backend.entities.*;
 import fr.openobservatory.backend.entities.ObservationVoteEntity.VoteType;
-import fr.openobservatory.backend.entities.UserAchievementEntity;
-import fr.openobservatory.backend.entities.UserEntity;
 import fr.openobservatory.backend.entities.UserEntity.Type;
 import fr.openobservatory.backend.exceptions.*;
 import fr.openobservatory.backend.repositories.*;
 import fr.openobservatory.backend.repositories.Achievements.Achievement;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -30,6 +25,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -100,6 +97,44 @@ class UserServiceTest {
 
     // Then
     assertThatThrownBy(action).isInstanceOf(UsernameAlreadyUsedException.class);
+  }
+
+  // --- UserService#search
+
+  @DisplayName("UserService#search should throw when dto is invalid")
+  @Test
+  void search_should_throw_when_wdto_is_invalid() {
+    // Given
+    var dto = PaginationDto.builder().page(-1).itemsPerPage(0).build();
+
+    // When
+    ThrowingCallable action = () -> userService.search(dto);
+
+    // Then
+    assertThatThrownBy(action)
+        .isInstanceOf(ValidationException.class)
+        .hasFieldOrPropertyWithValue("violations", Set.of("page.range", "itemsPerPage.range"));
+  }
+
+  @DisplayName("UserService#search should return users")
+  @Test
+  void search_should_return_users() {
+    // Given
+    var user = UserEntity.builder().id(33L).username("Eikjos").build();
+    var dto = PaginationDto.builder().page(0).itemsPerPage(1).build();
+    when(userRepository.findAll(Pageable.ofSize(1).withPage(0)))
+        .thenReturn(
+            new PageImpl<>(
+                List.of(user), Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()), 1));
+    // When
+    var users = userService.search(dto);
+
+    // Then
+    assertThat(users.getItemsPerPage()).isOne();
+    assertThat(users.getItemCount()).isOne();
+    assertThat(users.getPage()).isZero();
+    assertThat(users.getPageCount()).isOne();
+    assertThat(users.getData().get(0).getUsername()).isEqualTo(user.getUsername());
   }
 
   // --- UserService#delete
