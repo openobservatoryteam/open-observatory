@@ -21,11 +21,10 @@ public class UserController {
   // ---
   @GetMapping
   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<SearchResultsDto<UserWithProfileDto>> search(
-      Authentication authentication, PaginationDto dto) {
+  public ResponseEntity<SearchResultsDto<UserWithProfileDto>> search(PaginationDto dto) {
     if (dto.getItemsPerPage() == null) dto.setItemsPerPage(10);
     if (dto.getPage() == null) dto.setPage(0);
-    var users = userService.search(dto, authentication.getName());
+    var users = userService.search(dto);
     return ResponseEntity.ok(users);
   }
 

@@ -48,10 +48,9 @@ public class UserService {
     return buildProfile(userRepository.save(user), UserWithProfileDto.class);
   }
 
-  public SearchResultsDto<UserWithProfileDto> search(PaginationDto dto, String issuerUsername) {
+  public SearchResultsDto<UserWithProfileDto> search(PaginationDto dto) {
     var violations = validator.validate(dto);
     if (!violations.isEmpty()) throw new ValidationException(violations);
-    var issuer = findIssuer(issuerUsername, false);
     return SearchResultsDto.from(
         userRepository
             .findAll(Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()))
