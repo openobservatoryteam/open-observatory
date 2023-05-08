@@ -132,7 +132,7 @@
       "edit": "Edit my profile",
       "observationsHistory": "Observations history",
       "delete": {
-        "message": "Do you really want this user? This action is irreversible."
+        "message": "Do you really want to delete this user? This action is irreversible."
       },
       "achievement": {
         "FAMOUS": "Famous",

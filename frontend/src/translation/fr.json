@@ -139,7 +139,7 @@
         "JAMES_WEBB": "James Webb"
       },
       "delete": {
-        "message": "Voulez-vous vraiment cet utilisateur ? Cet action est irréversible."
+        "message": "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est irréversible."
       },
       "achievementLevel": {
         "NEW": "Nouveau",
