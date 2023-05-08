@@ -1,14 +1,20 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOverlayTriggerState } from 'react-stately';
 
-import { UserWithProfile } from '~/api';
+import { SearchResults, UserWithProfile, deleteUser, findAllUser } from '~/api';
 import iconUser from '~/assets/png/icon-user.png';
 import { AsideAdmin, ColumnsProps, CustomActionProps, CustomTable, EditUserModal, Text, Title } from '~/components';
 
 function UserAdminPage() {
   const { t } = useTranslation();
   const [editUser, setEditUser] = useState<UserWithProfile | null>(null);
+  const [page, setPage] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [users, setUsers] = useState<SearchResults<UserWithProfile>>();
+  const [refetch, setRefecth] = useState<number>(0);
+
   const columns: ColumnsProps<UserWithProfile>[] = [
     {
       name: 'Avatar',
@@ -24,38 +30,16 @@ function UserAdminPage() {
     onOpenChange: (isOpen) => (isOpen ? undefined : setEditUser(null)),
   });
 
-  const userData: UserWithProfile[] = [
-    {
-      username: 'TOTO',
-      type: 'USER',
-      notificationEnabled: true,
-      public: true,
-      notificationRadius: 25,
-      biography: '',
-      karma: 1,
-      achievements: [],
-    },
-    {
-      username: 'LULULU',
-      type: 'ADMIN',
-      notificationEnabled: true,
-      public: true,
-      notificationRadius: 25,
-      biography: '',
-      karma: 1,
-      achievements: [],
-    },
-    {
-      username: 'KEKE',
-      type: 'USER',
-      notificationEnabled: true,
-      public: true,
-      notificationRadius: 25,
-      biography: '',
-      karma: 1,
-      achievements: [],
-    },
-  ];
+  const queryUser = useQuery({
+    queryFn: () => findAllUser({ page, itemsPerPage }),
+    queryKey: ['page', page, 'itemsPerPage', itemsPerPage],
+    onSuccess: (res) => setUsers(res),
+  });
+
+  const remove = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => setRefecth((prev) => prev + 1),
+  });
 
   const customAction: CustomActionProps<UserWithProfile> = {
     edit: {
@@ -66,30 +50,37 @@ function UserAdminPage() {
     },
     delete: {
       onDelete: (obj: UserWithProfile) => {
-        console.log(obj.username);
+        if (confirm('Voulez-vous vraiment cet utilisateur ? Cet action est irréversible.')) {
+          remove.mutate({ username: obj.username });
+        }
       },
     },
   };
 
   return (
     <>
-      {editUser && editUserState.isOpen && <EditUserModal user={editUser} state={editUserState} />}
+      {editUser && editUserState.isOpen && (
+        <EditUserModal user={editUser} state={editUserState} onClose={() => setRefecth((prev) => prev + 1)} />
+      )}
       <div className="flex">
         <AsideAdmin selected={2} />
         <div className="flex-1">
           <Title as="h2" centered className="mt-4 mb-4">
             {t('admin.users')}
           </Title>
-          <CustomTable
-            data={userData}
-            columns={columns}
-            page={0}
-            pageCount={2}
-            onItemsPerPageChange={(a) => console.log(a)}
-            onPageChange={(a) => console.log(a)}
-            customsAction={customAction}
-            className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
-          />
+          {users != undefined && !queryUser.isLoading && (
+            <CustomTable
+              client={queryUser}
+              columns={columns}
+              page={users.page}
+              pageCount={users.pageCount}
+              onItemsPerPageChange={(a) => setItemsPerPage(a)}
+              onPageChange={(a) => setPage(a)}
+              customsAction={customAction}
+              refetch={refetch}
+              className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
+            />
+          )}
         </div>
       </div>
     </>

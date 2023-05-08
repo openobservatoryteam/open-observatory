@@ -75,12 +75,4 @@ public class ObservationController {
     var obs = observationService.delete(id);
     return ResponseEntity.ok(obs);
   }
-
-  @PatchMapping("/{id}")
-  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-  public ResponseEntity<ObservationDto> updateFromAdmin(
-      @PathVariable Long id, @RequestBody UpdateObservationDto dto) {
-    var observation = observationService.updateFromAdmin(id, dto);
-    return ResponseEntity.ok(observation);
-  }
 }

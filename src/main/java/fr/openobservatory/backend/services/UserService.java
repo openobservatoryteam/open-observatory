@@ -1,10 +1,8 @@
 package fr.openobservatory.backend.services;
 
-import fr.openobservatory.backend.dto.input.CreateUserDto;
-import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
-import fr.openobservatory.backend.dto.input.UpdatePositionDto;
-import fr.openobservatory.backend.dto.input.UpdateUserDto;
+import fr.openobservatory.backend.dto.input.*;
 import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
+import fr.openobservatory.backend.dto.output.SearchResultsDto;
 import fr.openobservatory.backend.dto.output.SelfUserDto;
 import fr.openobservatory.backend.dto.output.UserWithProfileDto;
 import fr.openobservatory.backend.entities.UserEntity;
@@ -48,6 +46,16 @@ public class UserService {
             .biography(dto.getBiography())
             .build();
     return buildProfile(userRepository.save(user), UserWithProfileDto.class);
+  }
+
+  public SearchResultsDto<UserWithProfileDto> search(PaginationDto dto, String issuerUsername) {
+    var violations = validator.validate(dto);
+    if (!violations.isEmpty()) throw new ValidationException(violations);
+    var issuer = findIssuer(issuerUsername, false);
+    return SearchResultsDto.from(
+        userRepository
+            .findAll(Pageable.ofSize(dto.getItemsPerPage()).withPage(dto.getPage()))
+            .map(u -> modelMapper.map(u, UserWithProfileDto.class)));
   }
 
   public void delete(String username, String issuerUsername) {

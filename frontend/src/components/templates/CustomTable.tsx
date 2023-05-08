@@ -1,9 +1,11 @@
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { UseQueryResult } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
-import { Button, Text } from '~/components';
+import { SearchResults } from '~/api';
+import { Button, LoadingElement, Text } from '~/components';
 
 export type ColumnsProps<T> = {
   name: string;
@@ -21,7 +23,6 @@ export type CustomActionProps<T> = {
 };
 
 interface CustomTableProps<T> {
-  data: T[];
   page: number;
   pageCount: number;
   columns: ColumnsProps<T>[];
@@ -29,10 +30,11 @@ interface CustomTableProps<T> {
   className?: string;
   onPageChange: (n: number) => void;
   onItemsPerPageChange: (n: number) => void;
+  client: UseQueryResult<SearchResults<T>>;
+  refetch: number;
 }
 
 export function CustomTable<T>({
-  data,
   customsAction,
   columns,
   page,
@@ -40,64 +42,83 @@ export function CustomTable<T>({
   className,
   onItemsPerPageChange,
   onPageChange,
+  client,
+  refetch,
 }: CustomTableProps<T>) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<SearchResults<T>>();
+
+  useEffect(() => {
+    setLoading(true);
+    client.refetch().then((res) => {
+      setData(res.data);
+      setLoading(false);
+      console.log('data', res.data);
+      console.log('refecth', refetch);
+    });
+  }, [refetch]);
+
   return (
     <div className={clsx(className)}>
-      <table className="w-full">
-        <thead>
-          <tr className="border-b-2 border-b-white pb-3 flex justify-between">
-            {columns.map((e, index) => (
-              <th key={index}>
-                <Text centered bold className="w-32">
-                  {e.name}
-                </Text>
-              </th>
-            ))}
-            {customsAction && (
-              <th>
-                <Text centered bold className="w-32">
-                  Actions
-                </Text>
-              </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((d, index) => (
-            <tr key={index} className="border-b-2 border-b-white py-3 flex justify-between items-center">
+      {data == undefined && loading && <LoadingElement />}
+      {data && !loading && (
+        <table className="w-full">
+          <thead>
+            <tr className="border-b-2 border-b-white pb-3 flex justify-between">
               {columns.map((e, index) => (
-                <td key={e.name + index} className="w-32 flex justify-center">
-                  {e.render(d)}
-                </td>
+                <th key={index}>
+                  <Text centered bold className="w-32">
+                    {e.name}
+                  </Text>
+                </th>
               ))}
               {customsAction && (
-                <td className="flex items-center justify-end gap-x-1 w-32">
-                  <FontAwesomeIcon
-                    color="white"
-                    icon={faPen}
-                    onClick={() => customsAction.edit.onEdit(d)}
-                    className="p-2 rounded-full hover:cursor-pointer hover:bg-slate-400"
-                  />
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    onClick={() => customsAction.delete.onDelete}
-                    className="text-red-500 p-2 rounded-full hover:cursor-pointer hover:bg-slate-400"
-                  />
-                  {customsAction.other?.map((a) => a.element(d))}
-                </td>
+                <th>
+                  <Text centered bold className="w-32">
+                    Actions
+                  </Text>
+                </th>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.data.map((d, index) => (
+              <tr key={index} className="border-b-2 border-b-white py-3 flex justify-between items-center">
+                {columns.map((e, index) => (
+                  <td key={e.name + index} className="w-32 flex justify-center">
+                    {e.render(d)}
+                  </td>
+                ))}
+                {customsAction && (
+                  <td className="flex items-center justify-center gap-x-1 w-32">
+                    <FontAwesomeIcon
+                      color="white"
+                      icon={faPen}
+                      onClick={() => customsAction.edit.onEdit(d)}
+                      className="p-2 rounded-full hover:cursor-pointer hover:bg-slate-400"
+                    />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      onClick={() => customsAction.delete.onDelete(d)}
+                      className="text-red-500 p-2 rounded-full hover:cursor-pointer hover:bg-slate-400"
+                    />
+                    {customsAction.other?.map((a) => a.element(d))}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <div className="flex justify-end items-center gap-x-5 mt-5">
         {/* Sélection d'item par page */}
         <div>
           <select
+            defaultValue={10}
             onChange={(value) => onItemsPerPageChange(parseInt(value.currentTarget.value))}
             className="bg-transparent text-white border-white border-2 p-1 rounded-2xl"
           >
-            <option value={10} selected className="text-black">
+            <option value={10} className="text-black">
               10
             </option>
             <option value={20} className="text-black">
