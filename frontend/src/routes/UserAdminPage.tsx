@@ -78,7 +78,7 @@ function UserAdminPage() {
               onPageChange={(a) => setPage(a)}
               customsAction={customAction}
               refetch={refetch}
-              className="w-3/4 bg-slate-500 mx-auto p-5 rounded-2xl"
+              className="bg-slate-500 mx-28 p-5 rounded-2xl"
             />
           )}
         </div>
