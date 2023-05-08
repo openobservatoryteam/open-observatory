@@ -47,6 +47,7 @@ export function CustomTable<T>({
 }: CustomTableProps<T>) {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<SearchResults<T>>();
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   useEffect(() => {
     setLoading(true);
@@ -112,8 +113,12 @@ export function CustomTable<T>({
         {/* Sélection d'item par page */}
         <div>
           <select
-            defaultValue={10}
-            onChange={(value) => onItemsPerPageChange(parseInt(value.currentTarget.value))}
+            defaultValue={itemsPerPage}
+            onChange={(value) => {
+              const v = parseInt(value.currentTarget.value);
+              setItemsPerPage(v);
+              onItemsPerPageChange(v);
+            }}
             className="bg-transparent text-white border-white border-2 p-1 rounded-2xl"
           >
             <option value={10} className="text-black">

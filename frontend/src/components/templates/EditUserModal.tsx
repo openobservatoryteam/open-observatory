@@ -77,7 +77,7 @@ export function EditUserModal({ state, user, onClose }: EditUserModelProps) {
 
   return (
     <Modal state={state}>
-      <Dialog title="Edition de l'utilisateur">
+      <Dialog title="Edition de l'utilisateur" onClose={() => state.close()}>
         <form className="flex flex-col mt-6 items-center w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative">
             <img
