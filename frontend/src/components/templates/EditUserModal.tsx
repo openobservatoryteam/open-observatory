@@ -22,9 +22,10 @@ type UpdateUserFormData = {
 type EditUserModelProps = {
   user: UserWithProfile;
   state: OverlayTriggerState;
+  onClose: () => void;
 };
 
-export function EditUserModal({ state, user }: EditUserModelProps) {
+export function EditUserModal({ state, user, onClose }: EditUserModelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const UpdateUserSchema = z.object({
@@ -61,6 +62,8 @@ export function EditUserModal({ state, user }: EditUserModelProps) {
     mutationFn: updateUser,
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(['users', '@me'], updatedUser);
+      state.close();
+      onClose();
     },
     onError: ({ cause }: { cause?: ApplicationError }) => {
       if (cause?.message === 'BIOGRAPHY_REACHED_500_CHARACTERS')

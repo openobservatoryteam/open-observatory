@@ -1,4 +1,4 @@
-import { Observation, UserWithProfile } from './@types';
+import { Observation, SearchResults, UserWithProfile } from './@types';
 import client from './client';
 
 export const getSelfUser = () => client.get('users/@me').then((r) => r.json<UserWithProfile>());
@@ -33,3 +33,9 @@ export const updateUser = ({ username, ...json }: UpdateUserData & { username: s
 export type SendCurrentPositionData = { username: string; latitude: number; longitude: number };
 export const sendCurrentPosition = ({ username, ...json }: SendCurrentPositionData) =>
   client.post(`users/${username}/position`, { json }).then(() => void 0);
+
+type findAllUserData = { page: number; itemsPerPage: number };
+export const findAllUser = ({ page, itemsPerPage }: findAllUserData) =>
+  client.get(`users?page=${page}&itemsPerPage=${itemsPerPage}`).then((r) => r.json<SearchResults<UserWithProfile>>());
+
+export const deleteUser = ({ username }: { username: string }) => client.delete(`users/${username}`).then(() => null);

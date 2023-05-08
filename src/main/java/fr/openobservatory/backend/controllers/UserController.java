@@ -1,12 +1,7 @@
 package fr.openobservatory.backend.controllers;
 
-import fr.openobservatory.backend.dto.input.CreateUserDto;
-import fr.openobservatory.backend.dto.input.UpdatePasswordDto;
-import fr.openobservatory.backend.dto.input.UpdatePositionDto;
-import fr.openobservatory.backend.dto.input.UpdateUserDto;
-import fr.openobservatory.backend.dto.output.ObservationWithDetailsDto;
-import fr.openobservatory.backend.dto.output.SelfUserDto;
-import fr.openobservatory.backend.dto.output.UserWithProfileDto;
+import fr.openobservatory.backend.dto.input.*;
+import fr.openobservatory.backend.dto.output.*;
 import fr.openobservatory.backend.services.UserService;
 import java.net.URI;
 import java.util.List;
@@ -24,6 +19,15 @@ public class UserController {
   private final UserService userService;
 
   // ---
+  @GetMapping
+  @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+  public ResponseEntity<SearchResultsDto<UserWithProfileDto>> search(
+      Authentication authentication, PaginationDto dto) {
+    if (dto.getItemsPerPage() == null) dto.setItemsPerPage(10);
+    if (dto.getPage() == null) dto.setPage(0);
+    var users = userService.search(dto, authentication.getName());
+    return ResponseEntity.ok(users);
+  }
 
   @PostMapping("/register")
   @PreAuthorize("isAnonymous()")
