@@ -138,6 +138,9 @@
         "JUDGE": "Juge",
         "JAMES_WEBB": "James Webb"
       },
+      "delete": {
+        "message": "Voulez-vous vraiment cet utilisateur ? Cet action est irréversible."
+      },
       "achievementLevel": {
         "NEW": "Nouveau",
         "BEGINNER": "Débutant",

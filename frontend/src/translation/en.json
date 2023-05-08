@@ -131,6 +131,9 @@
       "karma": "Karma",
       "edit": "Edit my profile",
       "observationsHistory": "Observations history",
+      "delete": {
+        "message": "Do you really want this user? This action is irreversible."
+      },
       "achievement": {
         "FAMOUS": "Famous",
         "HUBBLE": "Hubble",

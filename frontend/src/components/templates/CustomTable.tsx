@@ -53,8 +53,6 @@ export function CustomTable<T>({
     client.refetch().then((res) => {
       setData(res.data);
       setLoading(false);
-      console.log('data', res.data);
-      console.log('refecth', refetch);
     });
   }, [refetch]);
 

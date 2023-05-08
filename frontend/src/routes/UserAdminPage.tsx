@@ -50,7 +50,7 @@ function UserAdminPage() {
     },
     delete: {
       onDelete: (obj: UserWithProfile) => {
-        if (confirm('Voulez-vous vraiment cet utilisateur ? Cet action est irréversible.')) {
+        if (confirm(t('users.delete.message')!)) {
           remove.mutate({ username: obj.username });
         }
       },
