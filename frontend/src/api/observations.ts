@@ -31,3 +31,9 @@ export const findAllObservation = ({ page, itemsPerPage }: findAllObservationDat
   client
     .get(`observations?page=${page}&itemsPerPage=${itemsPerPage}`)
     .then((r) => r.json<SearchResults<Observation>>());
+
+export type UpdateObservationData = { description: string };
+export const updateObservation = ({ id, ...json }: { id: number } & UpdateObservationData) =>
+  client.patch(`observations/${id}`, { json }).then((r) => r.json<ObservationWithDetails>());
+
+export const deleteObservation = ({ id }: { id: number }) => client.delete(`observations/${id}`).then(() => null);

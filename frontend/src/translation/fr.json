@@ -113,7 +113,8 @@
       "newObservation": "Création d'une observation",
       "createCelestialBody": "Création d'un objet céleste",
       "updateCelestialBody": "Modification d'un objet céleste",
-      "radiusNotification": "Rayon de notifications"
+      "radiusNotification": "Rayon de notifications",
+      "updateObservation": "Éditer l'observation"
     },
     "users": {
       "profil": "Mon profil",

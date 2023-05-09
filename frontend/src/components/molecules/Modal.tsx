@@ -12,8 +12,8 @@ function Modal({ children, state, ...props }: ModalProps) {
   const { modalProps, underlayProps } = useModalOverlay(props, state, ref);
   return state.isOpen ? (
     <Overlay>
-      <div {...underlayProps} className="fixed inset-0 flex justify-center items-center z-100 bg-slate-400/20">
-        <div {...modalProps} ref={ref} className="w-full h-full flex justify-center items-center">
+      <div {...underlayProps} className="fixed inset-0 flex justify-center items-center z-[1001] bg-slate-400/20">
+        <div {...modalProps} ref={ref} className="w-full h-full flex justify-center items-center z-[1001]">
           {children}
         </div>
       </div>
