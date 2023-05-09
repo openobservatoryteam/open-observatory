@@ -2,6 +2,7 @@ package fr.openobservatory.backend.controllers;
 
 import fr.openobservatory.backend.dto.input.SubscribeNotificationsDto;
 import fr.openobservatory.backend.services.PushSubscriptionService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/push")
 @RestController
+@Hidden
 public class PushSubscriptionController {
 
   private final PushSubscriptionService pushSubscriptionService;
