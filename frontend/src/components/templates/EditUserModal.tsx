@@ -39,13 +39,13 @@ export function EditUserModal({ state, user, onClose }: EditUserModelProps) {
       .regex(/.*[`~<>?,./!@#$%^&*()\-_+="'|{}[\];:].*/, t('errors.password.specialCharacter')!)
       .min(8, t('errors.password.min')!)
       .max(32, t('errors.password.max')!)
-      .optional(),
+      .or(z.string().optional()),
   });
   const { formState, handleSubmit, setValue, register, watch, setError } = useForm<UpdateUserFormData>({
     defaultValues: {
       avatar: user.avatar,
       biography: user.biography,
-      password: null,
+      password: '',
     },
     resolver: zodResolver(UpdateUserSchema),
   });
@@ -71,8 +71,8 @@ export function EditUserModal({ state, user, onClose }: EditUserModelProps) {
     },
   });
 
-  const onSubmit = (values: UpdateUserFormData) => {
-    updateUserMutation.mutate({ username: user?.username, ...values });
+  const onSubmit = ({ password, ...values }: UpdateUserFormData) => {
+    updateUserMutation.mutate({ username: user?.username, password: password || undefined, ...values });
   };
 
   return (
@@ -91,13 +91,14 @@ export function EditUserModal({ state, user, onClose }: EditUserModelProps) {
             </label>
           </div>
           <TextInput
-            className="mt-10 md:w-[45rem] w-72"
-            errorMessage={formState.errors.biography?.message}
+            className="mt-10 mx-16"
+            errorMessage={formState.errors.password?.message}
             placeholder={t('users.password')!}
+            type="password"
             {...r(register, 'password')}
           />
           <TextArea
-            className="mt-10 md:w-[45rem] w-72"
+            className="mt-10 mx-12"
             errorMessage={formState.errors.biography?.message}
             placeholder={t('users.biography')!}
             {...r(register, 'biography')}

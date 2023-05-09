@@ -25,6 +25,7 @@ export type UpdateUserData = {
   avatar?: string | null;
   biography?: string | null;
   isPublic?: boolean;
+  password?: string;
 };
 
 export const updateUser = ({ username, ...json }: UpdateUserData & { username: string | undefined }) =>
