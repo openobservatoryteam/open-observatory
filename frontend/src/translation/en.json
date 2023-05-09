@@ -113,7 +113,8 @@
       "newObservation": "Observation creation",
       "createCelestialBody": "Celestial body creation",
       "updateCelestialBody": "Celestial body update",
-      "radiusNotification": "Notification range"
+      "radiusNotification": "Notification range",
+      "updateObservation": "Update observation"
     },
     "users": {
       "profil": "My profile",

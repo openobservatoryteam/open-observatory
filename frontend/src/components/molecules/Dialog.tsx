@@ -26,7 +26,7 @@ function Dialog({ children, className, onClose, title, ...props }: DialogProps) 
     <div
       {...dialogProps}
       className={clsx(
-        'text-white bg-[#333C47] rounded-2xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[50%] relative',
+        'text-white bg-[#333C47] rounded-2xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[50%] relative z-[1001]',
         className,
       )}
       ref={ref}
